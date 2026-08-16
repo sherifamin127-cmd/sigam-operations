@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة سيجام - عداد كراتين BREITECA MPX X2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+    /* ============================================================
+       VARIABLES — نفس ألوان واجهة الصيانة بالضبط
+    ============================================================ */
+    :root {
+        --bg:        #070f2e;
+        --card:      #0d1b4c;
+        --card-light:#1a2d6b;
+        --gold:      #ffd700;
+        --gold-light:#ffeb3b;
+        --gold-dark: #ffaa00;
+        --gold-glow: rgba(255,215,0,0.15);
+        --green:     #10b981;
+        --blue:      #3b82f6;
+        --red:       #ef4444;
+        --purple:    #a855f7;
+        --cyan:      #06b6d4;
+        --orange:    #f97316;
+        --text:      #f8fafc;
+        --dim:       #94a3b8;
+        --dim2:      #4a5f85;
+        --border:    rgba(255,215,0,0.12);
+        --border2:   rgba(255,215,0,0.28);
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0 }
+
+    body {
+        font-family:'Almarai',sans-serif;
+        background:linear-gradient(180deg,#070f2e 0%,#0d1b4c 40%,#070f2e 100%);
+        color:var(--text);
+        min-height:100vh;
+        direction:rtl;
+    }
+
+    /* ============================================================
+       TOP BRAND BAR
+    ============================================================ */
+    .system-brand {
+        background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);
+        padding:10px 32px;
+        border-bottom:2px solid var(--gold);
+        box-shadow:0 2px 20px rgba(255,215,0,0.1);
+        position:relative;
+    }
+    .system-brand::after {
+        content:'';
+        position:absolute;
+        bottom:-1px;left:0;right:0;
+        height:1px;
+        background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    }
+    .system-brand-content {
+        max-width:1400px;
+        margin:0 auto;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+    .system-logo { display:flex;align-items:center;gap:12px }
+    .system-icon {
+        width:40px;height:40px;
+        background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+        border-radius:10px;
+        display:flex;align-items:center;justify-content:center;
+        font-size:1.4em;
+        box-shadow:0 0 20px rgba(255,215,0,0.35);
+    }
+    .system-text h2 {
+        font-size:1.3em;font-weight:800;
+        color:var(--gold);
+        text-shadow:0 0 15px rgba(255,215,0,0.3);
+    }
+    .system-text p { color:var(--dim);font-size:0.78em;margin-top:2px;letter-spacing:.5px }
+    .system-meta { display:flex;align-items:center;gap:16px }
+    .system-version {
+        background:rgba(255,215,0,0.1);
+        border:1px solid var(--gold);
+        padding:5px 14px;border-radius:20px;
+        color:var(--gold);font-size:0.78em;font-weight:700;
+    }
+    .system-date { color:var(--dim);font-size:0.85em }
+    .live-badge {
+        display:inline-flex;align-items:center;gap:5px;
+        font-size:0.75em;font-weight:800;color:var(--green);letter-spacing:1px;
+    }
+    .live-dot {
+        width:7px;height:7px;border-radius:50%;
+        background:var(--green);
+        box-shadow:0 0 7px var(--green);
+        animation:blink 1.5s infinite;
+    }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+    /* ============================================================
+       MAIN HEADER
+    ============================================================ */
+    .header {
+        background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);
+        padding:20px 32px;
+        border-bottom:3px solid var(--gold);
+        box-shadow:0 4px 30px rgba(255,215,0,0.12);
+        position:relative;
+        overflow:hidden;
+    }
+    .header::before {
+        content:'';
+        position:absolute;top:0;right:0;
+        width:220px;height:100%;
+        background:linear-gradient(90deg,transparent,rgba(255,215,0,0.05));
+    }
+    .header-content {
+        max-width:1400px;margin:0 auto;
+        display:flex;justify-content:space-between;align-items:center;
+    }
+    .header-left h1 {
+        font-size:1.9em;font-weight:800;
+        color:var(--gold);
+        text-shadow:0 0 20px rgba(255,215,0,0.35);
+        display:flex;align-items:center;gap:12px;
+    }
+    .header-left h1 i { font-size:0.85em;filter:drop-shadow(0 0 8px rgba(255,215,0,0.5)) }
+    .header-left p { color:var(--dim);margin-top:7px;font-size:1em }
+    .header-right { text-align:left }
+    .machine-badge {
+        display:inline-block;
+        background:rgba(255,215,0,0.1);
+        border:1px solid var(--gold);
+        padding:8px 22px;border-radius:28px;
+        color:var(--gold);font-weight:700;font-size:0.9em;
+    }
+    .status-indicator {
+        display:inline-flex;align-items:center;gap:7px;
+        margin-top:9px;padding:6px 14px;border-radius:18px;font-size:0.82em;
+    }
+    .status-indicator.online { background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.25) }
+    .status-indicator.offline{ background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.25) }
+    .status-dot {
+        width:8px;height:8px;border-radius:50%;
+        background:currentColor;
+        box-shadow:0 0 7px currentColor;
+        animation:blink 1.5s infinite;
+    }
+    #topbar-clock {
+        font-size:1.5em;font-weight:800;
+        color:var(--gold);font-variant-numeric:tabular-nums;
+        letter-spacing:2px;
+        text-shadow:0 0 10px rgba(255,215,0,0.3);
+    }
+
+    /* ============================================================
+       MAIN CONTAINER
+    ============================================================ */
+    .main { max-width:1400px;margin:0 auto;padding:24px 20px }
+
+    /* ============================================================
+       OEE SECTION (NEW)
+    ============================================================ */
+    .oee-section {
+        background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);
+        border:1px solid var(--border);
+        border-top:3px solid var(--cyan);
+        border-radius:14px;
+        padding:20px 24px;
+        margin-bottom:24px;
+        box-shadow:0 4px 20px rgba(0,0,0,0.3),0 0 20px rgba(6,182,212,0.06);
+    }
+    .oee-header {
+        display:flex;justify-content:space-between;align-items:center;
+        margin-bottom:16px;padding-bottom:12px;
+        border-bottom:1px solid var(--border);
+    }
+    .oee-header h2 {
+        color:var(--cyan);font-size:1.1em;font-weight:800;
+        display:flex;align-items:center;gap:9px;
+    }
+    .oee-header h2 i { filter:drop-shadow(0 0 5px rgba(6,182,212,0.5)) }
+    .oee-grid {
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:14px;
+    }
+    .oee-card {
+        background:rgba(0,0,0,0.25);
+        border:1px solid var(--border);
+        border-radius:11px;
+        padding:16px;
+        text-align:center;
+        position:relative;
+        overflow:hidden;
+        transition:all .3s;
+    }
+    .oee-card:hover { border-color:var(--border2);transform:translateY(-2px) }
+    .oee-card::before {
+        content:'';
+        position:absolute;top:0;left:0;right:0;height:2px;
+    }
+    .oee-card.oee-main::before  { background:linear-gradient(90deg,transparent,var(--gold),transparent) }
+    .oee-card.oee-avail::before { background:linear-gradient(90deg,transparent,var(--green),transparent) }
+    .oee-card.oee-perf::before  { background:linear-gradient(90deg,transparent,var(--blue),transparent) }
+    .oee-card.oee-qual::before  { background:linear-gradient(90deg,transparent,var(--orange),transparent) }
+    .oee-lbl { font-size:0.72em;color:var(--dim);font-weight:700;letter-spacing:.8px;margin-bottom:8px }
+    .oee-val {
+        font-size:2.2em;font-weight:800;line-height:1;
+        text-shadow:0 0 15px currentColor;
+        margin-bottom:6px;
+    }
+    .oee-main .oee-val  { color:var(--gold) }
+    .oee-avail .oee-val { color:var(--green) }
+    .oee-perf .oee-val  { color:var(--blue) }
+    .oee-qual .oee-val  { color:var(--orange) }
+    .oee-bar { height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-top:8px }
+    .oee-bar-fill { height:100%;border-radius:3px;transition:width 1s ease }
+    .oee-main .oee-bar-fill  { background:linear-gradient(90deg,var(--gold-dark),var(--gold)) }
+    .oee-avail .oee-bar-fill { background:var(--green) }
+    .oee-perf .oee-bar-fill  { background:var(--blue) }
+    .oee-qual .oee-bar-fill  { background:var(--orange) }
+    .oee-sub { font-size:0.7em;color:var(--dim2);margin-top:5px }
+
+    /* OEE insight box */
+    .oee-insight {
+        margin-top:14px;
+        background:rgba(6,182,212,0.06);
+        border:1px solid rgba(6,182,212,0.18);
+        border-radius:10px;
+        padding:12px 16px;
+        font-size:0.82em;
+        color:var(--dim);
+        line-height:1.7;
+        display:flex;gap:10px;align-items:flex-start;
+    }
+    .oee-insight i { color:var(--cyan);font-size:1.1em;flex-shrink:0;margin-top:2px }
+    .oee-insight b { color:var(--cyan) }
+
+    /* POS link */
+    .pos-link-row {
+        display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;
+    }
+    .pos-box {
+        background:rgba(0,0,0,0.2);
+        border:1px solid var(--border);
+        border-radius:10px;
+        padding:12px 14px;
+        display:flex;gap:10px;align-items:flex-start;
+        transition:all .3s;
+    }
+    .pos-box:hover { border-color:var(--border2);background:rgba(255,215,0,0.03) }
+    .pos-box-icon {
+        width:34px;height:34px;border-radius:9px;
+        display:flex;align-items:center;justify-content:center;
+        font-size:1em;flex-shrink:0;
+    }
+    .pos-box-icon.pos { background:rgba(59,130,246,0.12);color:var(--blue) }
+    .pos-box-icon.oee { background:rgba(6,182,212,0.12);color:var(--cyan) }
+    .pos-box-title { font-size:0.82em;font-weight:800;color:var(--text);margin-bottom:3px }
+    .pos-box-desc { font-size:0.72em;color:var(--dim);line-height:1.5 }
+
+    /* ============================================================
+       KPI CARDS (top 4)
+    ============================================================ */
+    .cards-grid {
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+        gap:16px;
+        margin-bottom:22px;
+    }
+    .card {
+        background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);
+        border:1px solid var(--border);
+        border-radius:14px;
+        padding:22px;
+        position:relative;overflow:hidden;
+        transition:all .3s;
+        border-top:3px solid var(--gold);
+    }
+    .card::before {
+        content:'';
+        position:absolute;top:0;right:0;
+        width:80px;height:80px;
+        border-radius:0 14px 0 80px;
+        background:var(--gold-glow);
+        opacity:.4;
+    }
+    .card:hover {
+        transform:translateY(-4px);
+        border-color:rgba(255,215,0,0.4);
+        box-shadow:0 8px 30px rgba(0,0,0,0.4),0 0 20px rgba(255,215,0,0.1);
+    }
+    .card-icon {
+        width:46px;height:46px;
+        background:rgba(255,215,0,0.1);
+        border:1px solid rgba(255,215,0,0.25);
+        border-radius:12px;
+        display:flex;align-items:center;justify-content:center;
+        font-size:1.3em;margin-bottom:14px;
+        color:var(--gold);
+    }
+    .card-label { color:var(--dim);font-size:0.88em;margin-bottom:6px;font-weight:600 }
+    .card-value {
+        font-size:2.8em;font-weight:800;
+        color:var(--gold);
+        text-shadow:0 0 20px rgba(255,215,0,0.25);
+        line-height:1;
+    }
+    .card-unit { color:var(--dim);font-size:0.85em;margin-top:7px }
+    .card-trend {
+        display:inline-flex;align-items:center;gap:5px;
+        margin-top:10px;padding:4px 10px;border-radius:8px;font-size:0.8em;font-weight:600;
+    }
+    .card-trend.up   { background:rgba(16,185,129,0.12);color:var(--green) }
+    .card-trend.down { background:rgba(239,68,68,0.12);color:var(--red) }
+
+    /* ============================================================
+       CLASSIFICATION SECTION
+    ============================================================ */
+    .classification-section {
+        background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);
+        border:1px solid var(--border);
+        border-radius:14px;
+        padding:20px 22px;
+        margin-bottom:22px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.2);
+    }
+    .classification-header {
+        display:flex;justify-content:space-between;align-items:center;
+        margin-bottom:16px;padding-bottom:12px;
+        border-bottom:1px solid var(--border);
+    }
+    .classification-header h2 {
+        color:var(--gold);font-size:1.1em;font-weight:800;
+        display:flex;align-items:center;gap:9px;
+    }
+    .classification-header h2 i { filter:drop-shadow(0 0 5px rgba(255,215,0,0.4)) }
+    .classification-header .total-types { color:var(--dim);font-size:0.85em }
+
+    /* Category tabs */
+    .cat-tabs {
+        display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;
+    }
+    .cat-tab {
+        padding:6px 14px;border-radius:20px;font-size:0.78em;font-weight:700;
+        cursor:pointer;border:1px solid var(--border);
+        background:rgba(0,0,0,0.2);color:var(--dim);
+        transition:all .25s;font-family:'Almarai',sans-serif;
+    }
+    .cat-tab:hover { border-color:var(--gold);color:var(--gold) }
+    .cat-tab.active {
+        background:rgba(255,215,0,0.12);
+        border-color:var(--gold);
+        color:var(--gold);
+    }
+
+    .classification-grid {
+        display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+        gap:12px;
+    }
+    .type-card {
+        background:linear-gradient(135deg,rgba(4,9,26,0.9) 0%,#0d1b4c 100%);
+        border:1px solid var(--border);
+        border-radius:11px;
+        padding:13px;
+        display:flex;justify-content:space-between;align-items:center;
+        transition:all .3s;cursor:pointer;
+    }
+    .type-card:hover {
+        border-color:rgba(255,215,0,0.35);
+        transform:translateX(-4px);
+        box-shadow:0 4px 15px rgba(0,0,0,0.3);
+    }
+    .type-card.active { border-color:var(--green);background:rgba(16,185,129,0.06) }
+    .type-info { display:flex;flex-direction:column;gap:4px }
+    .type-name { color:var(--text);font-weight:700;font-size:0.9em }
+    .type-category { color:var(--dim);font-size:0.7em }
+    .type-count {
+        background:rgba(255,215,0,0.1);
+        border:1px solid rgba(255,215,0,0.25);
+        border-radius:9px;padding:7px 14px;min-width:58px;text-align:center;
+    }
+    .type-count-value { color:var(--gold);font-weight:800;font-size:1.2em }
+    .type-count-label { color:var(--dim);font-size:0.65em;margin-top:1px }
+
+    /* ============================================================
+       CHART SECTION
+    ============================================================ */
+    .chart-section {
+        background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);
+        border:1px solid var(--border);
+        border-radius:14px;
+        padding:20px 22px;
+        margin-bottom:22px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.2);
+    }
+    .chart-header {
+        display:flex;justify-content:space-between;align-items:center;
+        margin-bottom:16px;padding-bottom:12px;
+        border-bottom:1px solid var(--border);
+    }
+    .chart-header h2 {
+        color:var(--gold);font-size:1.1em;font-weight:800;
+        display:flex;align-items:center;gap:9px;
+    }
+    .chart-header h2 i { color:var(--gold);filter:drop-shadow(0 0 5px rgba(255,215,0,0.4)) }
+    .chart-header .period { color:var(--dim);font-size:0.85em }
+    .chart-container { height:220px;position:relative }
+    .chart-bar {
+        display:flex;align-items:flex-end;justify-content:space-around;
+        height:190px;padding:0 8px;
+    }
+    .bar-item { display:flex;flex-direction:column;align-items:center;flex:1;max-width:55px }
+    .bar-fill {
+        width:80%;
+        background:linear-gradient(180deg,var(--gold) 0%,rgba(255,215,0,0.3) 100%);
+        border-radius:5px 5px 0 0;min-height:4px;
+        transition:height .5s ease;position:relative;
+        box-shadow:0 -2px 10px rgba(255,215,0,0.2);
+    }
+    .bar-fill::after {
+        content:'';position:absolute;top:0;left:0;right:0;
+        height:3px;background:var(--gold-light);border-radius:5px 5px 0 0;
+    }
+    .bar-label { color:var(--dim);font-size:0.7em;margin-top:7px;white-space:nowrap }
+    .bar-value { color:var(--gold);font-size:0.75em;font-weight:700;margin-bottom:4px }
+
+    /* canvas chart */
+    .canvas-wrap { position:relative;height:190px }
+
+    /* ============================================================
+       HISTORY TABLE
+    ============================================================ */
+    .history-section {
+        background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);
+        border:1px solid var(--border);
+        border-radius:14px;
+        padding:20px 22px;
+        margin-bottom:22px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.2);
+    }
+    .history-header {
+        display:flex;justify-content:space-between;align-items:center;
+        margin-bottom:14px;padding-bottom:12px;
+        border-bottom:1px solid var(--border);
+    }
+    .history-header h2 {
+        color:var(--gold);font-size:1.1em;font-weight:800;
+        display:flex;align-items:center;gap:9px;
+    }
+    .history-header .count { color:var(--dim);font-size:0.85em }
+    .table-wrap { overflow-x:auto;border-radius:10px }
+    table { width:100%;border-collapse:collapse }
+    thead tr { background:linear-gradient(135deg,#1a2d6b 0%,#0d1b4c 100%) }
+    thead th {
+        color:var(--gold);font-weight:700;padding:12px 14px;
+        text-align:center;font-size:0.85em;
+        border-bottom:2px solid rgba(255,215,0,0.2);
+    }
+    tbody td {
+        padding:11px 14px;text-align:center;
+        border-bottom:1px solid rgba(255,215,0,0.06);
+        color:var(--text);font-size:0.9em;
+    }
+    tbody tr:hover { background:rgba(255,215,0,0.04) }
+    .time-cell  { color:var(--dim) }
+    .count-cell { color:var(--gold);font-weight:700;font-size:1.05em }
+    .diff-cell  { font-weight:600 }
+    .diff-cell.positive { color:var(--green) }
+    .diff-cell.negative { color:var(--red) }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+        text-align:center;padding:22px;
+        color:var(--dim);font-size:0.82em;
+        border-top:1px solid var(--border);
+        margin-top:10px;
+    }
+    .footer span { color:var(--gold) }
+
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width:6px }
+    ::-webkit-scrollbar-track { background:var(--bg) }
+    ::-webkit-scrollbar-thumb { background:var(--card-light);border-radius:3px }
+    ::-webkit-scrollbar-thumb:hover { background:var(--gold) }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast {
+        position:fixed;top:24px;left:50%;
+        transform:translateX(-50%) translateY(-120px);
+        background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+        color:#0d1b4c;padding:13px 32px;border-radius:12px;
+        font-weight:800;z-index:9999;
+        box-shadow:0 8px 30px rgba(0,0,0,0.4),0 0 20px rgba(255,215,0,0.3);
+        opacity:0;transition:all .4s ease;font-size:13px;
+    }
+    .toast.show { transform:translateX(-50%) translateY(0);opacity:1 }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media(max-width:768px){
+        .oee-grid { grid-template-columns:1fr 1fr }
+        .pos-link-row { grid-template-columns:1fr }
+        .header-content { flex-direction:column;gap:12px;text-align:center }
+        .header-right { text-align:center }
+    }
+    </style>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+<!-- ===== SYSTEM BRAND BAR ===== -->
+<div class="system-brand">
+    <div class="system-brand-content">
+        <div class="system-logo">
+            <div class="system-icon"><i class="fa-solid fa-screwdriver-wrench" style="color:#0d1b4c"></i></div>
+            <div class="system-text">
+                <h2>منظومة سيجام</h2>
+                <p>للمراقبة والتتبع</p>
+            </div>
+        </div>
+        <div class="system-meta">
+            <span class="system-version">v2.1</span>
+            <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+            <span class="system-date" id="system-date">--/--/----</span>
+        </div>
+    </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+    <div class="header-content">
+        <div class="header-left">
+            <h1><i class="fa-solid fa-boxes-stacked"></i> BREITECA MPX X2</h1>
+            <p>نظام مراقبة الإنتاج — عداد الكراتين الأوتوماتيكي</p>
+        </div>
+        <div class="header-right">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:8px">
+                <div id="topbar-clock">--:--:--</div>
+                <div class="machine-badge"><i class="fa-solid fa-gear"></i> ماكينة شيرنك أوتوماتيك</div>
+                <div class="status-indicator online" id="status">
+                    <span class="status-dot"></span>
+                    <span>النظام يعمل</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+
+    <!-- ===== KPI CARDS ===== -->
+    <div class="cards-grid">
+        <div class="card">
+            <div class="card-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div class="card-label">إجمالي الكراتين</div>
+            <div class="card-value" id="total-count">0</div>
+            <div class="card-unit">كرتونة</div>
+            <div class="card-trend up" id="total-trend">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+                <span id="total-diff">+0</span>
+            </div>
+        </div>
+        <div class="card" style="border-top-color:var(--cyan)">
+            <div class="card-icon" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.25);color:var(--cyan)"><i class="fa-solid fa-bolt"></i></div>
+            <div class="card-label">السرعة الحالية</div>
+            <div class="card-value" style="color:var(--cyan)" id="speed">0</div>
+            <div class="card-unit">كرتونة / دقيقة</div>
+            <div class="card-trend up"><i class="fa-solid fa-arrow-trend-up"></i> <span>ممتازة</span></div>
+        </div>
+        <div class="card" style="border-top-color:var(--orange)">
+            <div class="card-icon" style="background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.25);color:var(--orange)"><i class="fa-solid fa-stopwatch"></i></div>
+            <div class="card-label">الوقت من آخر قراءة</div>
+            <div class="card-value" style="color:var(--orange)" id="elapsed">0</div>
+            <div class="card-unit">ثانية</div>
+        </div>
+        <div class="card" style="border-top-color:var(--green)">
+            <div class="card-icon" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.25);color:var(--green)"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="card-label">إنتاج الشيفت الحالي</div>
+            <div class="card-value" style="color:var(--green)" id="shift">0</div>
+            <div class="card-unit">كرتونة</div>
+            <div class="card-trend up"><i class="fa-solid fa-arrow-trend-up"></i> <span id="shift-percent">0%</span></div>
+        </div>
+    </div>
+
+    <!-- ===== OEE SECTION (NEW) ===== -->
+    <div class="oee-section">
+        <div class="oee-header">
+            <h2><i class="fa-solid fa-gauge-high"></i> مؤشر الكفاءة الكلية للمعدات — OEE</h2>
+            <span style="font-size:0.78em;color:var(--dim)">Overall Equipment Effectiveness</span>
+        </div>
+
+        <div class="oee-grid">
+            <div class="oee-card oee-main">
+                <div class="oee-lbl">OEE الإجمالي</div>
+                <div class="oee-val" id="oee-total">78%</div>
+                <div class="oee-sub">العالمي المستهدف ≥ 85%</div>
+                <div class="oee-bar"><div class="oee-bar-fill" id="oee-total-bar" style="width:78%"></div></div>
+            </div>
+            <div class="oee-card oee-avail">
+                <div class="oee-lbl">التوافرية — Availability</div>
+                <div class="oee-val" id="oee-avail">88%</div>
+                <div class="oee-sub">وقت التشغيل الفعلي ÷ المخطط</div>
+                <div class="oee-bar"><div class="oee-bar-fill" id="oee-avail-bar" style="width:88%"></div></div>
+            </div>
+            <div class="oee-card oee-perf">
+                <div class="oee-lbl">الأداء — Performance</div>
+                <div class="oee-val" id="oee-perf">92%</div>
+                <div class="oee-sub">السرعة الفعلية ÷ السرعة المثالية</div>
+                <div class="oee-bar"><div class="oee-bar-fill" id="oee-perf-bar" style="width:92%"></div></div>
+            </div>
+            <div class="oee-card oee-qual">
+                <div class="oee-lbl">الجودة — Quality</div>
+                <div class="oee-val" id="oee-qual">96%</div>
+                <div class="oee-sub">الإنتاج الجيد ÷ الإجمالي</div>
+                <div class="oee-bar"><div class="oee-bar-fill" id="oee-qual-bar" style="width:96%"></div></div>
+            </div>
+        </div>
+
+        <!-- OEE & POS Insight -->
+        <div class="oee-insight">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+                <b>ما هي علاقة الـ OEE بنظام الـ POS؟</b><br>
+                يخبرك الـ <b>POS</b> بالمنتجات التي عليها إقبال والكميات المباعة — بينما يخبرك الـ <b>OEE</b> بقدرة ماكينتك على إنتاج هذه الكميات بكفاءة ودون هدر.
+                معاً يمكّناك من <b>مراقبة الطلب والإنتاج</b> في نفس الوقت: الطلب من السوق من الـ POS، والطاقة الإنتاجية الفعلية من الـ OEE.
+            </div>
+        </div>
+
+        <div class="pos-link-row">
+            <div class="pos-box">
+                <div class="pos-box-icon pos"><i class="fa-solid fa-cash-register"></i></div>
+                <div>
+                    <div class="pos-box-title">نظام POS — نقطة البيع</div>
+                    <div class="pos-box-desc">يكشف المنتجات الأعلى مبيعاً والكميات المطلوبة من السوق — يحدد <b>ماذا نُنتج وبأي كمية</b></div>
+                </div>
+            </div>
+            <div class="pos-box">
+                <div class="pos-box-icon oee"><i class="fa-solid fa-gauge-high"></i></div>
+                <div>
+                    <div class="pos-box-title">نظام OEE — كفاءة المعدات</div>
+                    <div class="pos-box-desc">يقيس قدرة الماكينة الفعلية على تلبية الطلب بكفاءة — يحدد <b>هل يمكننا إنتاجه بدون هدر</b></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CLASSIFICATION ===== -->
+    <div class="classification-section">
+        <div class="classification-header">
+            <h2><i class="fa-solid fa-tags"></i> التصنيف حسب نوع التمر</h2>
+            <span class="total-types" id="total-types">25 نوع</span>
+        </div>
+
+        <!-- Category filter tabs -->
+        <div class="cat-tabs" id="cat-tabs">
+            <button class="cat-tab active" onclick="filterCat('all',this)">الكل</button>
+            <button class="cat-tab" onclick="filterCat('PRM',this)">بريميوم</button>
+            <button class="cat-tab" onclick="filterCat('DELT',this)">دلت</button>
+            <button class="cat-tab" onclick="filterCat('D2',this)">D2 ميكس</button>
+            <button class="cat-tab" onclick="filterCat('RING',this)">رينج</button>
+            <button class="cat-tab" onclick="filterCat('LIGHT',this)">لايت</button>
+            <button class="cat-tab" onclick="filterCat('OTHER',this)">أخرى</button>
+        </div>
+
+        <div class="classification-grid" id="classification-grid"></div>
+    </div>
+
+    <!-- ===== CHARTS (dual) ===== -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px">
+        <div class="chart-section" style="margin-bottom:0">
+            <div class="chart-header">
+                <h2><i class="fa-solid fa-chart-bar"></i> معدل الإنتاج (آخر ساعة)</h2>
+                <span class="period" id="chart-period">--:-- — --:--</span>
+            </div>
+            <div class="chart-container">
+                <div class="chart-bar" id="chart-bars"></div>
+            </div>
+        </div>
+
+        <div class="chart-section" style="margin-bottom:0">
+            <div class="chart-header">
+                <h2><i class="fa-solid fa-chart-line"></i> OEE عبر الزمن</h2>
+                <span class="period">مباشر</span>
+            </div>
+            <div class="chart-container">
+                <div class="canvas-wrap"><canvas id="oee-chart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== HISTORY TABLE ===== -->
+    <div class="history-section">
+        <div class="history-header">
+            <h2><i class="fa-solid fa-clock-rotate-left"></i> سجل القراءات</h2>
+            <span class="count" id="history-count">0 قراءة</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الوقت</th>
+                        <th>العدد الإجمالي</th>
+                        <th>الزيادة</th>
+                        <th>السرعة</th>
+                        <th>OEE</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table"></tbody>
+            </table>
+        </div>
+    </div>
+
+</div><!-- end main -->
+
+<div class="footer">
+    <p>منظومة سيجام للمراقبة والتتبع | <span>BREITECA MPX X2</span> | نظام عدّ الكراتين الأوتوماتيكي | v2.1</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+// ============================================================
+// FIREBASE — منظومة سيجام (sigam-operations) — تخزين حقيقي + حارس دخول
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBtcvF104xLvNX6xkwxcMZThjQPq2EKAKU",
+  authDomain: "sigam-operations.firebaseapp.com",
+  projectId: "sigam-operations",
+  storageBucket: "sigam-operations.firebasestorage.app",
+  messagingSenderId: "971246574608",
+  appId: "1:971246574608:web:8c70a8271664b0457c3e95"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+db.enablePersistence({ synchronizeTabs:true }).catch(()=>{});
+
+// صفحة عرض عامة — تكفي أي جلسة دخول صحيحة (بدون اشتراط دور معين)
+auth.onAuthStateChanged(user=>{
+  if(!user){ window.location.href = 'SIGAM-HOME.html'; }
+});
+
+// ---------- Fetch shim: يحوّل كل نداءات /api/* لقراءة/كتابة مباشرة على Firestore ----------
+(function(){
+  const REAL_FETCH = window.fetch.bind(window);
+  const API_MAP = {
+    '/api/maintenance-state': 'maintenance_state',
+    '/api/procurement-state': 'procurement_state',
+    '/api/proc-alerts': 'proc_alerts',
+    '/api/tracking-state': 'tracking_state',
+    '/api/warehouse-state': 'warehouse_state'
+  };
+  window.fetch = async function(url, opts){
+    const key = API_MAP[url];
+    if(!key) return REAL_FETCH(url, opts);
+    const docRef = db.collection('app_state').doc(key);
+    const method = (opts && opts.method) ? opts.method.toUpperCase() : 'GET';
+    try{
+      if(method === 'GET'){
+        const snap = await docRef.get();
+        const data = snap.exists ? snap.data().payload : (key==='proc_alerts' ? [] : {});
+        return new Response(JSON.stringify({ success:true, data }), { status:200, headers:{'Content-Type':'application/json'} });
+      } else if(method === 'POST'){
+        const body = JSON.parse(opts.body);
+        await docRef.set({ payload: body, updatedAt: Date.now() });
+        return new Response(JSON.stringify({ success:true }), { status:200, headers:{'Content-Type':'application/json'} });
+      }
+      return REAL_FETCH(url, opts);
+    }catch(e){
+      return new Response(JSON.stringify({ success:false, error:String(e) }), { status:500, headers:{'Content-Type':'application/json'} });
+    }
+  };
+})();
+
+// ====== CLOCK ======
+function updateClock(){
+    const now = new Date();
+    document.getElementById('topbar-clock').textContent =
+        now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    document.getElementById('system-date').textContent =
+        now.toLocaleDateString('ar-EG');
+}
+setInterval(updateClock,1000); updateClock();
+
+// ====== TOAST ======
+function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ====== DATE TYPES DATA ======
+const dateTypes = {
+    'PRM': [
+        {name:'PRM - S J',count:45,category:'بريميوم'},
+        {name:'PRM - J',  count:38,category:'بريميوم'},
+        {name:'PRM - L',  count:52,category:'بريميوم'},
+        {name:'PRM - M',  count:41,category:'بريميوم'},
+        {name:'PRM - S',  count:29,category:'بريميوم'}
+    ],
+    'DELT': [
+        {name:'DELT - S J',count:33,category:'دلت'},
+        {name:'DELT - J',  count:27,category:'دلت'},
+        {name:'DELT - L',  count:44,category:'دلت'},
+        {name:'DELT - M',  count:36,category:'دلت'},
+        {name:'DELT - S',  count:22,category:'دلت'}
+    ],
+    'D2': [
+        {name:'D2 - L MIX',count:18,category:'D2 ميكس'},
+        {name:'D2 - M MIX',count:15,category:'D2 ميكس'}
+    ],
+    'RING': [
+        {name:'RING - MIX',count:25,category:'رينج'},
+        {name:'RING - S J',count:31,category:'رينج'},
+        {name:'RING - J',  count:28,category:'رينج'},
+        {name:'RING - L',  count:42,category:'رينج'},
+        {name:'RING - M',  count:35,category:'رينج'},
+        {name:'RING - S',  count:20,category:'رينج'}
+    ],
+    'LIGHT': [
+        {name:'LIGHT - S J',count:19,category:'لايت'},
+        {name:'LIGHT - J',  count:16,category:'لايت'},
+        {name:'LIGHT - L',  count:24,category:'لايت'},
+        {name:'LIGHT - M',  count:21,category:'لايت'},
+        {name:'LIGHT - S',  count:14,category:'لايت'}
+    ],
+    'OTHER': [
+        {name:'BABY SMALL',count:12,category:'أخرى'},
+        {name:'BON',       count:8, category:'أخرى'}
+    ]
+};
+
+let allTypes = [];
+Object.entries(dateTypes).forEach(([key,arr])=> arr.forEach((t,i)=> allTypes.push({...t, key, globalIdx: allTypes.length + i})));
+// re-index after building
+allTypes = [];
+Object.entries(dateTypes).forEach(([key,arr])=> arr.forEach(t=> allTypes.push({...t, key})));
+
+// ====== CATEGORY FILTER ======
+let activeCat = 'all';
+function filterCat(cat, btn){
+    activeCat = cat;
+    document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderClassification();
+}
+
+// ====== RENDER CLASSIFICATION ======
+function renderClassification(){
+    const grid = document.getElementById('classification-grid');
+    grid.innerHTML = '';
+    const items = activeCat==='all' ? allTypes : allTypes.filter(t=>t.key===activeCat);
+    items.forEach((type, idx) => {
+        const realIdx = allTypes.indexOf(type);
+        const card = document.createElement('div');
+        card.className = 'type-card';
+        card.innerHTML = `
+            <div class="type-info">
+                <div class="type-name">${type.name}</div>
+                <div class="type-category">${type.category}</div>
+            </div>
+            <div class="type-count">
+                <div class="type-count-value" id="type-${realIdx}">${type.count}</div>
+                <div class="type-count-label">كرتونة</div>
+            </div>
+        `;
+        card.addEventListener('click',()=>{
+            type.count++;
+            const el = document.getElementById('type-'+realIdx);
+            if(el){ el.textContent = type.count; el.style.color='var(--green)'; setTimeout(()=>el.style.color='',400) }
+            card.classList.add('active'); setTimeout(()=>card.classList.remove('active'),600);
+            updateTotalCount();
+        });
+        grid.appendChild(card);
+    });
+    document.getElementById('total-types').textContent = allTypes.length + ' نوع';
+}
+
+function updateTotalCount(){
+    const total = allTypes.reduce((s,t)=>s+t.count,0);
+    document.getElementById('total-count').textContent = total.toLocaleString('ar-EG');
+}
+
+// ====== OEE CHART ======
+let oeeChart;
+const oeeHistory = { labels:[], avail:[], perf:[], qual:[], oee:[] };
+
+function initOEEChart(){
+    const ctx = document.getElementById('oee-chart').getContext('2d');
+    oeeChart = new Chart(ctx,{
+        type:'line',
+        data:{
+            labels:[],
+            datasets:[
+                {label:'OEE %',data:[],borderColor:'#ffd700',backgroundColor:'rgba(255,215,0,0.08)',
+                 tension:0.4,fill:true,borderWidth:2,pointRadius:3,pointBackgroundColor:'#ffd700'},
+                {label:'توافرية',data:[],borderColor:'#10b981',backgroundColor:'transparent',
+                 tension:0.4,borderWidth:1.5,pointRadius:2,borderDash:[4,4]},
+                {label:'أداء',data:[],borderColor:'#3b82f6',backgroundColor:'transparent',
+                 tension:0.4,borderWidth:1.5,pointRadius:2,borderDash:[4,4]},
+                {label:'جودة',data:[],borderColor:'#f97316',backgroundColor:'transparent',
+                 tension:0.4,borderWidth:1.5,pointRadius:2,borderDash:[4,4]}
+            ]
+        },
+        options:{
+            responsive:true,maintainAspectRatio:false,
+            plugins:{legend:{labels:{color:'#94a3b8',font:{size:9,family:'Almarai'},boxWidth:8}}},
+            scales:{
+                x:{ticks:{color:'#94a3b8',font:{size:8}},grid:{color:'rgba(255,255,255,0.03)'}},
+                y:{min:60,max:100,ticks:{color:'#94a3b8',font:{size:8},callback:v=>v+'%'},
+                   grid:{color:'rgba(255,255,255,0.04)'}}
+            },
+            animation:{duration:400}
+        }
+    });
+}
+
+function updateOEEChart(avail,perf,qual,oee){
+    if(!oeeChart) return;
+    const t = new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+    oeeHistory.labels.push(t);
+    oeeHistory.avail.push(avail);
+    oeeHistory.perf.push(perf);
+    oeeHistory.qual.push(qual);
+    oeeHistory.oee.push(oee);
+    if(oeeHistory.labels.length>15){
+        ['labels','avail','perf','qual','oee'].forEach(k=>oeeHistory[k].shift());
+    }
+    oeeChart.data.labels=oeeHistory.labels;
+    oeeChart.data.datasets[0].data=oeeHistory.oee;
+    oeeChart.data.datasets[1].data=oeeHistory.avail;
+    oeeChart.data.datasets[2].data=oeeHistory.perf;
+    oeeChart.data.datasets[3].data=oeeHistory.qual;
+    oeeChart.update('active');
+}
+
+// ====== PRODUCTION CHART ======
+function updateChart(history){
+    const container = document.getElementById('chart-bars');
+    container.innerHTML = '';
+    const data = history.slice(-12);
+    const maxVal = Math.max(...data.map(d=>d.count),1);
+    data.forEach((row,i)=>{
+        const height = ((row.count-(data[0]?.count||0))/maxVal)*170+10;
+        const prev = i>0 ? data[i-1].count : row.count;
+        const diff = row.count - prev;
+        const bar = document.createElement('div');
+        bar.className = 'bar-item';
+        bar.innerHTML = `
+            <div class="bar-value">${diff>0?'+'+diff:''}</div>
+            <div class="bar-fill" style="height:${Math.max(height,4)}px"></div>
+            <div class="bar-label">${row.time}</div>
+        `;
+        container.appendChild(bar);
+    });
+    if(data.length>0)
+        document.getElementById('chart-period').textContent=`${data[0].time} — ${data[data.length-1].time}`;
+}
+
+// ====== DEMO DATA ======
+const demoData = {
+    count:1247, speed:45, elapsed:12,
+    history:[
+        {time:'14:32',count:1247},{time:'14:31',count:1244},
+        {time:'14:30',count:1242},{time:'14:29',count:1237},
+        {time:'14:28',count:1232},{time:'14:27',count:1228},
+        {time:'14:26',count:1223},{time:'14:25',count:1218},
+        {time:'14:24',count:1214},{time:'14:23',count:1209}
+    ]
+};
+
+let lastCount=0, shiftStart=0, shiftTarget=1000;
+
+// ============ SYNC WITH SERVER ============
+let _trackSaveTimeout = null;
+function saveTrackingState(){
+  clearTimeout(_trackSaveTimeout);
+  _trackSaveTimeout = setTimeout(() => {
+    fetch('/api/tracking-state', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify({ allTypes, demoData, lastCount, shiftStart, shiftTarget })
+    }).then(async res => {
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json || !json.success) console.error('❌ السيرفر رفض حفظ بيانات التتبع:', res.status, json);
+    }).catch(err => console.error('❌ فشل الاتصال بالسيرفر أثناء حفظ التتبع:', err));
+  }, 800);
+}
+
+async function loadTrackingState(){
+  try {
+    const res = await fetch('/api/tracking-state', { cache: 'no-store' });
+    const json = await res.json();
+    if (!res.ok || !json.success) { console.error('❌ فشل تحميل بيانات التتبع:', res.status, json); return; }
+    if (json.data) {
+      const s = json.data;
+      if (Array.isArray(s.allTypes)) allTypes = s.allTypes;
+      if (s.demoData) demoData = s.demoData;
+      if (typeof s.lastCount === 'number') lastCount = s.lastCount;
+      if (typeof s.shiftStart === 'number') shiftStart = s.shiftStart;
+      if (typeof s.shiftTarget === 'number') shiftTarget = s.shiftTarget;
+      console.log('✅ تم تحميل بيانات التتبع من السيرفر');
+    }
+  } catch (err) {
+    console.error('❌ فشل تحميل بيانات التتبع من السيرفر:', err);
+  }
+}
+
+function updateOEECards(){
+    const avail = Math.min(99, Math.max(70, 85 + Math.floor(Math.random()*8-4)));
+    const perf  = Math.min(99, Math.max(75, 90 + Math.floor(Math.random()*8-4)));
+    const qual  = Math.min(99, Math.max(80, 95 + Math.floor(Math.random()*5-2)));
+    const oee   = Math.round(avail * perf * qual / 10000);
+    document.getElementById('oee-total').textContent = oee+'%';
+    document.getElementById('oee-avail').textContent = avail+'%';
+    document.getElementById('oee-perf').textContent  = perf+'%';
+    document.getElementById('oee-qual').textContent  = qual+'%';
+    document.getElementById('oee-total-bar').style.width = oee+'%';
+    document.getElementById('oee-avail-bar').style.width = avail+'%';
+    document.getElementById('oee-perf-bar').style.width  = perf+'%';
+    document.getElementById('oee-qual-bar').style.width  = qual+'%';
+    updateOEEChart(avail,perf,qual,oee);
+    return {avail,perf,qual,oee};
+}
+
+function updateDashboard(){
+    const data = demoData;
+    document.getElementById('speed').textContent   = data.speed;
+    document.getElementById('elapsed').textContent = data.elapsed;
+    if(!shiftStart) shiftStart = data.count - 300;
+    const shiftCount = data.count - shiftStart;
+    document.getElementById('shift').textContent = shiftCount.toLocaleString('ar-EG');
+    const shiftPct = Math.round(shiftCount/shiftTarget*100);
+    document.getElementById('shift-percent').textContent = shiftPct+'%';
+    const diff = data.count - lastCount;
+    document.getElementById('total-diff').textContent = (diff>=0?'+':'')+diff;
+    lastCount = data.count;
+
+    // OEE
+    const {oee} = updateOEECards();
+
+    // History table
+    const tbody = document.getElementById('history-table');
+    tbody.innerHTML='';
+    data.history.forEach((row,i,arr)=>{
+        const prev = arr[i+1] ? arr[i+1].count : row.count;
+        const d = row.count - prev;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="time-cell">${row.time}</td>
+            <td class="count-cell">${row.count.toLocaleString('ar-EG')}</td>
+            <td class="diff-cell ${d>0?'positive':'negative'}">${d>0?'+'+d:d}</td>
+            <td>${data.speed>0?data.speed+' ك/د':'-'}</td>
+            <td style="color:var(--cyan);font-weight:700">${oee}%</td>
+        `;
+        tbody.appendChild(tr);
+    });
+    document.getElementById('history-count').textContent = data.history.length+' قراءة';
+    updateChart(data.history);
+    saveTrackingState();
+}
+
+// ====== AUTO UPDATE ======
+setInterval(()=>{
+    const randomType = Math.floor(Math.random()*allTypes.length);
+    allTypes[randomType].count++;
+    const el = document.getElementById('type-'+randomType);
+    if(el){ el.textContent=allTypes[randomType].count; el.style.color='var(--green)'; setTimeout(()=>el.style.color='',400) }
+    updateTotalCount();
+    demoData.count = allTypes.reduce((s,t)=>s+t.count,0);
+    demoData.speed   = 40 + Math.floor(Math.random()*15);
+    demoData.elapsed = Math.floor(Math.random()*20);
+    demoData.history.unshift({
+        time:new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}),
+        count:demoData.count
+    });
+    demoData.history = demoData.history.slice(0,10);
+    updateDashboard();
+},12000);
+
+// ====== INIT ======
+(async function initTracking(){
+  await loadTrackingState();
+  initOEEChart();
+  renderClassification();
+  updateTotalCount();
+  updateDashboard();
+  showToast('✅ منظومة سيجام v2.1 جاهزة');
+
+  // كل 20 ثانية: يتحقق من بيانات محدثة من أجهزة تانية
+  setInterval(async () => {
+    await loadTrackingState();
+    renderClassification();
+    updateTotalCount();
+  }, 20000);
+})();
+</script>
+</body>
+</html>

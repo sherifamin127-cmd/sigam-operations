@@ -1,0 +1,2877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منظومة سيجام للصيانة</title>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #070f2e;
+  --card: #0d1b4c;
+  --card-light: #1a2d6b;
+  --gold: #ffd700;
+  --gold-light: #ffeb3b;
+  --gold-dark: #ffaa00;
+  --green: #10b981;
+  --blue: #3b82f6;
+  --red: #ef4444;
+  --purple: #a855f7;
+  --cyan: #06b6d4;
+  --orange: #f97316;
+  --text: #f8fafc;
+  --dim: #94a3b8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(180deg,#070f2e 0%,#0d1b4c 40%,#070f2e 100%);color:var(--text);font-family:'Almarai',sans-serif;direction:rtl;min-height:100vh}
+
+/* ====== HEADER ====== */
+.header{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gold);box-shadow:0 4px 30px rgba(255,215,0,.15);position:sticky;top:0;z-index:100}
+.header h1{font-size:20px;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:10px;text-shadow:0 0 20px rgba(255,215,0,.4)}
+.header h1 i{font-size:26px;filter:drop-shadow(0 0 8px rgba(255,215,0,.6))}
+.header .subtitle{font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:1px}
+.header-meta{text-align:left}
+.header-meta #hdate{font-size:13px;color:var(--gold);font-weight:700}
+.header-meta #hlast{font-size:10px;color:var(--dim);margin-top:3px}
+.header-clock{font-size:22px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;letter-spacing:2px;text-shadow:0 0 15px rgba(255,215,0,.4)}
+
+/* ====== TABS ====== */
+.tabs{display:flex;gap:0;background:var(--card);border-bottom:2px solid rgba(255,215,0,.15);padding:0 28px;position:sticky;top:70px;z-index:99}
+.tab{padding:12px 20px;font-size:13px;font-weight:700;color:var(--dim);cursor:pointer;border-bottom:3px solid transparent;transition:all .3s;display:flex;align-items:center;gap:7px}
+.tab:hover{color:var(--text);background:rgba(255,215,0,.05)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(255,215,0,.07)}
+.tab-badge{background:var(--red);color:#fff;border-radius:10px;padding:2px 6px;font-size:10px;font-weight:800}
+.tab-panel{display:none;padding:20px 28px}
+.tab-panel.active{display:block;animation:fadeIn .3s ease}
+
+/* ====== MAIN ====== */
+.main{padding:20px 28px}
+
+/* ====== KPIs ====== */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);border-radius:12px;padding:16px 10px;text-align:center;border:1px solid rgba(255,215,0,.15);border-top:3px solid var(--gold);box-shadow:0 4px 15px rgba(0,0,0,.3);transition:all .3s;cursor:default}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,.4),0 0 20px rgba(255,215,0,.12);border-color:rgba(255,215,0,.35)}
+.kpi .n{font-size:28px;font-weight:800;color:var(--gold);text-shadow:0 0 12px rgba(255,215,0,.25);transition:all .4s}
+.kpi .l{font-size:10px;color:var(--dim);margin-top:5px;font-weight:600}
+.kpi .trend{font-size:10px;margin-top:4px}
+
+/* ====== ALERTS BAR ====== */
+.alert-bar{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(249,115,22,.08));border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;display:none}
+.alert-bar.show{display:flex;animation:fadeIn .4s}
+.alert-bar i{color:var(--red);font-size:18px;flex-shrink:0;animation:pulse 1.5s infinite}
+.alert-bar span{font-size:13px;font-weight:700;color:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* ====== FORM ====== */
+.form-card{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);border-radius:14px;padding:22px;border:1px solid rgba(255,215,0,.15);border-right:5px solid var(--red);margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.form-card h2{font-size:15px;font-weight:800;margin-bottom:16px;color:var(--gold);display:flex;align-items:center;gap:9px}
+.form-card h2 i{color:var(--red);filter:drop-shadow(0 0 5px rgba(239,68,68,.4))}
+.fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.fgrid2{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+label{font-size:11px;color:var(--dim);display:block;margin-bottom:5px;font-weight:600}
+label .icon{color:var(--gold);margin-left:3px}
+input,textarea{width:100%;background:linear-gradient(135deg,#070f2e 0%,#0d1b4c 100%);border:2px solid rgba(255,215,0,.18);border-radius:9px;color:var(--text);padding:9px 12px;font-family:'Almarai',sans-serif;font-size:13px;transition:all .3s}
+input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,215,0,.12)}
+textarea{resize:none;height:54px}
+select{width:100%;background:linear-gradient(135deg,#070f2e 0%,#0d1b4c 100%);border:2px solid rgba(255,215,0,.18);border-radius:9px;color:var(--text);padding:9px 12px;font-family:'Almarai',sans-serif;font-size:13px;transition:all .3s;cursor:pointer}
+select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,215,0,.12)}
+select option{background:#f8fafc;color:#0f172a;font-family:'Almarai',sans-serif}
+
+/* ====== BUTTONS ====== */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{padding:11px 22px;border-radius:26px;border:none;cursor:pointer;font-family:'Almarai',sans-serif;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:7px;transition:all .3s;position:relative;overflow:hidden}
+.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .5s}
+.btn:hover::before{left:100%}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:linear-gradient(135deg,#ffd700 0%,#ffaa00 100%);color:#0d1b4c;box-shadow:0 4px 15px rgba(255,215,0,.35)}
+.btn-gold:hover{box-shadow:0 6px 25px rgba(255,215,0,.5)}
+.btn-red{background:linear-gradient(135deg,#ef4444 0%,#dc2626 100%);color:#fff;box-shadow:0 4px 15px rgba(239,68,68,.25)}
+.btn-blue{background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);color:#fff;box-shadow:0 4px 15px rgba(59,130,246,.25)}
+.btn-green{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,.25)}
+.btn-wa{background:linear-gradient(135deg,#25d366 0%,#128c7e 100%);color:#fff;box-shadow:0 4px 15px rgba(37,211,102,.25)}
+.btn-purple{background:linear-gradient(135deg,#a855f7 0%,#7c3aed 100%);color:#fff;box-shadow:0 4px 15px rgba(168,85,247,.25)}
+.btn-orange{background:linear-gradient(135deg,#f97316 0%,#ea580c 100%);color:#fff;box-shadow:0 4px 15px rgba(249,115,22,.25)}
+.btn-cyan{background:linear-gradient(135deg,#06b6d4 0%,#0891b2 100%);color:#fff;box-shadow:0 4px 15px rgba(6,182,212,.25)}
+.btn-dark{background:linear-gradient(135deg,#1a2d6b 0%,#0d1b4c 100%);color:var(--gold);border:2px solid rgba(255,215,0,.3);box-shadow:0 4px 15px rgba(0,0,0,.3)}
+.btn-sm{padding:7px 14px;font-size:11px;border-radius:20px}
+
+/* ====== SEARCH BAR ====== */
+.search-bar{display:flex;gap:10px;margin-bottom:14px;align-items:center}
+.search-bar input{max-width:280px;padding:9px 14px;border-radius:24px}
+.search-bar select{width:auto;padding:9px 14px;border-radius:24px}
+
+/* ====== SENT BOX ====== */
+.sent-box{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(6,182,212,.05));border:1px solid rgba(16,185,129,.3);border-radius:12px;padding:16px;margin-bottom:20px;display:none;box-shadow:0 4px 15px rgba(0,0,0,.2)}
+.sent-box.active{display:block;animation:fadeIn .4s ease}
+.sent-box h3{font-size:14px;color:var(--green);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sent-item{background:rgba(0,0,0,.2);border-radius:9px;padding:10px 14px;margin-bottom:7px;border-right:3px solid var(--green);font-size:12px;display:flex;justify-content:space-between;align-items:center;transition:all .3s}
+.sent-item:hover{background:rgba(0,0,0,.3);transform:translateX(-3px)}
+.sent-item .title{color:var(--gold);font-weight:800;font-size:12px}
+.sent-item .desc{color:var(--dim);font-size:10px;margin-top:2px}
+.sent-item .status{color:var(--green);font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px}
+
+/* ====== CHARTS ====== */
+.charts-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.charts-mid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.chart-card{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);border-radius:12px;padding:16px;border:1px solid rgba(255,215,0,.1);box-shadow:0 4px 15px rgba(0,0,0,.2);transition:all .3s}
+.chart-card:hover{border-color:rgba(255,215,0,.25);box-shadow:0 8px 25px rgba(0,0,0,.3)}
+.chart-card h3{font-size:12px;color:var(--dim);margin-bottom:9px;font-weight:700;display:flex;align-items:center;gap:7px}
+.chart-card h3 i{color:var(--gold);filter:drop-shadow(0 0 3px rgba(255,215,0,.25))}
+.ch{position:relative;width:100%;height:180px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--dim);margin-bottom:8px}
+.leg-sq{width:9px;height:9px;border-radius:2px;display:inline-block;margin-left:3px;vertical-align:middle}
+
+/* ====== BARS ====== */
+.bars-scroll{max-height:190px;overflow-y:auto}
+.bar-wrap{margin-bottom:7px}
+.bar-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-bottom:3px}
+.bar-track{background:#070f2e;border-radius:5px;height:12px;overflow:hidden;border:1px solid rgba(255,215,0,.04)}
+.bar-fill{height:100%;border-radius:5px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* ====== LOG ====== */
+.log-card{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);border-radius:12px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,215,0,.1);box-shadow:0 4px 15px rgba(0,0,0,.2)}
+.log-card h2{font-size:14px;font-weight:800;margin-bottom:10px;color:var(--gold);display:flex;align-items:center;gap:7px}
+.log-list{max-height:340px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+.log-item{background:linear-gradient(135deg,#070f2e 0%,#0d1b4c 100%);border-radius:9px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;border-right:4px solid var(--red);font-size:12px;border:1px solid rgba(255,215,0,.05);border-right-width:4px;transition:all .3s}
+.log-item:hover{border-color:rgba(255,215,0,.18);box-shadow:0 4px 15px rgba(0,0,0,.2)}
+.log-item.med{border-right-color:var(--orange)}
+.log-item.low{border-right-color:var(--green)}
+.log-item.closed-item{opacity:.7}
+.log-eq{font-weight:800;color:var(--text);font-size:12px}
+.log-desc{color:var(--dim);font-size:10px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:420px}
+.pill{padding:3px 8px;border-radius:8px;font-size:9px;font-weight:800;white-space:nowrap}
+.ph{background:rgba(239,68,68,.15);color:var(--red)}
+.pm{background:rgba(249,115,22,.15);color:var(--orange)}
+.pl{background:rgba(16,185,129,.15);color:var(--green)}
+.pproc{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid rgba(255,215,0,.2)}
+.pclosed{background:rgba(16,185,129,.1);color:var(--green)}
+.empty{color:var(--dim);text-align:center;padding:28px;font-size:12px}
+
+/* ====== ACTION BUTTONS IN LOG ====== */
+.close-btn{background:rgba(16,185,129,.12);color:var(--green);border:none;border-radius:7px;padding:4px 9px;font-size:10px;cursor:pointer;font-family:'Almarai',sans-serif;font-weight:700;transition:all .3s}
+.close-btn:hover{background:rgba(16,185,129,.25)}
+.reopen-btn{background:rgba(249,115,22,.12);color:var(--orange);border:none;border-radius:7px;padding:4px 9px;font-size:10px;cursor:pointer;font-family:'Almarai',sans-serif;font-weight:700;transition:all .3s}
+.reopen-btn:hover{background:rgba(249,115,22,.25)}
+.alert-btn{background:rgba(168,85,247,.15);color:var(--purple);border:none;border-radius:7px;padding:4px 9px;font-size:10px;cursor:pointer;font-family:'Almarai',sans-serif;font-weight:700;transition:all .3s;margin-right:3px}
+.alert-btn:hover{background:rgba(168,85,247,.28)}
+.del-btn{background:rgba(239,68,68,.12);color:var(--red);border:none;border-radius:7px;padding:4px 9px;font-size:10px;cursor:pointer;font-family:'Almarai',sans-serif;font-weight:700;transition:all .3s}
+.del-btn:hover{background:rgba(239,68,68,.25)}
+.edit-btn{background:rgba(59,130,246,.12);color:var(--blue);border:none;border-radius:7px;padding:4px 9px;font-size:10px;cursor:pointer;font-family:'Almarai',sans-serif;font-weight:700;transition:all .3s}
+.edit-btn:hover{background:rgba(59,130,246,.25)}
+.wa-btn{background:rgba(37,211,102,.12);color:#25d366;border:none;border-radius:7px;padding:4px 9px;font-size:10px;cursor:pointer;font-family:'Almarai',sans-serif;font-weight:700;transition:all .3s}
+.wa-btn:hover{background:rgba(37,211,102,.25)}
+
+/* ====== TOAST ====== */
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-150px);background:linear-gradient(135deg,#ffd700,#ffaa00);color:#0d1b4c;padding:14px 32px;border-radius:12px;font-weight:800;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,.4);opacity:0;transition:all .4s ease;font-size:14px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ====== MODAL ====== */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex;animation:fadeIn .2s}
+.modal{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);border-radius:16px;padding:28px;border:2px solid rgba(255,215,0,.3);width:min(600px,95vw);box-shadow:0 20px 60px rgba(0,0,0,.6);max-height:85vh;overflow-y:auto}
+.modal h2{font-size:16px;color:var(--gold);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.modal h2 i{color:var(--gold)}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+
+/* ====== MAINTENANCE PLAN ====== */
+.plan-card{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);border-radius:12px;padding:16px;border:1px solid rgba(255,215,0,.12);margin-bottom:12px;transition:all .3s}
+.plan-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:9px;margin-bottom:7px;background:rgba(0,0,0,.2);border:1px solid rgba(255,215,0,.05);transition:all .3s}
+.plan-item:hover{border-color:rgba(255,215,0,.2);background:rgba(0,0,0,.3)}
+.plan-due{font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px}
+.due-ok{background:rgba(16,185,129,.15);color:var(--green)}
+.due-warn{background:rgba(249,115,22,.15);color:var(--orange)}
+.due-bad{background:rgba(239,68,68,.15);color:var(--red)}
+
+/* ====== ALERTS TAB ====== */
+.alert-cat-title{font-size:12px;font-weight:800;color:var(--gold);margin:14px 0 8px;padding-right:8px;border-right:3px solid var(--gold);display:flex;align-items:center;gap:7px}
+.alert-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:8px;background:rgba(0,0,0,.2);border:1px solid rgba(255,215,0,.05);transition:all .3s;flex-wrap:wrap}
+.alert-item:hover{border-color:rgba(255,215,0,.2);background:rgba(0,0,0,.3)}
+.alert-item.overdue{border-right:4px solid var(--red)}
+.alert-item.soon{border-right:4px solid var(--orange)}
+.alert-item.ok{border-right:4px solid var(--green)}
+.alert-hours-box{display:flex;align-items:center;gap:6px}
+.alert-hours-box input{width:90px;padding:6px 9px;font-size:12px;border-radius:7px}
+.alert-history-item{background:rgba(0,0,0,.2);border-radius:9px;padding:9px 14px;margin-bottom:6px;border-right:3px solid var(--cyan);font-size:11px;display:flex;justify-content:space-between;align-items:center}
+.alert-history-item .t{color:var(--dim)}
+.due-late{background:rgba(239,68,68,.15);color:var(--red)}
+
+/* ====== STATS PAGE ====== */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.stat-card{background:linear-gradient(135deg,#0d1b4c 0%,#1a2d6b 100%);border-radius:12px;padding:18px;border:1px solid rgba(255,215,0,.1);text-align:center}
+.stat-card .big{font-size:36px;font-weight:800;color:var(--gold);text-shadow:0 0 15px rgba(255,215,0,.25)}
+.stat-card .sub{font-size:11px;color:var(--dim);margin-top:5px}
+.stat-card .badge{font-size:12px;font-weight:700;margin-top:6px}
+
+/* ====== TABLE ====== */
+.table-wrap{overflow-x:auto;border-radius:10px;border:1px solid rgba(255,215,0,.1)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:linear-gradient(135deg,#1a2d6b 0%,#0d1b4c 100%)}
+thead th{padding:10px 14px;text-align:right;color:var(--gold);font-weight:700;font-size:11px;border-bottom:2px solid rgba(255,215,0,.2)}
+tbody tr{border-bottom:1px solid rgba(255,215,0,.06);transition:background .2s}
+tbody tr:hover{background:rgba(255,215,0,.04)}
+tbody td{padding:9px 14px;color:var(--text)}
+tbody td.dim{color:var(--dim)}
+
+/* ====== PROGRESS ====== */
+.progress-bar{background:#070f2e;border-radius:6px;height:8px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:6px;transition:width .5s ease}
+
+/* ====== NOTES ====== */
+.note-item{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;margin-bottom:8px;border-right:3px solid var(--cyan);display:flex;justify-content:space-between;align-items:flex-start}
+.note-text{color:var(--text);font-size:12px;line-height:1.6}
+.note-meta{font-size:10px;color:var(--dim);margin-top:4px}
+
+/* ====== BACKUP INDICATOR ====== */
+.backup-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-left:5px;box-shadow:0 0 6px var(--green)}
+
+/* ====== FOOD SAFETY TAB ====== */
+.fs-subnav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.fs-chip{padding:8px 16px;border-radius:20px;font-size:11px;font-weight:700;color:var(--dim);background:var(--card);border:1px solid rgba(255,215,0,.15);cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:6px}
+.fs-chip:hover{color:var(--text);border-color:rgba(255,215,0,.3)}
+.fs-chip.active{color:#0d1b4c;background:linear-gradient(135deg,#ffd700,#ffaa00);border-color:transparent}
+.fs-panel{display:none}
+.fs-panel.active{display:block;animation:fadeIn .3s ease}
+.fs-empty-note{background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--dim);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.fs-record{background:rgba(0,0,0,.2);border-radius:9px;padding:12px 14px;margin-bottom:8px;border-right:3px solid var(--gold);font-size:12px}
+.fs-record .fs-title{color:var(--gold);font-weight:800;font-size:12px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.fs-record .fs-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px 14px;color:var(--dim);font-size:11px}
+.fs-record .fs-fields b{color:var(--text);font-weight:600}
+.fs-record .fs-full{grid-column:1/-1}
+.fs-section-title{font-size:13px;font-weight:800;color:var(--gold);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(255,215,0,.15);display:flex;align-items:center;gap:7px}
+.fs-item-row{display:grid;grid-template-columns:1fr 130px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.fs-item-row .fs-item-txt{font-size:11.5px;color:var(--text);line-height:1.5}
+.fs-item-row select,.fs-item-row input{padding:6px 8px;font-size:11px}
+.fs-round-summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.fs-badge-ok{color:var(--green);font-weight:800}
+.fs-badge-bad{color:var(--red);font-weight:800}
+.fs-eq-profile{background:linear-gradient(135deg,rgba(255,215,0,.06),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.15);border-radius:10px;padding:12px 16px;margin-bottom:10px}
+.fs-eq-profile .fs-title{color:var(--gold);font-weight:800;font-size:13px;margin-bottom:6px}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--card-light);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+
+@media print{
+  body{background:#fff;color:#000}
+  .header{background:#1e293b;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .no-print{display:none!important}
+  .chart-card,.log-card,.form-card,.plan-card{background:#f8fafc;border:1px solid #e2e8f0}
+  .kpi{background:#f8fafc;border:1px solid #e2e8f0}
+}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <div>
+    <h1><i class="fa-solid fa-screwdriver-wrench"></i> منظومة سيجام للصيانة</h1>
+    <div class="subtitle">نظام إدارة الأعطال والصيانة الشاملة — <span id="backup-status"><span class="backup-dot"></span> البيانات محفوظة</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:28px">
+    <div class="header-clock" id="hclock">--:--:--</div>
+    <div class="header-meta">
+      <div id="hdate"></div>
+      <div id="hlast">لا توجد أعطال بعد</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<div class="tabs no-print">
+  <div class="tab active" onclick="switchTab('dashboard')" id="tab-dashboard"><i class="fa-solid fa-gauge"></i> لوحة التحكم</div>
+  <div class="tab" onclick="switchTab('log')" id="tab-log"><i class="fa-solid fa-list-check"></i> سجل الأعطال <span class="tab-badge" id="badge-open">0</span></div>
+  <div class="tab" onclick="switchTab('stats')" id="tab-stats"><i class="fa-solid fa-chart-bar"></i> الإحصائيات</div>
+  <div class="tab" onclick="switchTab('plan')" id="tab-plan"><i class="fa-solid fa-calendar-check"></i> خطة الصيانة</div>
+  <div class="tab" onclick="switchTab('notes')" id="tab-notes"><i class="fa-solid fa-note-sticky"></i> الملاحظات</div>
+  <div class="tab" onclick="switchTab('alerts')" id="tab-alerts"><i class="fa-solid fa-bell"></i> التنبيهات <span class="tab-badge" id="badge-alerts">0</span></div>
+  <div class="tab" onclick="switchTab('food')" id="tab-food"><i class="fa-solid fa-shield-halved"></i> سلامة الغذاء</div>
+  <div class="tab" onclick="switchTab('settings')" id="tab-settings"><i class="fa-solid fa-sliders"></i> الإعدادات</div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: DASHBOARD -->
+<!-- ========================================== -->
+<div class="tab-panel active" id="panel-dashboard">
+  <div class="main" style="padding:20px 0">
+
+    <!-- Alert Bar -->
+    <div class="alert-bar" id="alert-bar">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span id="alert-bar-text"></span>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi">
+        <div class="n" id="k-total">0</div>
+        <div class="l">إجمالي الأعطال</div>
+        <div class="trend" id="t-total" style="color:var(--dim)">—</div>
+      </div>
+      <div class="kpi" style="border-top-color:var(--red);border-color:rgba(239,68,68,.2)">
+        <div class="n" style="color:var(--red)" id="k-high">0</div>
+        <div class="l">أولوية عالية</div>
+        <div class="trend" id="t-high" style="color:var(--dim)">—</div>
+      </div>
+      <div class="kpi" style="border-top-color:var(--orange);border-color:rgba(249,115,22,.2)">
+        <div class="n" style="color:var(--orange)" id="k-med">0</div>
+        <div class="l">أولوية متوسطة</div>
+        <div class="trend" id="t-med" style="color:var(--dim)">—</div>
+      </div>
+      <div class="kpi" style="border-top-color:var(--green);border-color:rgba(16,185,129,.2)">
+        <div class="n" style="color:var(--green)" id="k-low">0</div>
+        <div class="l">أولوية منخفضة</div>
+      </div>
+      <div class="kpi" style="border-top-color:var(--blue);border-color:rgba(59,130,246,.2)">
+        <div class="n" style="color:var(--blue)" id="k-down">0</div>
+        <div class="l">دقائق توقف</div>
+      </div>
+      <div class="kpi" style="border-top-color:var(--purple);border-color:rgba(168,85,247,.2)">
+        <div class="n" style="color:var(--purple)" id="k-closed">0</div>
+        <div class="l">أعطال مغلقة</div>
+      </div>
+    </div>
+
+    <!-- Sent Box -->
+    <div class="sent-box" id="sent-box">
+      <h3><i class="fa-solid fa-paper-plane"></i> تنبيهات مرسلة للمشتريات</h3>
+      <div id="sent-list"></div>
+    </div>
+
+    <!-- Form -->
+    <div class="form-card no-print">
+      <h2><i class="fa-solid fa-circle-plus"></i> تسجيل عطل جديد</h2>
+      <div class="fgrid">
+        <div>
+          <label><i class="fa-solid fa-location-dot icon"></i> مكان العطل</label>
+          <select id="f-loc">
+            <option>1 - الثلاجات وغرف التبريد</option>
+            <option>2 - خط الفرز 31 مخرج</option>
+            <option>3 - خط فرز مبدئي</option>
+            <option>4 - أجهزة الاستيم</option>
+            <option>5 - كومبروسور كبير</option>
+            <option>6 - كومبروسور صغير</option>
+            <option>7 - ماكينة شرينك أوتوماتيك 2</option>
+            <option>8 - ماكينة شرينك نصف أوتوماتيك</option>
+            <option>9 - فرن انكماش أوتوماتيك</option>
+            <option>10 - فرن انكماش صغير</option>
+            <option>11 - محطة التحلية</option>
+            <option>12 - كشافات الإنارة</option>
+            <option>13 - أجهزة الكمبيوتر</option>
+            <option>14 - سويتشات وسيلفرات</option>
+            <option>15 - كاميرات</option>
+            <option>16 - ماكينة تغليف</option>
+            <option>17 - خلاط تسميد كبير</option>
+            <option>18 - خلاط تسميد صغير</option>
+            <option>19 - ماكينة عمل دبس</option>
+            <option>20 - ركات تخزين + بالتات</option>
+            <option>21 - الأبواب الأوتوماتيك</option>
+            <option>22 - الحساسات</option>
+            <option>23 - الحمامات</option>
+            <option>24 - الترنش / الصرف</option>
+            <option>25 - نظام التحكم والتحديث</option>
+            <option>26 - الطابعات</option>
+            <option>27 - الهاند بالت</option>
+            <option>28 - الكلاركات</option>
+            <option>29 - الدراجة النارية</option>
+          </select>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-flag icon"></i> الأولوية</label>
+          <select id="f-priority">
+            <option value="high">🔴 عالية</option>
+            <option value="medium">🟠 متوسطة</option>
+            <option value="low">🟢 منخفضة</option>
+          </select>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-clock icon"></i> زمن التوقف</label>
+          <div style="padding:8px 10px;font-size:11px;color:var(--dim);background:rgba(255,255,255,.03);border-radius:8px;border:1px dashed var(--border2)">
+            ⏱️ بيتحسب تلقائياً من وقت التسجيل لحد الإغلاق
+          </div>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-user-gear icon"></i> الفني المسؤول</label>
+          <input type="text" id="f-tech" placeholder="اسم الفني...">
+        </div>
+      </div>
+      <div class="fgrid2">
+        <div style="display:none">
+          <input type="number" id="f-down" min="0" value="0">
+        </div>
+        <div>
+          <label><i class="fa-solid fa-file-lines icon"></i> وصف العطل</label>
+          <textarea id="f-desc" placeholder="اكتب وصف العطل بالتفصيل..."></textarea>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-magnifying-glass icon"></i> السبب</label>
+          <input type="text" id="f-cause" placeholder="سبب العطل...">
+        </div>
+        <div>
+          <label><i class="fa-solid fa-gears icon"></i> قطع الغيار المطلوبة</label>
+          <input type="text" id="f-parts" placeholder="أسماء القطع...">
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <label><i class="fa-solid fa-sticky-note icon"></i> ملاحظات إضافية</label>
+        <input type="text" id="f-notes" placeholder="أي ملاحظات إضافية...">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="addFault()">
+          <i class="fa-solid fa-paper-plane"></i> تسجيل العطل
+        </button>
+        <button class="btn btn-purple" onclick="sendToProcurement()">
+          <i class="fa-solid fa-bell"></i> تنبيه للمشتريات
+        </button>
+        <button class="btn btn-wa" onclick="sendOwnerReport()">
+          <i class="fa-brands fa-whatsapp"></i> واتساب لصاحب الشركة
+        </button>
+        <button class="btn btn-blue" onclick="printReport()">
+          <i class="fa-solid fa-print"></i> طباعة التقرير
+        </button>
+        <button class="btn btn-orange" onclick="exportCSV()">
+          <i class="fa-solid fa-file-csv"></i> تصدير Excel
+        </button>
+        <button class="btn btn-cyan" onclick="exportJSON()">
+          <i class="fa-solid fa-database"></i> نسخ احتياطي
+        </button>
+        <button class="btn btn-dark" onclick="document.getElementById('import-file').click()">
+          <i class="fa-solid fa-upload"></i> استيراد بيانات
+        </button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-top">
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-chart-pie"></i> توزيع الأعطال حسب الأولوية</h3>
+        <div class="legend">
+          <span><span class="leg-sq" style="background:var(--red)"></span>عالية <b id="lg-h">0</b></span>
+          <span><span class="leg-sq" style="background:var(--orange)"></span>متوسطة <b id="lg-m">0</b></span>
+          <span><span class="leg-sq" style="background:var(--green)"></span>منخفضة <b id="lg-l">0</b></span>
+        </div>
+        <div class="ch"><canvas id="cDonut"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-chart-line"></i> تراكم الأعطال عبر الزمن</h3>
+        <div class="ch"><canvas id="cLine"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-percent"></i> نسبة الأعطال عالية الخطورة %</h3>
+        <div class="ch"><canvas id="cHighPct"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-mid">
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-clock"></i> وقت التوقف حسب الأولوية (دقيقة)</h3>
+        <div class="ch"><canvas id="cDownBar"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-chart-bar"></i> الأعطال حسب مكان العطل</h3>
+        <div class="bars-scroll" id="barLoc"><div class="empty">أضف أعطالاً لرؤية البيانات</div></div>
+      </div>
+    </div>
+
+    <!-- Charts Row 3 -->
+    <div class="charts-mid">
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-stopwatch"></i> وقت التوقف لكل مكان (دقيقة)</h3>
+        <div class="bars-scroll" id="barDown"><div class="empty">أضف أعطالاً لرؤية البيانات</div></div>
+      </div>
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-chart-bar"></i> توزيع وقت التوقف الكلي</h3>
+        <div class="legend">
+          <span><span class="leg-sq" style="background:var(--red)"></span>عالية</span>
+          <span><span class="leg-sq" style="background:var(--orange)"></span>متوسطة</span>
+          <span><span class="leg-sq" style="background:var(--green)"></span>منخفضة</span>
+        </div>
+        <div class="ch"><canvas id="cDownPie"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: LOG -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-log">
+  <div class="log-card" style="margin-top:20px">
+    <h2><i class="fa-solid fa-list-check"></i> سجل الأعطال
+      <span id="log-count" style="font-size:12px;color:var(--dim);font-weight:400;margin-right:6px">(0 عطل)</span>
+    </h2>
+
+    <!-- Search & Filter -->
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="🔍  بحث في الأعطال..." oninput="applyFilters()" style="flex:1;max-width:300px">
+      <select onchange="applyFilters()" id="filter-priority" style="width:auto;padding:9px 14px;border-radius:24px;font-family:Almarai,sans-serif;font-size:12px">
+        <option value="all">كل الأولويات</option>
+        <option value="high">🔴 عالية فقط</option>
+        <option value="medium">🟠 متوسطة فقط</option>
+        <option value="low">🟢 منخفضة فقط</option>
+      </select>
+      <select onchange="applyFilters()" id="filter-status" style="width:auto;padding:9px 14px;border-radius:24px;font-family:Almarai,sans-serif;font-size:12px">
+        <option value="all">كل الحالات</option>
+        <option value="open">مفتوحة</option>
+        <option value="closed">مغلقة</option>
+        <option value="sent">مرسلة للمشتريات</option>
+      </select>
+      <select onchange="applyFilters()" id="filter-loc" style="width:auto;padding:9px 14px;border-radius:24px;font-family:Almarai,sans-serif;font-size:12px">
+        <option value="all">كل الأماكن</option>
+      </select>
+      <button class="btn btn-red btn-sm" onclick="clearAllFaults()" title="مسح كل الأعطال">
+        <i class="fa-solid fa-trash"></i> مسح الكل
+      </button>
+    </div>
+
+    <div class="log-list" id="log-list-full"></div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: STATS -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-stats">
+  <div style="margin-top:20px">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="big" id="stat-total">0</div>
+        <div class="sub">إجمالي الأعطال المسجلة</div>
+      </div>
+      <div class="stat-card">
+        <div class="big" id="stat-down" style="color:var(--blue)">0</div>
+        <div class="sub">إجمالي دقائق التوقف</div>
+        <div class="badge" id="stat-down-hrs" style="color:var(--dim)"></div>
+      </div>
+      <div class="stat-card">
+        <div class="big" id="stat-avgdown" style="color:var(--orange)">0</div>
+        <div class="sub">متوسط التوقف لكل عطل</div>
+        <div class="badge" style="color:var(--dim)">دقيقة/عطل</div>
+      </div>
+      <div class="stat-card">
+        <div class="big" id="stat-highpct" style="color:var(--red)">0%</div>
+        <div class="sub">نسبة الأعطال العالية</div>
+      </div>
+      <div class="stat-card">
+        <div class="big" id="stat-closerate" style="color:var(--green)">0%</div>
+        <div class="sub">معدل إغلاق الأعطال</div>
+      </div>
+      <div class="stat-card">
+        <div class="big" id="stat-sentpct" style="color:var(--purple)">0%</div>
+        <div class="sub">نسبة ما أُرسل للمشتريات</div>
+      </div>
+    </div>
+
+    <!-- Top locations table -->
+    <div class="chart-card" style="margin-bottom:14px">
+      <h3><i class="fa-solid fa-ranking-star"></i> أكثر الأماكن تعطلاً</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>مكان العطل</th>
+              <th>عدد الأعطال</th>
+              <th>وقت التوقف</th>
+              <th>عالية</th>
+              <th>متوسطة</th>
+              <th>منخفضة</th>
+              <th>نسبة</th>
+            </tr>
+          </thead>
+          <tbody id="stats-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Technician stats -->
+    <div class="chart-card">
+      <h3><i class="fa-solid fa-user-gear"></i> إحصائيات الفنيين</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>الفني</th>
+              <th>عدد الأعطال</th>
+              <th>عالية</th>
+              <th>وقت توقف</th>
+              <th>مغلقة</th>
+              <th>معدل الإغلاق</th>
+            </tr>
+          </thead>
+          <tbody id="tech-table"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: PLAN -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-plan">
+  <div style="margin-top:20px">
+    <div class="form-card no-print">
+      <h2><i class="fa-solid fa-calendar-plus"></i> إضافة مهمة صيانة دورية</h2>
+      <div class="fgrid3">
+        <div>
+          <label><i class="fa-solid fa-location-dot icon"></i> الجهاز / المكان</label>
+          <select id="p-loc">
+            <option>1 - الثلاجات وغرف التبريد</option>
+            <option>2 - خط الفرز 31 مخرج</option>
+            <option>3 - خط فرز مبدئي</option>
+            <option>4 - أجهزة الاستيم</option>
+            <option>5 - كومبروسور كبير</option>
+            <option>6 - كومبروسور صغير</option>
+            <option>7 - ماكينة شرينك أوتوماتيك 2</option>
+            <option>8 - ماكينة شرينك نصف أوتوماتيك</option>
+            <option>9 - فرن انكماش أوتوماتيك</option>
+            <option>10 - فرن انكماش صغير</option>
+            <option>11 - محطة التحلية</option>
+            <option>12 - كشافات الإنارة</option>
+            <option>13 - أجهزة الكمبيوتر</option>
+            <option>14 - سويتشات وسيلفرات</option>
+            <option>15 - كاميرات</option>
+            <option>16 - ماكينة تغليف</option>
+            <option>17 - خلاط تسميد كبير</option>
+            <option>18 - خلاط تسميد صغير</option>
+            <option>19 - ماكينة عمل دبس</option>
+            <option>20 - ركات تخزين + بالتات</option>
+            <option>21 - الأبواب الأوتوماتيك</option>
+            <option>22 - الحساسات</option>
+            <option>23 - الحمامات</option>
+            <option>24 - الترنش / الصرف</option>
+            <option>25 - نظام التحكم والتحديث</option>
+            <option>26 - الطابعات</option>
+            <option>27 - الهاند بالت</option>
+            <option>28 - الكلاركات</option>
+            <option>29 - الدراجة النارية</option>
+          </select>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-repeat icon"></i> التكرار</label>
+          <select id="p-freq">
+            <option value="daily">يومي</option>
+            <option value="weekly">أسبوعي</option>
+            <option value="monthly">شهري</option>
+            <option value="quarterly">ربع سنوي</option>
+          </select>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-user-gear icon"></i> المسؤول</label>
+          <input type="text" id="p-tech" placeholder="اسم الفني...">
+        </div>
+        <div style="grid-column:1/-1">
+          <label><i class="fa-solid fa-file-lines icon"></i> وصف المهمة</label>
+          <input type="text" id="p-desc" placeholder="وصف مهمة الصيانة الدورية...">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="addPlanItem()"><i class="fa-solid fa-plus"></i> إضافة للخطة</button>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <h2 style="font-size:14px;font-weight:800;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:7px">
+        <i class="fa-solid fa-calendar-check" style="color:var(--gold)"></i> خطة الصيانة الدورية
+      </h2>
+      <div id="plan-list"><div class="empty">لم تُضف أي مهام صيانة دورية بعد</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: NOTES -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-notes">
+  <div style="margin-top:20px">
+    <div class="form-card no-print">
+      <h2><i class="fa-solid fa-note-sticky"></i> إضافة ملاحظة</h2>
+      <div style="margin-bottom:12px">
+        <label>نص الملاحظة</label>
+        <textarea id="note-text" style="height:80px" placeholder="اكتب ملاحظتك هنا..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="addNote()"><i class="fa-solid fa-save"></i> حفظ الملاحظة</button>
+      </div>
+    </div>
+    <div class="log-card">
+      <h2><i class="fa-solid fa-notes-medical"></i> الملاحظات المحفوظة</h2>
+      <div id="notes-list"><div class="empty">لا توجد ملاحظات بعد</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: ALERTS -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-alerts">
+  <div style="margin-top:20px">
+
+    <div class="form-card no-print">
+      <h2><i class="fa-solid fa-bell"></i> إضافة تنبيه جديد</h2>
+      <div class="fgrid3">
+        <div style="grid-column:1/-1">
+          <label><i class="fa-solid fa-file-lines icon"></i> اسم التنبيه</label>
+          <input type="text" id="al-title" placeholder="مثال: تغيير فلتر مياة...">
+        </div>
+        <div>
+          <label><i class="fa-solid fa-tag icon"></i> التصنيف (اختياري)</label>
+          <input type="text" id="al-cat" placeholder="مثال: الكومبروسر...">
+        </div>
+        <div>
+          <label><i class="fa-solid fa-gauge-high icon"></i> نوع التنبيه</label>
+          <select id="al-type" onchange="toggleAlertTypeFields()">
+            <option value="date">بتاريخ / تكرار زمني</option>
+            <option value="hours">بساعات التشغيل</option>
+          </select>
+        </div>
+        <div id="al-freq-wrap">
+          <label><i class="fa-solid fa-repeat icon"></i> التكرار</label>
+          <select id="al-freq">
+            <option value="daily">يومي</option>
+            <option value="weekly">أسبوعي</option>
+            <option value="monthly">شهري</option>
+            <option value="quarterly">ربع سنوي (3 شهور)</option>
+            <option value="biannual">كل 6 أشهر</option>
+            <option value="yearly">سنوي</option>
+            <option value="day1">أول كل شهر (يوم 1)</option>
+            <option value="firstweek">أول أسبوع من الشهر</option>
+          </select>
+        </div>
+        <div id="al-hours-wrap" style="display:none">
+          <label><i class="fa-solid fa-clock icon"></i> كل كام ساعة تشغيل</label>
+          <input type="number" id="al-interval-hours" placeholder="2000" min="1">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="addAlert()"><i class="fa-solid fa-plus"></i> إضافة التنبيه</button>
+        <button class="btn btn-blue" onclick="printAlertsReport()"><i class="fa-solid fa-print"></i> طباعة تقرير تنفيذ التنبيهات</button>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <h2 style="font-size:14px;font-weight:800;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:7px">
+        <i class="fa-solid fa-bell" style="color:var(--gold)"></i> التنبيهات الحالية
+      </h2>
+      <div id="alerts-list"><div class="empty">لا توجد تنبيهات</div></div>
+    </div>
+
+    <div class="log-card">
+      <h2><i class="fa-solid fa-clock-rotate-left"></i> سجل تنفيذ التنبيهات</h2>
+      <div id="alerts-history-list"><div class="empty">لا يوجد سجل تنفيذ بعد</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: FOOD SAFETY -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-food">
+  <div style="margin-top:20px">
+    <div class="fs-subnav no-print" id="fs-subnav"></div>
+    <div id="fs-panel-infra" class="fs-panel"></div>
+    <div id="fs-panel-inventory" class="fs-panel"></div>
+    <div id="fs-panel-lifeLog" class="fs-panel"></div>
+    <div id="fs-panel-exitPermit" class="fs-panel"></div>
+    <div id="fs-panel-maintForm" class="fs-panel"></div>
+    <div id="fs-panel-calibPlan" class="fs-panel"></div>
+    <div id="fs-panel-scaleCalib" class="fs-panel"></div>
+    <div id="fs-panel-monthlyWalk" class="fs-panel"></div>
+    <div id="fs-panel-partsReceipt" class="fs-panel"></div>
+    <div id="fs-panel-buildingInspect" class="fs-panel"></div>
+    <div id="fs-panel-incident" class="fs-panel"></div>
+    <div id="fs-panel-emergencyLog" class="fs-panel"></div>
+    <div id="fs-panel-riskAssessment" class="fs-panel"></div>
+    <div id="fs-panel-fireExtInventory" class="fs-panel"></div>
+    <div id="fs-panel-fireExtFollowup" class="fs-panel"></div>
+    <div id="fs-panel-fireBoxFollowup" class="fs-panel"></div>
+    <div id="fs-panel-firstAidInventory" class="fs-panel"></div>
+    <div id="fs-panel-firstAidFollowup" class="fs-panel"></div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TAB: SETTINGS -->
+<!-- ========================================== -->
+<div class="tab-panel" id="panel-settings">
+  <div style="margin-top:20px">
+    <div class="form-card">
+      <h2><i class="fa-solid fa-sliders"></i> إعدادات النظام</h2>
+      <div class="fgrid3">
+        <div>
+          <label><i class="fa-solid fa-phone icon"></i> رقم واتساب صاحب الشركة</label>
+          <input type="text" id="s-phone" placeholder="01xxxxxxxxx" value="01140707700">
+        </div>
+        <div>
+          <label><i class="fa-solid fa-building icon"></i> اسم الشركة</label>
+          <input type="text" id="s-company" placeholder="منظومة سيجام" value="منظومة سيجام">
+        </div>
+        <div>
+          <label><i class="fa-solid fa-user-tie icon"></i> اسم المسؤول</label>
+          <input type="text" id="s-manager" placeholder="اسم المدير...">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="saveSettings()"><i class="fa-solid fa-save"></i> حفظ الإعدادات</button>
+        <button class="btn btn-red" onclick="resetAll()"><i class="fa-solid fa-rotate-left"></i> إعادة تعيين كامل</button>
+      </div>
+    </div>
+
+    <div class="form-card" style="border-right-color:var(--blue)">
+      <h2><i class="fa-solid fa-database" style="color:var(--blue)"></i> إدارة البيانات</h2>
+      <div class="btn-row">
+        <button class="btn btn-cyan" onclick="exportJSON()"><i class="fa-solid fa-download"></i> تحميل نسخة احتياطية (.json)</button>
+        <button class="btn btn-orange" onclick="exportCSV()"><i class="fa-solid fa-file-csv"></i> تصدير Excel (.csv)</button>
+        <button class="btn btn-blue" onclick="printReport()"><i class="fa-solid fa-print"></i> طباعة تقرير كامل</button>
+        <button class="btn btn-dark" onclick="document.getElementById('import-file2').click()"><i class="fa-solid fa-upload"></i> استيراد نسخة احتياطية</button>
+        <input type="file" id="import-file2" accept=".json" style="display:none" onchange="importData(event)">
+      </div>
+      <div style="margin-top:16px;padding:14px;background:rgba(6,182,212,.06);border-radius:10px;border:1px solid rgba(6,182,212,.2)">
+        <div style="font-size:12px;color:var(--dim)">
+          <i class="fa-solid fa-info-circle" style="color:var(--cyan)"></i>
+          البيانات تُحفظ تلقائياً في المتصفح (localStorage). استخدم النسخة الاحتياطية لنقل البيانات بين أجهزة مختلفة.
+        </div>
+        <div style="font-size:11px;color:var(--dim);margin-top:6px" id="data-size"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- EDIT MODAL -->
+<!-- ========================================== -->
+<div class="modal-bg" id="edit-modal">
+  <div class="modal">
+    <h2><i class="fa-solid fa-pen-to-square"></i> تعديل العطل</h2>
+    <input type="hidden" id="edit-id">
+    <div class="modal-grid">
+      <div>
+        <label>مكان العطل</label>
+        <select id="edit-loc">
+          <option>1 - الثلاجات وغرف التبريد</option>
+          <option>2 - خط الفرز 31 مخرج</option>
+          <option>3 - خط فرز مبدئي</option>
+          <option>4 - أجهزة الاستيم</option>
+          <option>5 - كومبروسور كبير</option>
+          <option>6 - كومبروسور صغير</option>
+          <option>7 - ماكينة شرينك أوتوماتيك 2</option>
+          <option>8 - ماكينة شرينك نصف أوتوماتيك</option>
+          <option>9 - فرن انكماش أوتوماتيك</option>
+          <option>10 - فرن انكماش صغير</option>
+          <option>11 - محطة التحلية</option>
+          <option>12 - كشافات الإنارة</option>
+          <option>13 - أجهزة الكمبيوتر</option>
+          <option>14 - سويتشات وسيلفرات</option>
+          <option>15 - كاميرات</option>
+          <option>16 - ماكينة تغليف</option>
+          <option>17 - خلاط تسميد كبير</option>
+          <option>18 - خلاط تسميد صغير</option>
+          <option>19 - ماكينة عمل دبس</option>
+          <option>20 - ركات تخزين + بالتات</option>
+          <option>21 - الأبواب الأوتوماتيك</option>
+          <option>22 - الحساسات</option>
+          <option>23 - الحمامات</option>
+          <option>24 - الترنش / الصرف</option>
+          <option>25 - نظام التحكم والتحديث</option>
+          <option>26 - الطابعات</option>
+          <option>27 - الهاند بالت</option>
+          <option>28 - الكلاركات</option>
+          <option>29 - الدراجة النارية</option>
+        </select>
+      </div>
+      <div>
+        <label>الأولوية</label>
+        <select id="edit-priority">
+          <option value="high">🔴 عالية</option>
+          <option value="medium">🟠 متوسطة</option>
+          <option value="low">🟢 منخفضة</option>
+        </select>
+      </div>
+      <div>
+        <label>زمن التوقف (دقيقة)</label>
+        <input type="number" id="edit-down" min="0">
+      </div>
+      <div>
+        <label>الفني المسؤول</label>
+        <input type="text" id="edit-tech">
+      </div>
+      <div style="grid-column:1/-1">
+        <label>وصف العطل</label>
+        <textarea id="edit-desc" style="height:60px"></textarea>
+      </div>
+      <div>
+        <label>السبب</label>
+        <input type="text" id="edit-cause">
+      </div>
+      <div>
+        <label>قطع الغيار</label>
+        <input type="text" id="edit-parts">
+      </div>
+      <div style="grid-column:1/-1">
+        <label>ملاحظات</label>
+        <input type="text" id="edit-notes">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-dark btn-sm" onclick="closeModal()"><i class="fa-solid fa-xmark"></i> إلغاء</button>
+      <button class="btn btn-gold btn-sm" onclick="saveEdit()"><i class="fa-solid fa-check"></i> حفظ التعديلات</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ========================================== -->
+<!-- SCRIPT -->
+<!-- ========================================== -->
+<script>
+// ============================================================
+// FIREBASE — منظومة سيجام (sigam-operations) — تخزين حقيقي + حارس دخول
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBtcvF104xLvNX6xkwxcMZThjQPq2EKAKU",
+  authDomain: "sigam-operations.firebaseapp.com",
+  projectId: "sigam-operations",
+  storageBucket: "sigam-operations.firebasestorage.app",
+  messagingSenderId: "971246574608",
+  appId: "1:971246574608:web:8c70a8271664b0457c3e95"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+db.enablePersistence({ synchronizeTabs:true }).catch(()=>{});
+
+// هذه الصفحة مقصورة على: المدير، أو صاحب دور "الصيانة"
+const REQUIRED_ROLE = 'maintenance';
+auth.onAuthStateChanged(async user=>{
+  if(!user){ window.location.href = 'SIGAM-HOME.html'; return; }
+  try{
+    const doc = await db.collection('users').doc(user.uid).get();
+    const role = doc.exists ? doc.data().role : null;
+    if(role !== 'admin' && role !== REQUIRED_ROLE){
+      alert('⛔ حسابك غير مصرح له بفتح صفحة الصيانة');
+      window.location.href = 'SIGAM-HOME.html';
+    }
+  }catch(e){ window.location.href = 'SIGAM-HOME.html'; }
+});
+
+// ---------- Fetch shim: يحوّل كل نداءات /api/* لقراءة/كتابة مباشرة على Firestore ----------
+(function(){
+  const REAL_FETCH = window.fetch.bind(window);
+  const API_MAP = {
+    '/api/maintenance-state': 'maintenance_state',
+    '/api/procurement-state': 'procurement_state',
+    '/api/proc-alerts': 'proc_alerts',
+    '/api/tracking-state': 'tracking_state',
+    '/api/warehouse-state': 'warehouse_state'
+  };
+  window.fetch = async function(url, opts){
+    const key = API_MAP[url];
+    if(!key) return REAL_FETCH(url, opts);
+    const docRef = db.collection('app_state').doc(key);
+    const method = (opts && opts.method) ? opts.method.toUpperCase() : 'GET';
+    try{
+      if(method === 'GET'){
+        const snap = await docRef.get();
+        const data = snap.exists ? snap.data().payload : (key==='proc_alerts' ? [] : {});
+        return new Response(JSON.stringify({ success:true, data }), { status:200, headers:{'Content-Type':'application/json'} });
+      } else if(method === 'POST'){
+        const body = JSON.parse(opts.body);
+        await docRef.set({ payload: body, updatedAt: Date.now() });
+        return new Response(JSON.stringify({ success:true }), { status:200, headers:{'Content-Type':'application/json'} });
+      }
+      return REAL_FETCH(url, opts);
+    }catch(e){
+      return new Response(JSON.stringify({ success:false, error:String(e) }), { status:500, headers:{'Content-Type':'application/json'} });
+    }
+  };
+})();
+
+// ====== DATA ======
+const LOCATIONS = [
+  '1 - الثلاجات وغرف التبريد','2 - خط الفرز 31 مخرج','3 - خط فرز مبدئي',
+  '4 - أجهزة الاستيم','5 - كومبروسور كبير','6 - كومبروسور صغير',
+  '7 - ماكينة شرينك أوتوماتيك 2','8 - ماكينة شرينك نصف أوتوماتيك',
+  '9 - فرن انكماش أوتوماتيك','10 - فرن انكماش صغير','11 - محطة التحلية',
+  '12 - كشافات الإنارة','13 - أجهزة الكمبيوتر','14 - سويتشات وسيلفرات',
+  '15 - كاميرات','16 - ماكينة تغليف','17 - خلاط تسميد كبير',
+  '18 - خلاط تسميد صغير','19 - ماكينة عمل دبس','20 - ركات تخزين + بالتات',
+  '21 - الأبواب الأوتوماتيك','22 - الحساسات','23 - الحمامات',
+  '24 - الترنش / الصرف','25 - نظام التحكم والتحديث','26 - الطابعات',
+  '27 - الهاند بالت','28 - الكلاركات','29 - الدراجة النارية'
+];
+const SHORT = {
+  '1 - الثلاجات وغرف التبريد':'الثلاجات','2 - خط الفرز 31 مخرج':'خط الفرز',
+  '3 - خط فرز مبدئي':'فرز مبدئي','4 - أجهزة الاستيم':'الاستيم',
+  '5 - كومبروسور كبير':'كومب. كبير','6 - كومبروسور صغير':'كومب. صغير',
+  '7 - ماكينة شرينك أوتوماتيك 2':'شرينك أوتو','8 - ماكينة شرينك نصف أوتوماتيك':'شرينك نصف',
+  '9 - فرن انكماش أوتوماتيك':'فرن أوتو','10 - فرن انكماش صغير':'فرن صغير',
+  '11 - محطة التحلية':'التحلية','12 - كشافات الإنارة':'الإنارة',
+  '13 - أجهزة الكمبيوتر':'الكمبيوتر','14 - سويتشات وسيلفرات':'السويتشات',
+  '15 - كاميرات':'الكاميرات','16 - ماكينة تغليف':'التغليف',
+  '17 - خلاط تسميد كبير':'خلاط كبير','18 - خلاط تسميد صغير':'خلاط صغير',
+  '19 - ماكينة عمل دبس':'دبس','20 - ركات تخزين + بالتات':'ركات',
+  '21 - الأبواب الأوتوماتيك':'الأبواب','22 - الحساسات':'الحساسات',
+  '23 - الحمامات':'الحمامات','24 - الترنش / الصرف':'الترنش',
+  '25 - نظام التحكم والتحديث':'التحكم','26 - الطابعات':'الطابعات',
+  '27 - الهاند بالت':'هاند بالت','28 - الكلاركات':'الكلاركات',
+  '29 - الدراجة النارية':'الدراجة'
+};
+const LBL = {high:'عالية',medium:'متوسطة',low:'منخفضة'};
+const FREQ_LBL = {daily:'يومي',weekly:'أسبوعي',monthly:'شهري',quarterly:'ربع سنوي'};
+const ALERT_FREQ_LBL = {daily:'يومي',weekly:'أسبوعي',monthly:'شهري',quarterly:'ربع سنوي (3 شهور)',biannual:'كل 6 أشهر',yearly:'سنوي',day1:'أول كل شهر (يوم 1)',firstweek:'أول أسبوع من الشهر'};
+
+let faults = [];
+let counter = 0;
+let sentAlerts = [];
+let planItems = [];
+let notes = [];
+let alerts = [];
+let alertHistory = [];
+let alertCounter = 0;
+let settings = {phone:'01140707700',company:'منظومة سيجام',manager:'Sherif Mohamed'};
+
+// ====== DEFAULT ALERTS (تنبيهات الصيانة الدورية الأساسية) ======
+function defaultAlerts(){
+  const today=new Date().toLocaleDateString('ar-EG');
+  return [
+    {id:'ALT-01',title:'تغيير فلتر الكومبروسر',cat:'الكومبروسر',type:'hours',intervalHours:2000,lastDoneHours:0,currentHours:0,lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-02',title:'تغيير زيت الكومبروسر',cat:'الكومبروسر',type:'hours',intervalHours:2000,lastDoneHours:0,currentHours:0,lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-03',title:'زيت وتشحيم خط الفرز',cat:'خط الفرز',type:'hours',intervalHours:200,lastDoneHours:0,currentHours:0,lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-04',title:'متابعة وحدات التكييف',cat:'التكييف',type:'date',freq:'weekly',lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-05',title:'مياة الكلارك',cat:'الكلارك',type:'date',freq:'day1',lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-06',title:'زيت الكلارك',cat:'الكلارك',type:'date',freq:'day1',lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-07',title:'متابعة طفايات الحريق',cat:'السلامة',type:'date',freq:'biannual',lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-08',title:'لوحات الكهرباء',cat:'الكهرباء',type:'date',freq:'firstweek',lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-09',title:'سلامة الغذاء - متابعة الملفات والسجلات',cat:'سلامة الغذاء',type:'date',freq:'monthly',lastDoneDate:null,created:today,custom:false},
+    {id:'ALT-10',title:'سلامة الغذاء - إضافة / مراجعة سجلات جديدة',cat:'سلامة الغذاء',type:'date',freq:'yearly',lastDoneDate:null,created:today,custom:false}
+  ];
+}
+
+// ====== FOOD SAFETY DATA (seeded from: 1-قائمة حصر الأجهزة، 4-تصريح خروج معدة، 6-سجل حياة معدة، 12-تقرير فحص مبنى) ======
+// النماذج اللي كانت فاضية في الملفات الأصلية (3-نموذج صيانة معدة، 9-متابعة البنية التحتية،
+// 10-خطة معايرة الأجهزة، 11-سجل معايرة الموازين، 13-المرور الشهري، 16-محضر استلام قطع غيار)
+// اتسابت فاضية زي ما هي — جاهزة للتعبئة من غير بيانات وهمية.
+let foodSafety = {
+  inventory:[
+    {id:'fsi1',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'صيانة',desc:'غسيل + تشحيم + تسريب زيت + رجلاش + مراجعة على الاحزمة والسيور + متابعة المواتير + مراجعة الاصوات + ضغط الهواء + ضغط المياة + الحساسات'},
+    {id:'fsi2',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'معايرة',desc:'معايرة موازين الخط قبل الفرز من كل تشغيلة'},
+    {id:'fsi3',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'صيانة',desc:'متابعة حركة السايزر ومحاذاة مع الحساس'},
+    {id:'fsi4',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'صيانة',desc:'تنظيف وحدة الكاميرات بالهواء'},
+    {id:'fsi5',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'معايرة',desc:'معايرة الزيت كل 200 ساعة تشغيل'},
+    {id:'fsi6',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'صيانة',desc:'متابعة الراك كامل وجهاز التشغيل تنظيف بالهواء'},
+    {id:'fsi7',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'صيانة',desc:'لوحة الكهرباء والكنترول تنظيف بالهواء ومتابعة الفيوزات'},
+    {id:'fsi8',name:'خط الفرز',code:'M 01-58',loc:'صالة الفرز 81/90',req:'صيانة',desc:'صرف الخط والأرضيات تنظيف وتطهير يومي'},
+    {id:'fsi9',name:'مايكنة شيرنك اوتوماتيك',code:'M 01-06',loc:'صالة الفرز 81/90',req:'صيانة',desc:'غسيل + رجلاش + مراجعة على الاحزمة والسيور + متابعة المواتير + مراجعة الاصوات + الحساسات + تيفلون حراري + تنظيف المقص'},
+    {id:'fsi10',name:'فرن انكماش اوتوماتيك',code:'M 01-02',loc:'صالة الفرز 81/90',req:'صيانة',desc:'غسيل + رجلاش + مراجعة على البكر الحراري والسيور + متابعة المواتير + مراجعة الاصوات + الحساسات + زيت حراري'},
+    {id:'fsi11',name:'كاميرات المراقبة',code:'CCTV',loc:'صالة الفرز 81/90',req:'صيانة',desc:'تنظيف ومتابعة السوتشات وكشافات الطوارئ'},
+    {id:'fsi12',name:'الانارة وأجهزة التحكم عن بعد',code:'Li 01-193',loc:'صالة الفرز 81/90',req:'صيانة',desc:'تغيير فوري للكشافات ومتابعة دورية لأجهزة التحكم'},
+    {id:'fsi13',name:'كومبريسور + خزان هواء + فلتر هواء',code:'M 01',loc:'رصيف مصنع 90',req:'صيانة',desc:''}
+  ],
+  exitPermit:[
+    {id:'fse1',date:'2026-04-29',eqName:'كالارك',eqCode:'K 01',dept:'الصيانة',fault:'ربع تالف',repairer:'مركز صيانة',days:'يوم',returnDate:'2026-04-30',method:'تغيير ربع بطارية',tech:''}
+  ],
+  maintForm:[],
+  calibPlan:[],
+  scaleCalib:[],
+  monthlyWalk:[],
+  partsReceipt:[],
+  buildingInspect:[
+    {id:'fsb1',date:'2025-12-01',loc:'صالة الفرز',doors:'✓',windows:'✓',ceiling:'✓',floors:'✓',toilets:'✓',ventilation:'✓',walls:'✓',electric:'✓',drain:'✓',computers:'✓',requiredWork:'',inspector:''},
+    {id:'fsb2',date:'2025-12-01',loc:'الثلاجات',doors:'✓',windows:'—',ceiling:'✓',floors:'✓',toilets:'—',ventilation:'✓',walls:'✓',electric:'✓',drain:'✓',computers:'—',requiredWork:'',inspector:''},
+    {id:'fsb3',date:'2025-12-01',loc:'المخازن',doors:'✓',windows:'✓',ceiling:'✓',floors:'✓',toilets:'—',ventilation:'—',walls:'✓',electric:'✓',drain:'✓',computers:'✓',requiredWork:'',inspector:''},
+    {id:'fsb4',date:'2026-01-01',loc:'صالة الفرز',doors:'✓',windows:'✓',ceiling:'✓',floors:'✓',toilets:'✓',ventilation:'✓',walls:'✓',electric:'✓',drain:'✓',computers:'✓',requiredWork:'',inspector:''},
+    {id:'fsb5',date:'2026-01-01',loc:'الثلاجات',doors:'✓',windows:'—',ceiling:'✓',floors:'✓',toilets:'—',ventilation:'✓',walls:'✓',electric:'✓',drain:'✓',computers:'—',requiredWork:'',inspector:''},
+    {id:'fsb6',date:'2026-01-01',loc:'المخازن',doors:'✓',windows:'✓',ceiling:'✓',floors:'✓',toilets:'—',ventilation:'—',walls:'✓',electric:'✓',drain:'✓',computers:'✓',requiredWork:'',inspector:''}
+  ],
+  lifeLog:[
+    {id:'fsl1',name:'خط الفرز',origin:'ايطاليا',year:'',model:'',code:'M 01',loc:'صالة الفرز 81/90',cleaning:'مياه + هواء',func:'فرز وتصنيف تمور',serviceDate:'10/2025',
+      entries:[
+        {date:'اعمال يومية',type:'وقائية',desc:'غسيل + تشحيم + تسريب زيت + رجلاش + مراجعة على الاحزمة والسيور + متابعة المواتير + مراجعة الاصوات + ضغط الهواء + ضغط المياة + الحساسات',notes:'',tech:'محمد مصطفى'},
+        {date:'اعمال يومية',type:'وقائية',desc:'معايرة موازين الخط قبل الفرز من كل تشغيلة',notes:'',tech:'محمد مصطفى'},
+        {date:'اعمال يومية',type:'وقائية',desc:'متابعة حركة السايزر ومحاذاة مع الحساس',notes:'',tech:'محمد مصطفى'},
+        {date:'25/12/2025',type:'وقائية',desc:'تنظيف وحدة الكاميرات بالهواء',notes:'',tech:'محمد مصطفى'},
+        {date:'تم تزويد الزيت 27/12',type:'وقائية',desc:'معايرة الزيت كل 200 ساعة تشغيل',notes:'',tech:'محمد مصطفى'},
+        {date:'25/12/2025',type:'وقائية',desc:'متابعة الراك كامل وجهاز التشغيل تنظيف بالهواء',notes:'',tech:'محمد مصطفى'},
+        {date:'عطل خارجي من شركة الكهرباء 9/12/2025',type:'وقائية وعلاجية',desc:'لوحة الكهرباء والكنترول — عطل خارجي',notes:'',tech:'محمد مصطفى'},
+        {date:'اعمال يومية',type:'وقائية',desc:'صرف الخط والأرضيات تنظيف وتطهير يومي',notes:'',tech:'محمد مصطفى'}
+      ]
+    }
+  ],
+  infra:[],
+  incident:[],
+  emergencyLog:[],
+  riskAssessment:[],
+  fireExtInventory:[
+    {id:'fe1',no:'1',type:'فاير سيرش',loc:'خط الفرز',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe2',no:'2',type:'فاير سيرش',loc:'خط الفرز',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe3',no:'3',type:'فاير سيرش',loc:'خط الفرز',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe4',no:'4',type:'فاير سيرش',loc:'خط الفرز',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe5',no:'5',type:'بودرة',loc:'خط الفرز',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe6',no:'6',type:'بودرة',loc:'خط الفرز',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe7',no:'7',type:'فاير سيرش',loc:'ممر الخام',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe8',no:'8',type:'بودرة',loc:'ممر الخام',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe9',no:'9',type:'فاير سيرش',loc:'ممر الثلاجات',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe10',no:'10',type:'بودرة',loc:'ممر الثلاجات',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe11',no:'11',type:'فاير سيرش',loc:'مخزن الكرتون',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fe12',no:'12',type:'فاير سيرش',loc:'مخزن الكرتون',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'}
+  ],
+  fireExtFollowup:[
+    {id:'fef1',extNo:'1',month:'يناير',capacity:'6',arm:'اوتوماتيك',handle:'جيد',body:'جيد',safetyPin:'جيد',indicator:'جيد',base:'جيد',inspector:'حسام رمضان',notes:'ممتاز'}
+  ],
+  fireBoxFollowup:[
+    {id:'fbf1',boxNo:'1',month:'يناير',structure:'جيد',hose:'جيد',nozzle:'جيد',tap:'جيد',lock:'جيد',doorStatus:'جيد',inspector:'محمد مصطفى',notes:'ممتاز'},
+    {id:'fbf2',boxNo:'1',month:'فبراير',structure:'جيد',hose:'جيد',nozzle:'جيد',tap:'جيد',lock:'جيد',doorStatus:'جيد',inspector:'محمد مصطفى',notes:'ممتاز'},
+    {id:'fbf3',boxNo:'1',month:'مارس',structure:'جيد',hose:'جيد',nozzle:'جيد',tap:'جيد',lock:'جيد',doorStatus:'جيد',inspector:'محمد مصطفى',notes:'ممتاز'},
+    {id:'fbf4',boxNo:'1',month:'ابريل',structure:'جيد',hose:'جيد',nozzle:'جيد',tap:'جيد',lock:'جيد',doorStatus:'جيد',inspector:'محمد مصطفى',notes:'ممتاز'},
+    {id:'fbf5',boxNo:'1',month:'مايو',structure:'جيد',hose:'جيد',nozzle:'جيد',tap:'جيد',lock:'جيد',doorStatus:'جيد',inspector:'محمد مصطفى',notes:'ممتاز'},
+    {id:'fbf6',boxNo:'1',month:'يونيو',structure:'جيد',hose:'جيد',nozzle:'جيد',tap:'جيد',lock:'جيد',doorStatus:'جيد',inspector:'محمد مصطفى',notes:'ممتاز'}
+  ],
+  firstAidInventory:[
+    {id:'fa1',boxNo:'1',loc:'الهاجين',contents:'شاش + قطن + بيتادين + مسكنات + مقص + رباط ضاغط + حبوب للضغط',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'},
+    {id:'fa2',boxNo:'2',loc:'صالة الفرز',contents:'شاش + قطن + بيتادين + مسكنات + مقص + رباط ضاغط + حبوب للضغط',checkDate:'1/4/2026',nextDate:'1/10/2026',notes:'جيد'}
+  ],
+  firstAidFollowup:[
+    {id:'faf1',boxNo:'1',month:'يناير',scissors:'✓',gauze:'✓',betadine:'✓',antibiotic:'✓',pressureBandage:'✓',eyeDrops:'✓',plaster:'✓',lowPressureTreat:'✓',headacheTreat:'✓',diarrheaTreat:'✓',reviewer:'محمد مصطفى',notes:''},
+    {id:'faf2',boxNo:'1',month:'فبراير',scissors:'✓',gauze:'✓',betadine:'✓',antibiotic:'✓',pressureBandage:'✓',eyeDrops:'✓',plaster:'✓',lowPressureTreat:'✓',headacheTreat:'✓',diarrheaTreat:'✓',reviewer:'محمد مصطفى',notes:''},
+    {id:'faf3',boxNo:'1',month:'مارس',scissors:'✓',gauze:'✓',betadine:'✓',antibiotic:'✓',pressureBandage:'✓',eyeDrops:'✓',plaster:'✓',lowPressureTreat:'✓',headacheTreat:'✓',diarrheaTreat:'✓',reviewer:'محمد مصطفى',notes:''},
+    {id:'faf4',boxNo:'1',month:'ابريل',scissors:'✓',gauze:'✓',betadine:'✓',antibiotic:'✓',pressureBandage:'✓',eyeDrops:'✓',plaster:'✓',lowPressureTreat:'✓',headacheTreat:'✓',diarrheaTreat:'✓',reviewer:'محمد مصطفى',notes:''},
+    {id:'faf5',boxNo:'1',month:'مايو',scissors:'✓',gauze:'✓',betadine:'✓',antibiotic:'✓',pressureBandage:'✓',eyeDrops:'✓',plaster:'✓',lowPressureTreat:'✓',headacheTreat:'✓',diarrheaTreat:'✓',reviewer:'محمد مصطفى',notes:''},
+    {id:'faf6',boxNo:'1',month:'يونيه',scissors:'✓',gauze:'✓',betadine:'✓',antibiotic:'✓',pressureBandage:'✓',eyeDrops:'✓',plaster:'✓',lowPressureTreat:'✓',headacheTreat:'✓',diarrheaTreat:'✓',reviewer:'محمد مصطفى',notes:''},
+    {id:'faf7',boxNo:'1',month:'يوليو',scissors:'✓',gauze:'✓',betadine:'✓',antibiotic:'✓',pressureBandage:'✓',eyeDrops:'✓',plaster:'✓',lowPressureTreat:'✓',headacheTreat:'✓',diarrheaTreat:'✓',reviewer:'محمد مصطفى',notes:''}
+  ]
+};
+
+// ====== LOAD FROM SERVER ======
+let _maintSaveTimeout = null;
+
+async function loadData(){
+  try{
+    const res = await fetch('/api/maintenance-state', { cache: 'no-store' });
+    const json = await res.json();
+    const d = (json.success && json.data) ? json.data : {};
+    if(d.faults){faults=d.faults;}
+    if(d.counter){counter=d.counter;}
+    if(d.sentAlerts){sentAlerts=d.sentAlerts;}
+    if(d.planItems){planItems=d.planItems;}
+    if(d.notes){notes=d.notes;}
+    if(d.alerts && d.alerts.length){alerts=d.alerts;}else{alerts=defaultAlerts();}
+    if(d.alertHistory){alertHistory=d.alertHistory;}
+    if(d.foodSafety){foodSafety=Object.assign(foodSafety,d.foodSafety);}
+    _fsLastSnapshot = JSON.stringify(foodSafety);
+    if(d.settings){settings=Object.assign(settings,d.settings);}
+    if(!settings.manager) settings.manager='Sherif Mohamed';
+    // Restore settings fields
+    document.getElementById('s-phone').value=settings.phone||'01140707700';
+    document.getElementById('s-company').value=settings.company||'منظومة سيجام';
+    document.getElementById('s-manager').value=settings.manager||'';
+    renderSentBox();
+    renderPlan();
+    renderNotes();
+    renderAlerts();
+    renderAlertHistory();
+    populateLocFilter();
+    updateAll();
+  }catch(e){console.log('❌ فشل تحميل بيانات الصيانة من السيرفر',e);}
+}
+
+// نسخة خفيفة تستخدم في التحديث الدوري (بدون إعادة كتابة حقول الإعدادات كل مرة)
+async function reloadDataQuiet(){
+  try{
+    const res = await fetch('/api/maintenance-state', { cache: 'no-store' });
+    const json = await res.json();
+    const d = (json.success && json.data) ? json.data : {};
+    if(d.faults){faults=d.faults;}
+    if(d.counter){counter=d.counter;}
+    if(d.sentAlerts){sentAlerts=d.sentAlerts;}
+    if(d.planItems){planItems=d.planItems;}
+    if(d.notes){notes=d.notes;}
+    if(d.alerts && d.alerts.length){alerts=d.alerts;}
+    if(d.alertHistory){alertHistory=d.alertHistory;}
+    if(d.foodSafety){
+      const newSnap = JSON.stringify(d.foodSafety);
+      if(newSnap !== _fsLastSnapshot){
+        foodSafety=Object.assign(foodSafety,d.foodSafety);
+        _fsLastSnapshot = newSnap;
+        if(document.getElementById('panel-food').classList.contains('active')) renderAllFS();
+      }
+    }
+    renderSentBox();
+    renderPlan();
+    renderNotes();
+    renderAlerts();
+    renderAlertHistory();
+    populateLocFilter();
+    updateAll();
+  }catch(e){console.log('❌ فشل تحديث بيانات الصيانة من السيرفر',e);}
+}
+
+function saveData(){
+  _fsLastSnapshot = JSON.stringify(foodSafety);
+  clearTimeout(_maintSaveTimeout);
+  _maintSaveTimeout = setTimeout(() => {
+    fetch('/api/maintenance-state', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify({faults,counter,sentAlerts,planItems,notes,alerts,alertHistory,settings,foodSafety})
+    }).then(async res => {
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json || !json.success) console.error('❌ السيرفر رفض حفظ بيانات الصيانة:', res.status, json);
+    }).catch(err => console.error('❌ فشل الاتصال بالسيرفر أثناء حفظ الصيانة:', err));
+  }, 500);
+}
+
+function updateDataSize(){
+  const el = document.getElementById('data-size');
+  if(el) el.textContent = `البيانات محفوظة على السيرفر (اللابتوب)`;
+}
+
+// ====== إرسال تنبيه للمشتريات عن طريق السيرفر (يوصل لكل الأجهزة) ======
+async function sendAlertToProcurement(alertData){
+  try{
+    const res = await fetch('/api/proc-alerts', { cache: 'no-store' });
+    const json = await res.json();
+    const existing = (json.success && Array.isArray(json.data)) ? json.data : [];
+    existing.push(alertData);
+    await fetch('/api/proc-alerts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify(existing)
+    });
+  }catch(e){ console.error('❌ فشل إرسال التنبيه للمشتريات عن طريق السيرفر:', e); }
+}
+
+// ====== CLOCK ======
+function updateClock(){
+  const now = new Date();
+  document.getElementById('hclock').textContent = now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateClock,1000); updateClock();
+document.getElementById('hdate').textContent = new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ====== TABS ======
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  if(tab==='stats') updateStats();
+  if(tab==='log') applyFilters();
+  if(tab==='food') initFoodSafety();
+}
+
+// ====== CHARTS ======
+let donutC,lineC,highPctC,downBarC,downPieC;
+const CHART_DEFAULTS = {
+  color:'#94a3b8',
+  grid:{color:'rgba(255,255,255,0.04)'},
+};
+try{
+  donutC=new Chart(document.getElementById('cDonut'),{type:'doughnut',data:{labels:['عالية','متوسطة','منخفضة'],datasets:[{data:[0,0,0],backgroundColor:['#ef4444','#f97316','#10b981'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false}}}});
+  lineC=new Chart(document.getElementById('cLine'),{type:'line',data:{labels:[],datasets:[{label:'تراكمي',data:[],borderColor:'#ffd700',backgroundColor:'rgba(255,215,0,0.12)',tension:0.4,fill:true,borderWidth:2,pointRadius:5,pointBackgroundColor:'#ffd700'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#94a3b8',stepSize:1},grid:{color:'rgba(255,255,255,0.04)'},beginAtZero:true}}}});
+  highPctC=new Chart(document.getElementById('cHighPct'),{type:'line',data:{labels:[],datasets:[{label:'% عالية',data:[],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.1)',tension:0.4,fill:true,borderWidth:2,pointRadius:5,pointBackgroundColor:'#ef4444'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8',font:{size:9}},grid:{color:'rgba(255,255,255,0.04)'}},y:{max:100,ticks:{color:'#94a3b8',callback:v=>v+'%'},grid:{color:'rgba(255,255,255,0.04)'},beginAtZero:true}}}});
+  downBarC=new Chart(document.getElementById('cDownBar'),{type:'bar',data:{labels:['عالية','متوسطة','منخفضة'],datasets:[{data:[0,0,0],backgroundColor:['#ef4444','#f97316','#10b981'],borderRadius:6,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(255,255,255,0.04)'},beginAtZero:true}}}});
+  downPieC=new Chart(document.getElementById('cDownPie'),{type:'doughnut',data:{labels:['عالية','متوسطة','منخفضة'],datasets:[{data:[0,0,0],backgroundColor:['#ef4444','#f97316','#10b981'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false}}}});
+}catch(e){console.log('Chart error:',e);}
+
+// ====== TOAST ======
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ====== ADD FAULT ======
+function addFault(){
+  const loc=document.getElementById('f-loc').value;
+  const p=document.getElementById('f-priority').value;
+  const desc=document.getElementById('f-desc').value.trim();
+  const tech=document.getElementById('f-tech').value.trim();
+  const cause=document.getElementById('f-cause').value.trim();
+  const parts=document.getElementById('f-parts').value.trim();
+  const fnotes=document.getElementById('f-notes').value.trim();
+  if(!desc){showToast('⚠️ الرجاء كتابة وصف العطل');return;}
+  counter++;
+  const id='CM-'+String(counter).padStart(3,'0');
+  const now=new Date();
+  const time=now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  const dateStr=now.toLocaleDateString('ar-EG');
+  // down بيتحسب تلقائياً بدءاً من صفر ولحد لحظة الإغلاق (شوف closeFault و refreshOpenDurations)
+  const fault={id,loc,p,down:0,desc,tech,cause,parts,notes:fnotes,time,date:dateStr,ts:Date.now(),status:'open',sent:false};
+  faults.push(fault);
+  syncFaultToFoodSafety(fault);
+  // Clear fields
+  ['f-desc','f-cause','f-parts','f-tech','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-down').value='';
+  populateLocFilter();
+  updateAll();
+  saveData();
+  showToast('✨ تم تسجيل العطل: '+id);
+  // Alert bar for high priority
+  if(p==='high'){
+    const bar=document.getElementById('alert-bar');
+    document.getElementById('alert-bar-text').textContent='⚠️ تم تسجيل عطل عالي الأولوية في: '+loc;
+    bar.classList.add('show');
+    setTimeout(()=>bar.classList.remove('show'),6000);
+  }
+}
+
+// ====== مزامنة العطل مع سلامة الغذاء (سجل حياة معدة + بلاغ عطل تفصيلي) ======
+function syncFaultToFoodSafety(fault){
+  if(!foodSafety.lifeLog) foodSafety.lifeLog=[];
+  if(!foodSafety.maintForm) foodSafety.maintForm=[];
+
+  const eqName = (fault.loc||'').replace(/^\d+\s*-\s*/,'').trim() || fault.loc;
+
+  // 1) سجل حياة معدة: نلاقي المعدة بالاسم أو ننشئها لو مش موجودة
+  let eq = foodSafety.lifeLog.find(e=>(e.name||'').trim()===eqName);
+  if(!eq){
+    eq = {id:'eq_'+Date.now(),name:eqName,code:'',loc:fault.loc,origin:'',year:'',model:'',cleaning:'',serviceDate:'',func:'',entries:[]};
+    foodSafety.lifeLog.push(eq);
+  }
+  const noteParts=[];
+  if(fault.cause) noteParts.push('السبب: '+fault.cause);
+  if(fault.parts) noteParts.push('قطع الغيار: '+fault.parts);
+  if(fault.notes) noteParts.push(fault.notes);
+  eq.entries.push({
+    date:fault.date,
+    type:'علاجية',
+    desc:'بلاغ عطل '+fault.id+' ('+(LBL[fault.p]||fault.p)+'): '+fault.desc,
+    notes:noteParts.join(' | '),
+    tech:fault.tech||''
+  });
+
+  // 2) بلاغ عطل تفصيلي (نموذج 3 — سلامة الغذاء)
+  foodSafety.maintForm.push({
+    id:'fs_maintForm_'+Date.now(),
+    date:fault.date,
+    loc:fault.loc,
+    code:'',
+    eq:eqName,
+    shift:'',
+    batchNo:'',
+    product:'',
+    prodStatus:'',
+    reportTime:fault.time,
+    faultDesc:'['+fault.id+'] '+fault.desc,
+    reportedBy:fault.tech||'',
+    receivedBy:'',
+    rootCause:fault.cause||'',
+    actions:'',
+    spareParts:fault.parts||'',
+    startTime:'',
+    endTime:'',
+    repairStatus:'',
+    toolboxCheck:'',
+    cleaningCheck:'',
+    engineer:''
+  });
+
+  // لو تبويب سلامة الغذاء مفتوح حالياً، حدّث العرض فوراً
+  const foodPanel=document.getElementById('panel-food');
+  if(foodPanel && foodPanel.classList.contains('active')) renderAllFS();
+}
+
+// ====== SEND TO PROCUREMENT ======
+function sendToProcurement(){
+  if(!faults.length){showToast('⚠️ سجل عطل أولاً');return;}
+  const openUnsent=faults.filter(f=>!f.sent&&f.status==='open');
+  if(!openUnsent.length){showToast('لا توجد أعطال مفتوحة غير مرسلة');return;}
+  const lastFault=openUnsent[openUnsent.length-1];
+  sendSingleAlert(lastFault.id);
+}
+
+function sendSingleAlert(faultId){
+  const fault=faults.find(x=>x.id===faultId);
+  if(!fault){showToast('العطل غير موجود');return;}
+  if(fault.sent){showToast('التنبيه مرسل بالفعل!');return;}
+  fault.sent=true;
+  fault.sentAt=Date.now();
+  const alertData={
+    id:'PROC-'+Date.now(),source:'maintenance',faultId:fault.id,
+    title:'عطل في '+fault.loc+' يحتاج تدخل',equipment:fault.loc,
+    description:fault.desc,cause:fault.cause,parts:fault.parts,
+    priority:fault.p,technician:fault.tech,time:fault.time,date:fault.date,
+    timestamp:Date.now(),status:'new'
+  };
+  sendAlertToProcurement(alertData);
+  sentAlerts.push(alertData);
+  renderSentBox();
+  updateAll();
+  saveData();
+  showToast('🔔 تم إرسال التنبيه للمشتريات!');
+  try{const bc=new BroadcastChannel('sigma_alerts');bc.postMessage({type:'new_alert',alert:alertData});}catch(e){}
+}
+
+function renderSentBox(){
+  const box=document.getElementById('sent-box');
+  const list=document.getElementById('sent-list');
+  if(!sentAlerts.length){box.classList.remove('active');return;}
+  box.classList.add('active');
+  list.innerHTML=sentAlerts.map(a=>`
+    <div class="sent-item">
+      <div>
+        <div class="title">${a.title}</div>
+        <div class="desc">${a.equipment} | ${(a.description||'').substring(0,45)}... | ${a.time}</div>
+      </div>
+      <div class="status"><i class="fa-solid fa-check"></i> مرسل</div>
+    </div>
+  `).join('');
+}
+
+// ====== CLOSE / REOPEN ======
+function closeFault(id){
+  const f=faults.find(x=>x.id===id);
+  if(f){
+    f.status='closed';
+    f.closedTs=Date.now();
+    // مدة التوقف الفعلية = من وقت تسجيل العطل لحد لحظة الإغلاق
+    f.down=Math.max(0,Math.round((f.closedTs-f.ts)/60000));
+    updateAll();applyFilters();saveData();
+    showToast('✅ تم إغلاق العطل: '+id+' — مدة التوقف: '+f.down+' دقيقة');
+  }
+}
+function reopenFault(id){
+  const f=faults.find(x=>x.id===id);
+  if(f){
+    f.status='open';
+    delete f.closedTs;
+    updateAll();applyFilters();saveData();showToast('🔓 تم إعادة فتح العطل: '+id);
+  }
+}
+
+// ====== تحديث مدة التوقف الحية للأعطال المفتوحة ======
+function refreshOpenDurations(){
+  let changed=false;
+  faults.forEach(f=>{
+    if(f.status==='open'){
+      const mins=Math.max(0,Math.round((Date.now()-f.ts)/60000));
+      if(f.down!==mins){f.down=mins;changed=true;}
+    }
+  });
+  if(changed){updateAll();applyFilters();}
+}
+setInterval(refreshOpenDurations,30000); // تحديث كل 30 ثانية
+
+// ====== DELETE ======
+function deleteFault(id){
+  if(!confirm('هل أنت متأكد من حذف العطل '+id+'؟')){return;}
+  faults=faults.filter(x=>x.id!==id);
+  updateAll();applyFilters();saveData();showToast('🗑️ تم حذف العطل: '+id);
+}
+
+function clearAllFaults(){
+  if(!faults.length){showToast('لا توجد أعطال');return;}
+  if(!confirm('هل أنت متأكد من مسح جميع الأعطال ('+faults.length+' عطل)؟ هذا الإجراء لا يمكن التراجع عنه.')){return;}
+  faults=[];counter=0;sentAlerts=[];
+  updateAll();applyFilters();renderSentBox();saveData();
+  showToast('🗑️ تم مسح جميع الأعطال');
+}
+
+// ====== EDIT ======
+function editFault(id){
+  const f=faults.find(x=>x.id===id);
+  if(!f) return;
+  document.getElementById('edit-id').value=id;
+  document.getElementById('edit-loc').value=f.loc;
+  document.getElementById('edit-priority').value=f.p;
+  document.getElementById('edit-down').value=f.down;
+  document.getElementById('edit-tech').value=f.tech||'';
+  document.getElementById('edit-desc').value=f.desc||'';
+  document.getElementById('edit-cause').value=f.cause||'';
+  document.getElementById('edit-parts').value=f.parts||'';
+  document.getElementById('edit-notes').value=f.notes||'';
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeModal(){document.getElementById('edit-modal').classList.remove('open');}
+function saveEdit(){
+  const id=document.getElementById('edit-id').value;
+  const f=faults.find(x=>x.id===id);
+  if(!f){closeModal();return;}
+  f.loc=document.getElementById('edit-loc').value;
+  f.p=document.getElementById('edit-priority').value;
+  f.down=parseInt(document.getElementById('edit-down').value)||0;
+  f.tech=document.getElementById('edit-tech').value;
+  f.desc=document.getElementById('edit-desc').value;
+  f.cause=document.getElementById('edit-cause').value;
+  f.parts=document.getElementById('edit-parts').value;
+  f.notes=document.getElementById('edit-notes').value;
+  closeModal();updateAll();applyFilters();saveData();showToast('✏️ تم تعديل العطل: '+id);
+}
+document.getElementById('edit-modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// ====== WHATSAPP PER FAULT ======
+function sendFaultWA(id){
+  const f=faults.find(x=>x.id===id);
+  if(!f) return;
+  const msg=encodeURIComponent(
+    `تنبيه صيانة — ${settings.company||'منظومة سيجام'}\n`+
+    `━━━━━━━━━━━━\n`+
+    `الرقم: ${f.id}\n`+
+    `المكان: ${f.loc}\n`+
+    `الأولوية: ${LBL[f.p]}\n`+
+    `الوصف: ${f.desc}\n`+
+    (f.cause?`السبب: ${f.cause}\n`:'')+
+    (f.parts?`القطع: ${f.parts}\n`:'')+
+    (f.tech?`الفني: ${f.tech}\n`:'')+
+    `التوقف: ${f.down} دقيقة\n`+
+    `التاريخ: ${f.date} ${f.time}`
+  );
+  window.open('https://wa.me/'+(settings.phone||'01140707700')+'?text='+msg,'_blank');
+}
+
+// ====== UPDATE ALL ======
+function updateAll(){
+  const total=faults.length;
+  const high=faults.filter(f=>f.p==='high').length;
+  const med=faults.filter(f=>f.p==='medium').length;
+  const low=faults.filter(f=>f.p==='low').length;
+  const closed=faults.filter(f=>f.status==='closed').length;
+  const open=total-closed;
+  const totalDown=faults.reduce((a,f)=>a+f.down,0);
+  document.getElementById('k-total').textContent=total;
+  document.getElementById('k-high').textContent=high;
+  document.getElementById('k-med').textContent=med;
+  document.getElementById('k-low').textContent=low;
+  document.getElementById('k-down').textContent=totalDown;
+  document.getElementById('k-closed').textContent=closed;
+  document.getElementById('lg-h').textContent=high;
+  document.getElementById('lg-m').textContent=med;
+  document.getElementById('lg-l').textContent=low;
+  document.getElementById('log-count').textContent='('+total+' عطل)';
+  document.getElementById('badge-open').textContent=open;
+  document.getElementById('hlast').textContent='آخر تحديث: '+new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  updateAlertBadge();
+
+  if(donutC){donutC.data.datasets[0].data=[high,med,low];donutC.update('active');}
+  if(lineC){
+    lineC.data.labels=faults.map((_,i)=>'#'+(i+1));
+    lineC.data.datasets[0].data=faults.map((_,i)=>i+1);
+    lineC.update('active');
+  }
+  if(highPctC){
+    highPctC.data.labels=faults.map((_,i)=>'#'+(i+1));
+    highPctC.data.datasets[0].data=faults.map((_,i)=>{
+      const h=faults.slice(0,i+1).filter(f=>f.p==='high').length;
+      return Math.round(h/(i+1)*100);
+    });
+    highPctC.update('active');
+  }
+  if(downBarC){
+    const dH=faults.filter(f=>f.p==='high').reduce((a,f)=>a+f.down,0);
+    const dM=faults.filter(f=>f.p==='medium').reduce((a,f)=>a+f.down,0);
+    const dL=faults.filter(f=>f.p==='low').reduce((a,f)=>a+f.down,0);
+    downBarC.data.datasets[0].data=[dH,dM,dL];
+    downBarC.update('active');
+  }
+  if(downPieC){
+    const dH=faults.filter(f=>f.p==='high').reduce((a,f)=>a+f.down,0);
+    const dM=faults.filter(f=>f.p==='medium').reduce((a,f)=>a+f.down,0);
+    const dL=faults.filter(f=>f.p==='low').reduce((a,f)=>a+f.down,0);
+    downPieC.data.datasets[0].data=[dH,dM,dL];
+    downPieC.update('active');
+  }
+  // Location bars
+  const ec={},ed={};
+  LOCATIONS.forEach(e=>{ec[e]=0;ed[e]=0;});
+  faults.forEach(f=>{ec[f.loc]=(ec[f.loc]||0)+1;ed[f.loc]=(ed[f.loc]||0)+f.down;});
+  const active=LOCATIONS.filter(e=>ec[e]>0);
+  const maxC=Math.max(1,...active.map(e=>ec[e]));
+  const maxD=Math.max(1,...active.map(e=>ed[e]));
+  document.getElementById('barLoc').innerHTML=active.length?active.sort((a,b)=>ec[b]-ec[a]).map(e=>{
+    const pct=Math.round(ec[e]/maxC*100);
+    const col=ec[e]>=3?'#ef4444':ec[e]>=2?'#f97316':'#3b82f6';
+    return `<div class="bar-wrap"><div class="bar-meta"><span>${SHORT[e]||e}</span><span style="color:${col};font-weight:800">${ec[e]} عطل</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
+  }).join(''):'<div class="empty">لا توجد بيانات</div>';
+  document.getElementById('barDown').innerHTML=active.length?active.sort((a,b)=>ed[b]-ed[a]).map(e=>{
+    const pct=Math.round(ed[e]/maxD*100);
+    const col=ed[e]>60?'#ef4444':ed[e]>20?'#f97316':'#10b981';
+    return `<div class="bar-wrap"><div class="bar-meta"><span>${SHORT[e]||e}</span><span style="color:${col};font-weight:800">${ed[e]} دق</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div></div>`;
+  }).join(''):'<div class="empty">لا توجد بيانات</div>';
+  renderLog([...faults]);
+}
+
+// ====== RENDER LOG ======
+function renderLog(items){
+  const list=document.getElementById('log-list');
+  if(list){
+    if(!items.length){list.innerHTML='<div class="empty">لا توجد أعطال — أضف أول عطل لتفعيل الرسوم البيانية</div>';return;}
+    list.innerHTML=[...items].reverse().map(f=>buildLogItem(f)).join('');
+  }
+}
+
+function buildLogItem(f){
+  return `
+    <div class="log-item ${f.p==='medium'?'med':f.p==='low'?'low':''} ${f.status==='closed'?'closed-item':''}">
+      <div style="flex:1;min-width:0;">
+        <div class="log-eq">${f.loc} &nbsp;<span class="pill ${f.p==='high'?'ph':f.p==='medium'?'pm':'pl'}">${LBL[f.p]}</span>&nbsp;${f.status==='closed'?'<span class="pill pclosed">مغلق</span>':''}${f.sent?'&nbsp;<span class="pill pproc"><i class="fa-solid fa-paper-plane"></i> مرسل</span>':''}</div>
+        <div class="log-desc">${f.id} · ${f.desc}${f.cause?' | '+f.cause:''}${f.parts?' | قطع: '+f.parts:''}${f.status==='open'?' | ⏱️ متوقف منذ '+f.down+' دق':' | ⏹️ مدة التوقف: '+f.down+' دق'}${f.tech?' | '+f.tech:''}</div>
+        <div style="font-size:10px;color:var(--dim);margin-top:2px">${f.date} ${f.time}${f.notes?' | '+f.notes:''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;margin-right:10px;flex-wrap:wrap;justify-content:flex-end">
+        <button class="edit-btn" onclick="editFault('${f.id}')" title="تعديل"><i class="fa-solid fa-pen"></i></button>
+        ${f.status==='open'?`<button class="close-btn" onclick="closeFault('${f.id}')">إغلاق</button>`:
+          `<button class="reopen-btn" onclick="reopenFault('${f.id}')">إعادة فتح</button>`}
+        ${!f.sent?`<button class="alert-btn" onclick="sendSingleAlert('${f.id}')" title="إرسال للمشتريات"><i class="fa-solid fa-bell"></i></button>`:''}
+        <button class="wa-btn" onclick="sendFaultWA('${f.id}')" title="إرسال واتساب"><i class="fa-brands fa-whatsapp"></i></button>
+        <button class="del-btn" onclick="deleteFault('${f.id}')" title="حذف"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+  `;
+}
+
+// ====== FILTERS (LOG TAB) ======
+function populateLocFilter(){
+  const sel=document.getElementById('filter-loc');
+  const used=[...new Set(faults.map(f=>f.loc))];
+  const cur=sel.value;
+  sel.innerHTML='<option value="all">كل الأماكن</option>'+used.map(l=>`<option value="${l}">${SHORT[l]||l}</option>`).join('');
+  if(used.includes(cur)) sel.value=cur;
+}
+
+function applyFilters(){
+  const search=(document.getElementById('search-input').value||'').trim().toLowerCase();
+  const pri=document.getElementById('filter-priority').value;
+  const sta=document.getElementById('filter-status').value;
+  const loc=document.getElementById('filter-loc').value;
+  let items=[...faults];
+  if(pri!=='all') items=items.filter(f=>f.p===pri);
+  if(sta==='open') items=items.filter(f=>f.status==='open');
+  else if(sta==='closed') items=items.filter(f=>f.status==='closed');
+  else if(sta==='sent') items=items.filter(f=>f.sent);
+  if(loc!=='all') items=items.filter(f=>f.loc===loc);
+  if(search) items=items.filter(f=>(f.desc+f.cause+f.loc+f.tech+f.parts+f.id).toLowerCase().includes(search));
+  const list=document.getElementById('log-list-full');
+  if(!list) return;
+  if(!items.length){list.innerHTML='<div class="empty">لا توجد أعطال في هذه الفئة</div>';return;}
+  list.innerHTML=[...items].reverse().map(f=>buildLogItem(f)).join('');
+}
+
+// ====== STATS ======
+function updateStats(){
+  const total=faults.length;
+  if(!total){
+    ['stat-total','stat-down','stat-avgdown','stat-highpct','stat-closerate','stat-sentpct'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.textContent='0';
+    });
+    const tb=document.getElementById('stats-table');
+    if(tb) tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--dim);padding:20px">لا توجد بيانات</td></tr>';
+    return;
+  }
+  const totalDown=faults.reduce((a,f)=>a+f.down,0);
+  const high=faults.filter(f=>f.p==='high').length;
+  const closed=faults.filter(f=>f.status==='closed').length;
+  const sent=faults.filter(f=>f.sent).length;
+  document.getElementById('stat-total').textContent=total;
+  document.getElementById('stat-down').textContent=totalDown;
+  const hrs=document.getElementById('stat-down-hrs');
+  if(hrs) hrs.textContent='('+Math.floor(totalDown/60)+' ساعة '+totalDown%60+' دقيقة)';
+  document.getElementById('stat-avgdown').textContent=total?Math.round(totalDown/total):0;
+  document.getElementById('stat-highpct').textContent=total?Math.round(high/total*100)+'%':'0%';
+  document.getElementById('stat-closerate').textContent=total?Math.round(closed/total*100)+'%':'0%';
+  document.getElementById('stat-sentpct').textContent=total?Math.round(sent/total*100)+'%':'0%';
+
+  // Location table
+  const ec={},ed={},eh={},em={},el2={};
+  LOCATIONS.forEach(e=>{ec[e]=0;ed[e]=0;eh[e]=0;em[e]=0;el2[e]=0;});
+  faults.forEach(f=>{
+    ec[f.loc]=(ec[f.loc]||0)+1;
+    ed[f.loc]=(ed[f.loc]||0)+f.down;
+    if(f.p==='high') eh[f.loc]=(eh[f.loc]||0)+1;
+    else if(f.p==='medium') em[f.loc]=(em[f.loc]||0)+1;
+    else el2[f.loc]=(el2[f.loc]||0)+1;
+  });
+  const active=LOCATIONS.filter(e=>ec[e]>0).sort((a,b)=>ec[b]-ec[a]);
+  const tb=document.getElementById('stats-table');
+  if(tb) tb.innerHTML=active.map((e,i)=>`
+    <tr>
+      <td>${i+1}</td>
+      <td>${SHORT[e]||e}</td>
+      <td style="font-weight:800;color:var(--gold)">${ec[e]}</td>
+      <td>${ed[e]} دق</td>
+      <td style="color:var(--red)">${eh[e]}</td>
+      <td style="color:var(--orange)">${em[e]}</td>
+      <td style="color:var(--green)">${el2[e]}</td>
+      <td>
+        <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(ec[e]/total*100)}%;background:linear-gradient(90deg,#ffd700,#ffaa00)"></div></div>
+        <span style="font-size:10px;color:var(--dim)">${Math.round(ec[e]/total*100)}%</span>
+      </td>
+    </tr>
+  `).join('');
+
+  // Technician table
+  const techs={};
+  faults.forEach(f=>{
+    const t=f.tech||'غير محدد';
+    if(!techs[t]) techs[t]={cnt:0,high:0,down:0,closed:0};
+    techs[t].cnt++;
+    if(f.p==='high') techs[t].high++;
+    techs[t].down+=f.down;
+    if(f.status==='closed') techs[t].closed++;
+  });
+  const tb2=document.getElementById('tech-table');
+  if(tb2) tb2.innerHTML=Object.entries(techs).sort((a,b)=>b[1].cnt-a[1].cnt).map(([t,d])=>`
+    <tr>
+      <td style="font-weight:700">${t}</td>
+      <td style="color:var(--gold);font-weight:800">${d.cnt}</td>
+      <td style="color:var(--red)">${d.high}</td>
+      <td>${d.down} دق</td>
+      <td style="color:var(--green)">${d.closed}</td>
+      <td>${d.cnt?Math.round(d.closed/d.cnt*100):0}%</td>
+    </tr>
+  `).join('');
+}
+
+// ====== PLAN ======
+let planCounter=0;
+function addPlanItem(){
+  const loc=document.getElementById('p-loc').value;
+  const freq=document.getElementById('p-freq').value;
+  const tech=document.getElementById('p-tech').value.trim();
+  const desc=document.getElementById('p-desc').value.trim();
+  if(!desc){showToast('⚠️ اكتب وصف المهمة');return;}
+  planCounter++;
+  const now=new Date();
+  planItems.push({id:'PLN-'+String(planCounter).padStart(2,'0'),loc,freq,tech,desc,
+    created:now.toLocaleDateString('ar-EG'),done:false,lastDone:null});
+  document.getElementById('p-desc').value='';
+  document.getElementById('p-tech').value='';
+  renderPlan();saveData();showToast('📅 تم إضافة مهمة الصيانة');
+}
+
+function renderPlan(){
+  const el=document.getElementById('plan-list');
+  if(!el) return;
+  if(!planItems.length){el.innerHTML='<div class="empty">لم تُضف أي مهام صيانة دورية بعد</div>';return;}
+  el.innerHTML=planItems.map(p=>`
+    <div class="plan-item">
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:13px;color:var(--text)">${p.loc}</div>
+        <div style="font-size:11px;color:var(--dim);margin-top:2px">${p.desc}${p.tech?' | '+p.tech:''}</div>
+        <div style="font-size:10px;color:var(--dim);margin-top:2px">${FREQ_LBL[p.freq]||p.freq} | ${p.lastDone?'آخر تنفيذ: '+p.lastDone:'لم يُنفَّذ بعد'}</div>
+      </div>
+      <div style="display:flex;gap:7px;align-items:center">
+        <span class="plan-due ${p.done?'due-ok':'due-warn'}">${p.done?'✓ منجز':'معلق'}</span>
+        <button class="btn btn-green btn-sm" onclick="donePlan('${p.id}')"><i class="fa-solid fa-check"></i> تم</button>
+        <button class="del-btn" onclick="deletePlan('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function donePlan(id){
+  const p=planItems.find(x=>x.id===id);
+  if(p){p.done=true;p.lastDone=new Date().toLocaleDateString('ar-EG');renderPlan();saveData();showToast('✅ تم تنفيذ المهمة');}
+}
+function deletePlan(id){
+  planItems=planItems.filter(x=>x.id!==id);renderPlan();saveData();showToast('🗑️ تم حذف المهمة');
+}
+
+// ====== NOTES ======
+function addNote(){
+  const text=document.getElementById('note-text').value.trim();
+  if(!text){showToast('⚠️ اكتب نص الملاحظة');return;}
+  notes.push({id:Date.now(),text,date:new Date().toLocaleDateString('ar-EG'),time:new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})});
+  document.getElementById('note-text').value='';
+  renderNotes();saveData();showToast('📝 تم حفظ الملاحظة');
+}
+
+function renderNotes(){
+  const el=document.getElementById('notes-list');
+  if(!el) return;
+  if(!notes.length){el.innerHTML='<div class="empty">لا توجد ملاحظات بعد</div>';return;}
+  el.innerHTML=[...notes].reverse().map(n=>`
+    <div class="note-item">
+      <div style="flex:1">
+        <div class="note-text">${n.text}</div>
+        <div class="note-meta">${n.date} ${n.time}</div>
+      </div>
+      <button class="del-btn" onclick="deleteNote(${n.id})"><i class="fa-solid fa-trash"></i></button>
+    </div>
+  `).join('');
+}
+function deleteNote(id){notes=notes.filter(n=>n.id!==id);renderNotes();saveData();}
+
+// ====== ALERTS ======
+function toggleAlertTypeFields(){
+  const t=document.getElementById('al-type').value;
+  document.getElementById('al-freq-wrap').style.display = t==='date' ? '' : 'none';
+  document.getElementById('al-hours-wrap').style.display = t==='hours' ? '' : 'none';
+}
+
+function nextAlertDueDate(a){
+  const base = a.lastDoneDate ? parseArDate(a.lastDoneDate) : parseArDate(a.created);
+  const d = new Date(base);
+  switch(a.freq){
+    case 'daily': d.setDate(d.getDate()+1); break;
+    case 'weekly': d.setDate(d.getDate()+7); break;
+    case 'monthly': d.setMonth(d.getMonth()+1); break;
+    case 'quarterly': d.setMonth(d.getMonth()+3); break;
+    case 'biannual': d.setMonth(d.getMonth()+6); break;
+    case 'yearly': d.setFullYear(d.getFullYear()+1); break;
+    case 'day1': d.setMonth(d.getMonth()+1); d.setDate(1); break;
+    case 'firstweek': d.setMonth(d.getMonth()+1); d.setDate(1); break;
+    default: d.setMonth(d.getMonth()+1);
+  }
+  return d;
+}
+
+// تحويل تاريخ عربي من toLocaleDateString('ar-EG') لكائن Date (بيرجع النهارده لو فشل)
+function parseArDate(str){
+  if(!str) return new Date();
+  const norm = String(str).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c));
+  const parts = norm.split(/[\/\-]/).map(p=>parseInt(p,10));
+  if(parts.length===3 && !isNaN(parts[0])){
+    // معظم الحالات: يوم/شهر/سنة
+    return new Date(parts[2],parts[1]-1,parts[0]);
+  }
+  const d=new Date(str);
+  return isNaN(d) ? new Date() : d;
+}
+
+function alertStatus(a){
+  if(a.type==='hours'){
+    const used = (a.currentHours||0)-(a.lastDoneHours||0);
+    const remaining = a.intervalHours-used;
+    const soonAt = Math.max(50, Math.round(a.intervalHours*0.1));
+    if(remaining<=0) return {cls:'overdue',badge:'due-bad',label:'متأخر ⚠️',detail:'تجاوز الفاصل بـ '+Math.abs(remaining)+' ساعة'};
+    if(remaining<=soonAt) return {cls:'soon',badge:'due-warn',label:'قريب',detail:'متبقي '+remaining+' ساعة'};
+    return {cls:'ok',badge:'due-ok',label:'سليم',detail:'متبقي '+remaining+' ساعة'};
+  }
+  const next=nextAlertDueDate(a);
+  const today=new Date(); today.setHours(0,0,0,0);
+  const diffDays=Math.ceil((next-today)/86400000);
+  const nextStr=next.toLocaleDateString('ar-EG');
+  if(diffDays<=0) return {cls:'overdue',badge:'due-bad',label:'متأخر ⚠️',detail:'كان مستحق: '+nextStr};
+  if(diffDays<=3) return {cls:'soon',badge:'due-warn',label:'قريب',detail:'مستحق: '+nextStr+' (خلال '+diffDays+' يوم)'};
+  return {cls:'ok',badge:'due-ok',label:'سليم',detail:'مستحق: '+nextStr};
+}
+
+function addAlert(){
+  const title=document.getElementById('al-title').value.trim();
+  const cat=document.getElementById('al-cat').value.trim();
+  const type=document.getElementById('al-type').value;
+  if(!title){showToast('⚠️ اكتب اسم التنبيه');return;}
+  alertCounter++;
+  const today=new Date().toLocaleDateString('ar-EG');
+  const base={id:'ALT-C'+String(alertCounter).padStart(2,'0'),title,cat:cat||'عام',type,lastDoneDate:null,created:today,custom:true};
+  if(type==='hours'){
+    const iv=parseInt(document.getElementById('al-interval-hours').value,10);
+    if(!iv || iv<=0){showToast('⚠️ اكتب عدد الساعات');return;}
+    base.intervalHours=iv; base.lastDoneHours=0; base.currentHours=0;
+  }else{
+    base.freq=document.getElementById('al-freq').value;
+  }
+  alerts.push(base);
+  document.getElementById('al-title').value='';
+  document.getElementById('al-cat').value='';
+  document.getElementById('al-interval-hours').value='';
+  renderAlerts();saveData();showToast('🔔 تم إضافة التنبيه');
+}
+
+function updateAlertHours(id){
+  const inp=document.getElementById('ah-'+id);
+  if(!inp) return;
+  const val=parseFloat(inp.value);
+  if(isNaN(val)){showToast('⚠️ اكتب قراءة صحيحة');return;}
+  const a=alerts.find(x=>x.id===id);
+  if(a){a.currentHours=val;renderAlerts();saveData();showToast('⏱️ تم تحديث قراءة الساعات');}
+}
+
+function doneAlert(id){
+  const a=alerts.find(x=>x.id===id);
+  if(!a) return;
+  const today=new Date().toLocaleDateString('ar-EG');
+  const time=new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  let detail='';
+  if(a.type==='hours'){
+    a.lastDoneHours=a.currentHours||a.lastDoneHours||0;
+    detail='عند قراءة '+a.lastDoneHours+' ساعة تشغيل';
+  }else{
+    detail=ALERT_FREQ_LBL[a.freq]||a.freq;
+  }
+  a.lastDoneDate=today;
+  alertHistory.push({id:Date.now(),alertId:a.id,title:a.title,cat:a.cat,date:today,time,detail});
+  renderAlerts();renderAlertHistory();saveData();showToast('✅ تم تنفيذ التنبيه: '+a.title);
+}
+
+function deleteAlert(id){
+  if(!confirm('هل تريد حذف هذا التنبيه؟')) return;
+  alerts=alerts.filter(x=>x.id!==id);
+  renderAlerts();saveData();showToast('🗑️ تم حذف التنبيه');
+}
+
+function renderAlerts(){
+  const el=document.getElementById('alerts-list');
+  if(!el) return;
+  if(!alerts.length){el.innerHTML='<div class="empty">لا توجد تنبيهات</div>';updateAlertBadge();return;}
+  const cats={};
+  alerts.forEach(a=>{ (cats[a.cat||'عام']=cats[a.cat||'عام']||[]).push(a); });
+  let html='';
+  Object.keys(cats).forEach(cat=>{
+    html+=`<div class="alert-cat-title"><i class="fa-solid fa-layer-group"></i> ${cat}</div>`;
+    html+=cats[cat].map(a=>{
+      const s=alertStatus(a);
+      const freqTxt = a.type==='hours' ? ('كل '+a.intervalHours+' ساعة تشغيل') : (ALERT_FREQ_LBL[a.freq]||a.freq);
+      const hoursBox = a.type==='hours' ? `
+        <div class="alert-hours-box">
+          <input type="number" id="ah-${a.id}" value="${a.currentHours||0}" placeholder="القراءة الحالية">
+          <button class="btn btn-dark btn-sm" onclick="updateAlertHours('${a.id}')"><i class="fa-solid fa-rotate"></i></button>
+        </div>` : '';
+      return `
+      <div class="alert-item ${s.cls}">
+        <div style="flex:1;min-width:220px">
+          <div style="font-weight:800;font-size:13px;color:var(--text)">${a.title}</div>
+          <div style="font-size:11px;color:var(--dim);margin-top:2px">${freqTxt}</div>
+          <div style="font-size:10px;color:var(--dim);margin-top:2px">${s.detail}${a.lastDoneDate?' | آخر تنفيذ: '+a.lastDoneDate:' | لم يُنفَّذ بعد'}</div>
+        </div>
+        ${hoursBox}
+        <div style="display:flex;gap:7px;align-items:center">
+          <span class="plan-due ${s.badge}">${s.label}</span>
+          <button class="btn btn-green btn-sm" onclick="doneAlert('${a.id}')"><i class="fa-solid fa-check"></i> تم</button>
+          <button class="del-btn" onclick="deleteAlert('${a.id}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      </div>`;
+    }).join('');
+  });
+  el.innerHTML=html;
+  updateAlertBadge();
+}
+
+function renderAlertHistory(){
+  const el=document.getElementById('alerts-history-list');
+  if(!el) return;
+  if(!alertHistory.length){el.innerHTML='<div class="empty">لا يوجد سجل تنفيذ بعد</div>';return;}
+  el.innerHTML=[...alertHistory].reverse().slice(0,50).map(h=>`
+    <div class="alert-history-item">
+      <div>
+        <span style="color:var(--gold);font-weight:800">${h.title}</span>
+        <span class="t"> — ${h.detail||''}</span>
+      </div>
+      <div class="t">${h.date} ${h.time}</div>
+    </div>
+  `).join('');
+}
+
+function updateAlertBadge(){
+  const badge=document.getElementById('badge-alerts');
+  if(!badge) return;
+  const due=alerts.filter(a=>{const s=alertStatus(a);return s.cls==='overdue'||s.cls==='soon';}).length;
+  badge.textContent=due;
+  badge.style.background = due>0 ? 'var(--red)' : 'rgba(148,163,184,.3)';
+}
+
+function printAlertsReport(){
+  const pw=window.open('','_blank');
+  const rows=alerts.map((a,i)=>{
+    const s=alertStatus(a);
+    const freqTxt = a.type==='hours' ? ('كل '+a.intervalHours+' ساعة تشغيل') : (ALERT_FREQ_LBL[a.freq]||a.freq);
+    const cls = s.cls==='overdue'?'ph':s.cls==='soon'?'pm':'pl';
+    return `<tr><td>${i+1}</td><td>${a.title}</td><td>${a.cat||'—'}</td><td>${freqTxt}</td><td>${a.lastDoneDate||'لم يُنفَّذ'}</td><td>${s.detail}</td><td class="${cls}">${s.label}</td></tr>`;
+  }).join('');
+  const histRows=[...alertHistory].reverse().map((h,i)=>`<tr><td>${i+1}</td><td>${h.title}</td><td>${h.cat||'—'}</td><td>${h.detail||''}</td><td>${h.date}</td><td>${h.time}</td></tr>`).join('');
+  pw.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+    <title>تقرير تنفيذ التنبيهات — ${settings.company||'منظومة سيجام'}</title>
+    <style>body{font-family:Arial,sans-serif;direction:rtl;padding:24px;color:#1e293b}
+    h1{color:#b45309;margin-bottom:8px}h2{color:#0f172a;margin:20px 0 8px}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px}
+    th,td{padding:8px 10px;border:1px solid #e2e8f0;text-align:right}
+    th{background:#1e293b;color:#fbbf24;font-weight:700}
+    tr:nth-child(even){background:#f8fafc}
+    .ph{color:#ef4444;font-weight:800}.pm{color:#f97316;font-weight:700}.pl{color:#10b981;font-weight:700}
+    @media print{@page{margin:1cm}}</style></head><body>
+    <h1>${settings.company||'منظومة سيجام للصيانة'} — تقرير تنفيذ التنبيهات</h1>
+    <p>التاريخ: ${new Date().toLocaleDateString('ar-EG')} | المسؤول: ${settings.manager||'—'}</p>
+    <h2>حالة التنبيهات الحالية</h2>
+    <table><tr><th>#</th><th>التنبيه</th><th>التصنيف</th><th>التكرار</th><th>آخر تنفيذ</th><th>التفاصيل</th><th>الحالة</th></tr>
+    ${rows||'<tr><td colspan="7">لا توجد تنبيهات</td></tr>'}
+    </table>
+    <h2>سجل تنفيذ التنبيهات</h2>
+    <table><tr><th>#</th><th>التنبيه</th><th>التصنيف</th><th>تفاصيل التنفيذ</th><th>التاريخ</th><th>الوقت</th></tr>
+    ${histRows||'<tr><td colspan="6">لا يوجد سجل تنفيذ بعد</td></tr>'}
+    </table>
+    </body></html>`);
+  pw.document.close();
+  setTimeout(()=>pw.print(),500);
+}
+
+// ====== SETTINGS ======
+function saveSettings(){
+  settings.phone=document.getElementById('s-phone').value.trim();
+  settings.company=document.getElementById('s-company').value.trim();
+  settings.manager=document.getElementById('s-manager').value.trim();
+  saveData();showToast('✅ تم حفظ الإعدادات');
+}
+
+function resetAll(){
+  if(!confirm('هل أنت متأكد من إعادة تعيين النظام بالكامل؟ سيتم حذف جميع البيانات!')){return;}
+  faults=[];counter=0;sentAlerts=[];planItems=[];notes=[];planCounter=0;alerts=defaultAlerts();alertHistory=[];
+  localStorage.removeItem('sigam_data');
+  updateAll();renderSentBox();renderPlan();renderNotes();renderAlerts();renderAlertHistory();applyFilters();
+  showToast('🔄 تم إعادة تعيين النظام');
+}
+
+// ====== FOOD SAFETY MODULE ======
+// كل نموذج هنا مأخوذ من الملفات الأصلية اللي بعتها (أرقام النماذج بين قوسين)
+const FS_TYPES = {
+  inventory:{label:'قائمة حصر الأجهزة',short:'حصر الأجهزة',icon:'fa-list-ol',src:'نموذج 1',
+    fields:[
+      {id:'name',label:'اسم الماكينة / المعدة',type:'text',ph:'مثال: خط الفرز'},
+      {id:'code',label:'الكود',type:'text',ph:'مثال: M 01-58'},
+      {id:'loc',label:'المكان',type:'text',ph:'مثال: صالة الفرز 81/90'},
+      {id:'req',label:'المطلوب',type:'select',options:['صيانة','معايرة','صيانة ومعايرة']},
+      {id:'desc',label:'بيان الصيانة / المعايرة',type:'textarea',ph:'وصف أعمال الصيانة أو المعايرة الدورية...',full:true}
+    ]},
+  exitPermit:{label:'تصريح خروج معدة للصيانة',short:'تصريح خروج معدة',icon:'fa-truck-ramp-box',src:'نموذج 4',
+    fields:[
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'eqName',label:'اسم المعدة',type:'text'},
+      {id:'eqCode',label:'الكود',type:'text'},
+      {id:'dept',label:'الإدارة التابع لها المعدة',type:'text'},
+      {id:'fault',label:'وصف العطل',type:'text',full:true},
+      {id:'repairer',label:'الجهة القائمة بالإصلاح',type:'text'},
+      {id:'days',label:'عدد أيام الإصلاح',type:'text'},
+      {id:'returnDate',label:'تاريخ عودة المعدة',type:'date'},
+      {id:'method',label:'وصف طريقة الإصلاح',type:'text',full:true},
+      {id:'tech',label:'مسئول الصيانة',type:'text'}
+    ]},
+  maintForm:{label:'نموذج صيانة معدة (بلاغ عطل تفصيلي)',short:'بلاغ عطل تفصيلي',icon:'fa-file-medical',src:'نموذج 3',
+    fields:[
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'loc',label:'المكان',type:'text'},
+      {id:'code',label:'الكود',type:'text'},
+      {id:'eq',label:'المعدة',type:'text'},
+      {id:'shift',label:'الوردية',type:'select',options:['1','2','3']},
+      {id:'batchNo',label:'رقم الباتش',type:'text'},
+      {id:'product',label:'اسم المنتج',type:'text'},
+      {id:'prodStatus',label:'حالة الانتاج',type:'select',options:['متوقف','مستمر']},
+      {id:'reportTime',label:'وقت الابلاغ',type:'text'},
+      {id:'faultDesc',label:'شرح العطل',type:'textarea',full:true},
+      {id:'reportedBy',label:'القائم بالتبليغ',type:'text'},
+      {id:'receivedBy',label:'استلام البلاغ (الصيانة)',type:'text'},
+      {id:'rootCause',label:'الاسباب الجذرية للعطل',type:'textarea',full:true},
+      {id:'actions',label:'الاجراءات المتخذة',type:'textarea',full:true},
+      {id:'spareParts',label:'قطع الغيار المستخدمة',type:'text'},
+      {id:'startTime',label:'زمن بدء الصيانة',type:'text'},
+      {id:'endTime',label:'زمن انتهاء الصيانة',type:'text'},
+      {id:'repairStatus',label:'حالة الإصلاح',type:'select',options:['اصلاح نهائي','اصلاح مؤقت','لم يتم الاصلاح']},
+      {id:'toolboxCheck',label:'فحص شنطة العدة',type:'select',options:['مكتملة','غير مكتملة (يوجد فقد)']},
+      {id:'cleaningCheck',label:'فحص عمليات النظافة والتطهير',type:'select',options:['مطابق','غير مطابق']},
+      {id:'engineer',label:'مهندس الصيانة المسئول',type:'text'}
+    ]},
+  calibPlan:{label:'خطة معايرة أجهزة الفحص والقياس والاختبار',short:'خطة المعايرة',icon:'fa-gauge-high',src:'نموذج 10',
+    fields:[
+      {id:'devName',label:'اسم الجهاز',type:'text'},
+      {id:'devCode',label:'كود الجهاز',type:'text'},
+      {id:'months',label:'الأشهر المخططة للمعايرة',type:'text',ph:'مثال: 1، 4، 7، 10'},
+      {id:'nextDate',label:'تاريخ المعايرة القادم',type:'date'},
+      {id:'calibBy',label:'جهة المعايرة',type:'text'}
+    ]},
+  scaleCalib:{label:'سجل معايرة الموازين',short:'معايرة الموازين',icon:'fa-weight-scale',src:'نموذج 11',
+    fields:[
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'scaleNo',label:'رقم الميزان',type:'text'},
+      {id:'loc',label:'مكان الميزان',type:'text'},
+      {id:'sensitivity',label:'حساسية الميزان',type:'text'},
+      {id:'stdWeight',label:'وزن السنجة القياسية',type:'text'},
+      {id:'reading',label:'قراءة الميزان',type:'text'},
+      {id:'deviation',label:'الانحراف / الفرق',type:'text'},
+      {id:'corrective',label:'الاجراء التصحيحي',type:'text'},
+      {id:'sign',label:'توقيع المسئول',type:'text'}
+    ]},
+  monthlyWalk:{label:'المرور الشهري لسلامة الماكينات',short:'المرور الشهري للماكينات',icon:'fa-person-walking-arrow-right',src:'نموذج 13',
+    fields:[
+      {id:'machine',label:'اسم الماكينة',type:'text'},
+      {id:'month',label:'شهر المرور',type:'select',options:['يناير','فبراير','مارس','ابريل','مايو','يونيو','يوليو','اغسطس','سبتمبر','اكتوبر','نوفمبر','ديسمبر']},
+      {id:'date',label:'تاريخ المرور',type:'date'},
+      {id:'inspector',label:'القائم بالمتابعة',type:'text'},
+      {id:'notes',label:'ملاحظات',type:'text',full:true}
+    ]},
+  partsReceipt:{label:'محضر فحص واستلام مواد قطع غيار',short:'استلام قطع غيار',icon:'fa-boxes-packing',src:'نموذج 16',
+    fields:[
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'poNumber',label:'رقم طلب الشراء',type:'text'},
+      {id:'supplier',label:'اسم المورد وعنوانه',type:'text',full:true},
+      {id:'supplyOrder',label:'أمر توريد المورد رقم',type:'text'},
+      {id:'receiveLoc',label:'مكان الإستلام',type:'text'},
+      {id:'supplyDate',label:'تاريخ التوريد',type:'date'},
+      {id:'itemName',label:'اسم الصنف',type:'text'},
+      {id:'itemNo',label:'رقم الصنف',type:'text'},
+      {id:'unit',label:'الوحدة',type:'text'},
+      {id:'qty',label:'الكمية',type:'text'},
+      {id:'unitPrice',label:'سعر الوحدة',type:'text'},
+      {id:'totalValue',label:'القيمة الإجمالية',type:'text'},
+      {id:'notes',label:'ملاحظات',type:'text',full:true}
+    ]},
+  buildingInspect:{label:'تقرير فحص مبنى',short:'فحص المبنى',icon:'fa-building-shield',src:'نموذج 12',
+    fields:[
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'loc',label:'المكان',type:'text'},
+      {id:'doors',label:'الأبواب',type:'select',options:['✓','✗','—']},
+      {id:'windows',label:'الشبابيك',type:'select',options:['✓','✗','—']},
+      {id:'ceiling',label:'سقف معلق',type:'select',options:['✓','✗','—']},
+      {id:'floors',label:'الأرضيات',type:'select',options:['✓','✗','—']},
+      {id:'toilets',label:'دورات مياه',type:'select',options:['✓','✗','—']},
+      {id:'ventilation',label:'أجهزة تهوية',type:'select',options:['✓','✗','—']},
+      {id:'walls',label:'الحوائط وجمالون',type:'select',options:['✓','✗','—']},
+      {id:'electric',label:'أعمال كهرباء وإنارة',type:'select',options:['✓','✗','—']},
+      {id:'drain',label:'صرف صحي',type:'select',options:['✓','✗','—']},
+      {id:'computers',label:'أجهزة الحاسب الآلي',type:'select',options:['✓','✗','—']},
+      {id:'requiredWork',label:'الأعمال المطلوبة',type:'text',full:true},
+      {id:'inspector',label:'توقيع القائم بالفحص',type:'text'}
+    ]},
+  incident:{label:'تقرير حادثة',short:'تقرير حادثة',icon:'fa-triangle-exclamation',src:'نموذج 5',
+    fields:[
+      {id:'type',label:'نوع الحادثة',type:'select',options:['تصرف غير آمن','وضع غير آمن','حادث وشيك','حادث إصابة']},
+      {id:'no',label:'رقم الحادثة',type:'text'},
+      {id:'recorder',label:'مسجل الحادثة',type:'text'},
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'time',label:'الساعة',type:'text'},
+      {id:'injuredName',label:'اسم المصاب',type:'text'},
+      {id:'jobTitle',label:'الوظيفة',type:'text'},
+      {id:'dept',label:'الإدارة',type:'text'},
+      {id:'loc',label:'المكان',type:'text'},
+      {id:'desc',label:'وصف الحادث',type:'textarea',full:true},
+      {id:'w1Loc',label:'الشاهد الأول — المكان',type:'text'},
+      {id:'w1Desc',label:'الشاهد الأول — وصف الحادثة',type:'text',full:true},
+      {id:'w1Cause',label:'الشاهد الأول — السبب المحتمل',type:'text',full:true},
+      {id:'w1Name',label:'الشاهد الأول — الاسم',type:'text'},
+      {id:'w2Loc',label:'الشاهد الثاني — المكان',type:'text'},
+      {id:'w2Desc',label:'الشاهد الثاني — وصف الحادثة',type:'text',full:true},
+      {id:'w2Cause',label:'الشاهد الثاني — السبب المحتمل',type:'text',full:true},
+      {id:'w2Name',label:'الشاهد الثاني — الاسم',type:'text'},
+      {id:'rootCause',label:'السبب الجذري',type:'textarea',full:true},
+      {id:'corrective',label:'الإجراء التصحيحي المطلوب',type:'textarea',full:true}
+    ]},
+  fireExtInventory:{label:'سجل حصر طفايات الحريق',short:'حصر الطفايات',icon:'fa-fire-extinguisher',src:'نموذج 6 (سلامة)',
+    fields:[
+      {id:'no',label:'رقم الطفاية',type:'text'},
+      {id:'type',label:'نوعها',type:'select',options:['فاير سيرش','بودرة','CO2']},
+      {id:'loc',label:'مكان التواجد',type:'text'},
+      {id:'checkDate',label:'تاريخ الفحص',type:'text',ph:'مثال: 1/4/2026'},
+      {id:'nextDate',label:'تاريخ الفحص القادم',type:'text',ph:'مثال: 1/10/2026'},
+      {id:'notes',label:'ملاحظات',type:'text'}
+    ]},
+  fireExtFollowup:{label:'سجل متابعة طفاية رقم',short:'متابعة الطفايات',icon:'fa-clipboard-check',src:'نموذج 7',
+    fields:[
+      {id:'extNo',label:'رقم الطفاية',type:'text'},
+      {id:'month',label:'الشهر',type:'select',options:['يناير','فبراير','مارس','ابريل','مايو','يونيو','يوليو','اغسطس','سبتمبر','اكتوبر','نوفمبر','ديسمبر']},
+      {id:'capacity',label:'السعة',type:'text'},
+      {id:'arm',label:'ذراع التشغيل',type:'text'},
+      {id:'handle',label:'مقبض الحمل',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'body',label:'جسم الطفاية (البدن)',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'safetyPin',label:'تيلة الأمان',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'indicator',label:'المؤشر',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'base',label:'القاعدة السفلية',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'inspector',label:'اسم الفاحص',type:'text'},
+      {id:'notes',label:'ملاحظات بعد الفحص',type:'text'}
+    ]},
+  fireBoxFollowup:{label:'سجل متابعة صناديق الحريق',short:'متابعة صناديق الحريق',icon:'fa-box-open',src:'نموذج 8',
+    fields:[
+      {id:'boxNo',label:'رقم الصندوق',type:'text'},
+      {id:'month',label:'الشهر',type:'select',options:['يناير','فبراير','مارس','ابريل','مايو','يونيو','يوليو','اغسطس','سبتمبر','اكتوبر','نوفمبر','ديسمبر']},
+      {id:'structure',label:'هيكل الصندوق',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'hose',label:'خرطوم الحريق',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'nozzle',label:'قاذف',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'tap',label:'الحنفية',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'lock',label:'قفل الصندوق',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'doorStatus',label:'حالة باب الصندوق',type:'select',options:['جيد','يحتاج صيانة']},
+      {id:'inspector',label:'اسم الفاحص',type:'text'},
+      {id:'notes',label:'ملاحظات بعد الفحص',type:'text'}
+    ]},
+  firstAidInventory:{label:'سجل حصر صناديق الإسعافات',short:'حصر صناديق الإسعاف',icon:'fa-suitcase-medical',src:'نموذج 9 (سلامة)',
+    fields:[
+      {id:'boxNo',label:'رقم الصندوق',type:'text'},
+      {id:'loc',label:'المكان',type:'text'},
+      {id:'contents',label:'المحتويات',type:'text',full:true},
+      {id:'checkDate',label:'تاريخ الفحص',type:'text',ph:'مثال: 1/4/2026'},
+      {id:'nextDate',label:'تاريخ الفحص القادم',type:'text',ph:'مثال: 1/10/2026'},
+      {id:'notes',label:'ملاحظات',type:'text'}
+    ]},
+  firstAidFollowup:{label:'سجل متابعة صناديق الإسعافات',short:'متابعة صناديق الإسعاف',icon:'fa-kit-medical',src:'نموذج 10',
+    fields:[
+      {id:'boxNo',label:'رقم الصندوق',type:'text'},
+      {id:'month',label:'الشهر',type:'select',options:['يناير','فبراير','مارس','ابريل','مايو','يونيو','يوليو','اغسطس','سبتمبر','اكتوبر','نوفمبر','ديسمبر']},
+      {id:'scissors',label:'مقص',type:'select',options:['✓','✗']},
+      {id:'gauze',label:'شاش',type:'select',options:['✓','✗']},
+      {id:'betadine',label:'بيتادين',type:'select',options:['✓','✗']},
+      {id:'antibiotic',label:'مرهم حيوي',type:'select',options:['✓','✗']},
+      {id:'pressureBandage',label:'رباط ضغط',type:'select',options:['✓','✗']},
+      {id:'eyeDrops',label:'قطرات للعين',type:'select',options:['✓','✗']},
+      {id:'plaster',label:'بلاستر',type:'select',options:['✓','✗']},
+      {id:'lowPressureTreat',label:'علاج لانخفاض الضغط',type:'select',options:['✓','✗']},
+      {id:'headacheTreat',label:'علاج للصداع',type:'select',options:['✓','✗']},
+      {id:'diarrheaTreat',label:'علاج للإسهال',type:'select',options:['✓','✗']},
+      {id:'reviewer',label:'القائم بالمراجعة',type:'text'},
+      {id:'notes',label:'ملاحظات',type:'text',full:true}
+    ]},
+  riskAssessment:{label:'سجل تحديد وتقييم مخاطر',short:'تقييم المخاطر',icon:'fa-radiation',src:'نموذج 11 (سلامة)',
+    fields:[
+      {id:'dept',label:'الإدارة / القسم',type:'text'},
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'activity',label:'النشاط',type:'text'},
+      {id:'workType',label:'نوع العمل',type:'select',options:['روتيني (R)','غير روتيني (NR)']},
+      {id:'hazard',label:'الخطر (Hazard)',type:'text'},
+      {id:'risk',label:'الخطورة (Risk)',type:'text'},
+      {id:'beforeProb',label:'قبل الإجراءات — الاحتمالية',type:'text'},
+      {id:'beforeSeverity',label:'قبل الإجراءات — الشدة',type:'text'},
+      {id:'beforeResult',label:'قبل الإجراءات — النتيجة',type:'text'},
+      {id:'beforeLevel',label:'قبل الإجراءات — مستوى الخطر',type:'text'},
+      {id:'actions',label:'وصف الإجراءات المتخذة',type:'textarea',full:true},
+      {id:'afterProb',label:'بعد الإجراءات — الاحتمالية',type:'text'},
+      {id:'afterSeverity',label:'بعد الإجراءات — الشدة',type:'text'},
+      {id:'afterResult',label:'بعد الإجراءات — النتيجة',type:'text'},
+      {id:'afterLevel',label:'بعد الإجراءات — مستوى الخطر',type:'text'}
+    ]},
+  emergencyLog:{label:'سجل حالات الطوارئ الفعلية',short:'حالات الطوارئ',icon:'fa-bell',src:'نموذج 2 (سلامة)',
+    fields:[
+      {id:'date',label:'التاريخ',type:'date'},
+      {id:'desc',label:'وصف الحالة',type:'textarea',full:true},
+      {id:'cause',label:'السبب',type:'text'},
+      {id:'impact',label:'التأثير',type:'text'},
+      {id:'corrective',label:'الإجراء التصحيحي',type:'text',full:true},
+      {id:'responsible',label:'المسئول',type:'text'}
+    ]}
+};
+
+// بنود متابعة حالة البنية التحتية وإمدادات الطاقة (نموذج 9) — القائمة الكاملة زي ما هي في الملف الأصلي
+const INFRA_SECTIONS = [
+  {title:'أولاً: الأماكن المحيطة بالمبنى من الخارج',items:[
+    'تأكد من عدم وجود مخلفات إنشائية',
+    'تأكد من عدم وجود مهملات وكراكيب - لا داعي لها-',
+    'تأكد من عدم وجود فتحات وأماكن تشكل مأوى للآفات',
+    'تأكد من خلو الأماكن من النفايات المنسكبة والمياه الراكدة',
+    'تأكد من احكام غلق أبواب ونوافذ صالة الانتاج وعدم وجود قطع او فراغ بالأسلاك الخارجية',
+    'تأكد من عدم وجود فتحات أو تشققات في الأسوار',
+    'تأكد من نظافة منطقة التحميل والاستلام وعدم وجود عائق يسمح بمرور السيارات لمنطقة التحميل',
+    'تأكد من سلامة السيارات أثناء التحميل',
+    'تأكد من حالة غرف الصرف والبالوعات'
+  ]},
+  {title:'ثانياً: المباني',items:[
+    'تأكد من خلو المباني من التشققات والحفر، والأماكن التي قد تشكل مأوى للآفات أو مصادر خطر بيولوجية',
+    'تأكد من نظافة الجدران والحوائط',
+    'تأكد من أن فتحات الصرف الصحي لجميع المواقع نظيفة وصالحة للتصريف، ومغطاة',
+    'تأكد من كفاية التهوية وعدم وجود روائح غريبة',
+    'تأكد من نظافة الأسطح وعدم وجود تشققات بها',
+    'تأكد من خلو الممرات من أي أجسام تعيق عملية الحركة والتداول',
+    'تأكد من خلو نقطة التقاء الحوائط بالأرضيات من أي تراكمات',
+    'تأكد من وجود زوايا على الأعمدة وعدم وجود أي فتحات أو كسر بالأعمدة تسمح بجعلها وكر للآفات',
+    'تأكد من سلامة الأسقف وعدم وجود قشور دهانات أو شروخ',
+    'تأكد من سلامة مصابيح الإنارة وعدم كونها مصدر للتلوث في حالة كسرها',
+    'تأكد من سلامة الحوائط وعدم وجود شقوق أو تساقط للدهانات أو عناكب أو أتربة متراكمة',
+    'تأكد من سلامة الأرضيات وأنها ملساء ولا يوجد بها شقوق',
+    'تأكد من سلامة الأبواب ووجود الشرائط البلاستيكية على الأبواب كثيفة الاستخدام',
+    'تأكد من خطوط ومسارات الأسلاك والدوائر واللوح الكهربائية وعدم كونها مصدر خطر على العاملين والشركة',
+    'تأكد من حالة دورات المياه وعدم وجود تسريبات وعدم انسداد البلاعات، وتوفر مصادر الماء',
+    'تأكد من كفاءة الإضاءة المتواجدة بالمصنع والمخازن والمعمل ومنطقة التعبئة',
+    'تأكد من أن جميع وسائل الإضاءة محمية بشكل يمنع تلوث المادة الغذائية في حالة كسرها',
+    'تأكد من كفاية التهوية بالشركة وكفاءة الشفاطات وأنها تسمح بتجديد الهواء',
+    'تأكد من غرف تغيير ملابس العاملين وترتيبها وعدم وجود مهملات قد تؤدي لاجتذاب آفات',
+    'تأكد من سلامة منطقة تناول العاملين للوجبات وعدم وجود مهملات قد تؤدي لاجتذاب آفات',
+    'تأكد من سلامة حوض غسيل الأيدي الموجود داخل المبنى الخدمي',
+    'تأكد من وجود مسافات كافية بين البالتات والحوائط وبينها وبين الأرضيات تسمح بإجراء عملية النظافة',
+    'تأكد من ترتيب منطقة المخازن وتوزيع الأصناف بصورة يسهل التعرف عليها والوصول إليها',
+    'تأكد من عدم وجود أي مخزون موضوع على الأرض بدون بالتات',
+    'تأكد من تغطية البالتات الخشبية بمشمع'
+  ]},
+  {title:'ثالثاً: الأجهزة والأدوات والمعدات',items:[
+    'تأكد من أن جميع الأدوات والمعدات في حالة صيانة كاملة أي بحالة جيدة، وأنها نظيفة وتم تطهيرها',
+    'تأكد من خلو الأدوات والأسطح الملامسة للمنتجات من التآكل والخدوش',
+    'تأكد من خلو الأجزاء الخارجية من المعدات و/أو الأماكن المحيطة بها من الصدأ',
+    'تأكد من وجود مسافة مناسبة (20 سم) بين المعدات والجدران لتيسير عمليات التنظيف والتطهير',
+    'تأكد من نظافة وتطهير جميع الأدوات الملامسة للمادة الغذائية',
+    'تأكد من سلامة حفظ مستلزمات التعبئة التي يجب تواجدها في هذه المنطقة عند الإعداد والتجهيز أو عند التعبئة',
+    'تأكد من عدم وجود مواد كيميائية أياً كانت في منطقة التصنيع أو التعبئة إلا إذا كان لها ضرورة في هذا الوقت، وتابع نقلها في حالة عدم وجود ضرورة لها',
+    'تأكد من وجود برنامج للتنظيف والتطهير، وأن هذا البرنامج منفذ',
+    'تأكد من أن جميع المنظفات والمواد مصرح باستخدامها من الجهات المختصة'
+  ]},
+  {title:'رابعاً: سلامة المياه المستخدمة',items:[
+    'تأكد من توافر إمدادات المياه الصالحة بكميات كافية',
+    'تأكد من أن المياه عديمة اللون، والطعم، والرائحة، خالية من العكارة',
+    'تأكد من توافر ماء ساخن في الأماكن التي يلزم فيها ذلك',
+    'تأكد من وجود مياه صالحة للشرب (نظيفة وصحية) في الأماكن التي يلزم توافرها بها'
+  ]},
+  {title:'خامساً: الكهرباء',items:[
+    'تأكد من توافر مصادر الطاقة الكهربائية وبدائلها',
+    'تأكد من وجود أوتوماتيك عند انقطاع التيار الكهربائي ويقوم بتشغيل الإنارة ومواتير الأطفاء وسيور التحميل'
+  ]},
+  {title:'سادساً: الهواء',items:[
+    'الكمبروسر','البلاورات','مراوح التهوية'
+  ]},
+  {title:'سابعاً: ما يستجد',items:[
+    'ملاحظة إضافية 1','ملاحظة إضافية 2','ملاحظة إضافية 3'
+  ]}
+];
+
+// أكواد الوثائق — نفس نمط الترقيم اللي في ملفاتك (كود مؤكد من نموذج 11: F-15-11)
+const FS_DOC_CODES = {
+  inventory:'F-15-01', maintForm:'F-15-03', exitPermit:'F-15-04', lifeLog:'F-15-06',
+  infra:'F-15-09', calibPlan:'F-15-10', scaleCalib:'F-15-11', buildingInspect:'F-15-12',
+  monthlyWalk:'F-15-13', partsReceipt:'F-15-16',
+  emergencyLog:'F-16-02', incident:'F-16-05', fireExtInventory:'F-16-06', fireExtFollowup:'F-16-07',
+  fireBoxFollowup:'F-16-08', firstAidInventory:'F-16-09', firstAidFollowup:'F-16-10', riskAssessment:'F-16-11'
+};
+
+const FS_SUBS = [
+  {id:'infra',label:'متابعة البنية التحتية',icon:'fa-building-circle-check'},
+  {id:'inventory',label:'حصر الأجهزة',icon:'fa-list-ol'},
+  {id:'lifeLog',label:'سجل حياة معدة',icon:'fa-heart-pulse'},
+  {id:'exitPermit',label:'تصريح خروج معدة',icon:'fa-truck-ramp-box'},
+  {id:'maintForm',label:'بلاغ عطل تفصيلي',icon:'fa-file-medical'},
+  {id:'calibPlan',label:'خطة معايرة الأجهزة',icon:'fa-gauge-high'},
+  {id:'scaleCalib',label:'معايرة الموازين',icon:'fa-weight-scale'},
+  {id:'monthlyWalk',label:'المرور الشهري للماكينات',icon:'fa-person-walking-arrow-right'},
+  {id:'partsReceipt',label:'استلام قطع غيار',icon:'fa-boxes-packing'},
+  {id:'buildingInspect',label:'فحص المبنى',icon:'fa-building-shield'},
+  {id:'incident',label:'تقرير حادثة',icon:'fa-triangle-exclamation'},
+  {id:'emergencyLog',label:'حالات الطوارئ الفعلية',icon:'fa-bell'},
+  {id:'riskAssessment',label:'تحديد وتقييم مخاطر',icon:'fa-radiation'},
+  {id:'fireExtInventory',label:'حصر طفايات الحريق',icon:'fa-fire-extinguisher'},
+  {id:'fireExtFollowup',label:'متابعة الطفايات',icon:'fa-clipboard-check'},
+  {id:'fireBoxFollowup',label:'متابعة صناديق الحريق',icon:'fa-box-open'},
+  {id:'firstAidInventory',label:'حصر صناديق الإسعاف',icon:'fa-suitcase-medical'},
+  {id:'firstAidFollowup',label:'متابعة صناديق الإسعاف',icon:'fa-kit-medical'}
+];
+
+let _fsLastSnapshot = null;
+let _fsInited = false;
+function initFoodSafety(){
+  if(!_fsInited){
+    document.getElementById('fs-subnav').innerHTML = FS_SUBS.map((s,i)=>
+      `<div class="fs-chip${i===0?' active':''}" id="fs-chip-${s.id}" onclick="switchFoodSub('${s.id}')"><i class="fa-solid ${s.icon}"></i> ${s.label}</div>`
+    ).join('');
+    document.getElementById('fs-panel-'+FS_SUBS[0].id).classList.add('active');
+    _fsInited = true;
+  }
+  renderAllFS();
+}
+
+function switchFoodSub(id){
+  document.querySelectorAll('.fs-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.fs-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('fs-chip-'+id).classList.add('active');
+  document.getElementById('fs-panel-'+id).classList.add('active');
+}
+
+function renderAllFS(){
+  renderInfraPanel();
+  renderLifeLogPanel();
+  Object.keys(FS_TYPES).forEach(renderFSGeneric);
+}
+
+function fsFieldInput(typeKey,f){
+  const idAttr = `fs-${typeKey}-${f.id}`;
+  if(f.type==='select'){
+    return `<select id="${idAttr}">${f.options.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
+  }
+  if(f.type==='textarea'){
+    return `<textarea id="${idAttr}" placeholder="${f.ph||''}"></textarea>`;
+  }
+  return `<input type="${f.type==='date'?'date':'text'}" id="${idAttr}" placeholder="${f.ph||''}">`;
+}
+
+function renderFSGeneric(typeKey){
+  const cfg = FS_TYPES[typeKey];
+  const container = document.getElementById('fs-panel-'+typeKey);
+  if(!container) return;
+  const records = foodSafety[typeKey] || [];
+  const formFields = cfg.fields.map(f=>`
+    <div${f.full?' style="grid-column:1/-1"':''}>
+      <label>${f.label}</label>
+      ${fsFieldInput(typeKey,f)}
+    </div>`).join('');
+  const emptyNote = records.length===0
+    ? `<div class="fs-empty-note"><i class="fa-solid fa-circle-info"></i> النموذج الأصلي (${cfg.src}) كان فاضي من البيانات — ابدأ سجل جديد من الفورم اللي فوق.</div>`
+    : '';
+  const list = records.map(r=>{
+    const titleField = cfg.fields[0];
+    const title = r[titleField.id] || cfg.label;
+    const others = cfg.fields.slice(1).filter(f=>r[f.id]);
+    return `<div class="fs-record">
+      <div class="fs-title"><span>${title}</span>
+        <span>
+          <button class="btn btn-sm btn-blue" style="padding:4px 10px" onclick="printFSRecord('${typeKey}','${r.id}')"><i class="fa-solid fa-print"></i> طباعة</button>
+          <button class="del-btn" onclick="deleteFSGeneric('${typeKey}','${r.id}')"><i class="fa-solid fa-trash"></i></button>
+        </span>
+      </div>
+      <div class="fs-fields">
+        ${others.map(f=>`<div${f.full?' class="fs-full"':''}><b>${f.label}:</b> ${r[f.id]}</div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  container.innerHTML = `
+    <div class="form-card no-print">
+      <h2><i class="fa-solid ${cfg.icon}"></i> ${cfg.label} <span style="font-size:10px;color:var(--dim);font-weight:400">(${cfg.src} — كود ${FS_DOC_CODES[typeKey]})</span></h2>
+      <div class="fgrid3">${formFields}</div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="addFSGeneric('${typeKey}')"><i class="fa-solid fa-plus"></i> إضافة سجل</button>
+      </div>
+    </div>
+    <div class="log-card">
+      <h2><i class="fa-solid fa-table-list"></i> السجلات المحفوظة <span style="font-size:12px;color:var(--dim);font-weight:400">(${records.length})</span>
+        ${records.length?`<button class="btn btn-sm btn-blue" style="float:left" onclick="printFSAll('${typeKey}')"><i class="fa-solid fa-print"></i> طباعة كل السجلات</button>`:''}
+      </h2>
+      ${emptyNote}
+      ${records.length? list : '<div class="empty">لا توجد سجلات بعد</div>'}
+    </div>`;
+}
+
+function addFSGeneric(typeKey){
+  const cfg = FS_TYPES[typeKey];
+  const rec = {id:'fs_'+typeKey+'_'+Date.now()};
+  let hasValue = false;
+  cfg.fields.forEach(f=>{
+    const el = document.getElementById(`fs-${typeKey}-${f.id}`);
+    const val = el ? el.value.trim() : '';
+    if(val) hasValue = true;
+    rec[f.id] = val;
+  });
+  if(!hasValue){showToast('⚠️ املأ بيانات السجل أولاً');return;}
+  if(!foodSafety[typeKey]) foodSafety[typeKey]=[];
+  foodSafety[typeKey].push(rec);
+  renderFSGeneric(typeKey);
+  saveData();
+  showToast('✅ تم إضافة السجل');
+}
+
+function deleteFSGeneric(typeKey,id){
+  foodSafety[typeKey] = (foodSafety[typeKey]||[]).filter(r=>r.id!==id);
+  renderFSGeneric(typeKey);
+  saveData();
+}
+
+// ------ متابعة البنية التحتية (نموذج 9) ------
+function renderInfraPanel(){
+  const container = document.getElementById('fs-panel-infra');
+  if(!container) return;
+  const rounds = foodSafety.infra || [];
+  const sectionsHtml = INFRA_SECTIONS.map((sec,si)=>`
+    <div class="fs-section-title"><i class="fa-solid fa-layer-group"></i> ${sec.title}</div>
+    ${sec.items.map((txt,ii)=>`
+      <div class="fs-item-row">
+        <div class="fs-item-txt">${ii+1}. ${txt}</div>
+        <select id="infra-eval-${si}-${ii}">
+          <option value="">—</option>
+          <option value="مقبول">✅ مقبول</option>
+          <option value="غير مقبول">❌ غير مقبول</option>
+        </select>
+        <input type="text" id="infra-note-${si}-${ii}" placeholder="ملاحظات (اختياري)">
+      </div>`).join('')}
+  `).join('');
+  const roundsList = rounds.map(r=>{
+    const badCount = r.items.filter(it=>it.eval==='غير مقبول').length;
+    return `<div class="fs-record">
+      <div class="fs-round-summary" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">
+        <span><b>${r.date||'بدون تاريخ'}</b> — المسؤول: ${r.responsible||'—'}
+          &nbsp; ${badCount>0?`<span class="fs-badge-bad">❌ ${badCount} بند غير مقبول</span>`:'<span class="fs-badge-ok">✅ كل البنود مقبولة</span>'}
+        </span>
+        <span>
+          <button class="btn btn-sm btn-blue" style="padding:4px 10px" onclick="event.stopPropagation();printInfraRound('${r.id}')"><i class="fa-solid fa-print"></i> طباعة</button>
+          <button class="del-btn" onclick="event.stopPropagation();deleteInfraRound('${r.id}')"><i class="fa-solid fa-trash"></i></button>
+        </span>
+      </div>
+      <div style="display:none;margin-top:10px">
+        ${r.items.filter(it=>it.eval||it.note).map(it=>`
+          <div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px">
+            <b style="color:${it.eval==='غير مقبول'?'var(--red)':'var(--green)'}">${it.eval||'—'}</b>
+            — ${it.text} ${it.note?`<span style="color:var(--dim)">(${it.note})</span>`:''}
+          </div>`).join('') || '<div class="empty">لا توجد بنود مسجّلة في هذه الجولة</div>'}
+      </div>
+    </div>`;
+  }).join('');
+  container.innerHTML = `
+    <div class="form-card no-print">
+      <h2><i class="fa-solid fa-building-circle-check"></i> متابعة شهرية لحالة البنية التحتية وإمدادات الطاقة <span style="font-size:10px;color:var(--dim);font-weight:400">(نموذج 9)</span></h2>
+      <div class="fgrid3">
+        <div><label>تاريخ المتابعة</label><input type="date" id="infra-date"></div>
+        <div><label>المسؤول</label><input type="text" id="infra-responsible" placeholder="اسم رئيس فريق سلامة الغذاء..."></div>
+      </div>
+      ${sectionsHtml}
+      <div class="btn-row" style="margin-top:14px">
+        <button class="btn btn-gold" onclick="addInfraRound()"><i class="fa-solid fa-plus"></i> حفظ جولة المتابعة</button>
+      </div>
+    </div>
+    <div class="log-card">
+      <h2><i class="fa-solid fa-table-list"></i> جولات المتابعة السابقة <span style="font-size:12px;color:var(--dim);font-weight:400">(${rounds.length})</span></h2>
+      ${rounds.length===0?`<div class="fs-empty-note"><i class="fa-solid fa-circle-info"></i> النموذج الأصلي (نموذج 9) كان فاضي من التقييمات — سجّل أول جولة متابعة من الفورم اللي فوق.</div>`:''}
+      ${rounds.length? roundsList : '<div class="empty">لا توجد جولات متابعة بعد</div>'}
+    </div>`;
+}
+
+function addInfraRound(){
+  const date = document.getElementById('infra-date').value;
+  const responsible = document.getElementById('infra-responsible').value.trim();
+  const items = [];
+  let any=false;
+  INFRA_SECTIONS.forEach((sec,si)=>sec.items.forEach((txt,ii)=>{
+    const ev = document.getElementById(`infra-eval-${si}-${ii}`).value;
+    const nt = document.getElementById(`infra-note-${si}-${ii}`).value.trim();
+    if(ev||nt) any=true;
+    items.push({section:sec.title,text:txt,eval:ev,note:nt});
+  }));
+  if(!date && !any){showToast('⚠️ سجّل تاريخ الجولة وقيّم بند واحد على الأقل');return;}
+  foodSafety.infra.push({id:'infra_'+Date.now(),date,responsible,items});
+  renderInfraPanel();
+  saveData();
+  showToast('✅ تم حفظ جولة المتابعة');
+}
+
+function deleteInfraRound(id){
+  foodSafety.infra = foodSafety.infra.filter(r=>r.id!==id);
+  renderInfraPanel();
+  saveData();
+}
+
+// ------ سجل حياة معدة (نموذج 6) ------
+function renderLifeLogPanel(){
+  const container = document.getElementById('fs-panel-lifeLog');
+  if(!container) return;
+  const eqs = foodSafety.lifeLog || [];
+  const eqOptions = eqs.map(e=>`<option value="${e.id}">${e.name} (${e.code||'بدون كود'})</option>`).join('');
+  const profiles = eqs.map(eq=>`
+    <div class="fs-eq-profile">
+      <div class="fs-title"><i class="fa-solid fa-gears"></i> ${eq.name} <span style="color:var(--dim);font-weight:400;font-size:11px">— كود: ${eq.code||'—'}</span>
+        <span style="float:left">
+          <button class="btn btn-sm btn-blue" style="padding:4px 10px" onclick="printLifeLogEquipment('${eq.id}')"><i class="fa-solid fa-print"></i> طباعة</button>
+          <button class="del-btn" onclick="deleteLifeLogEquipment('${eq.id}')"><i class="fa-solid fa-trash"></i></button>
+        </span>
+      </div>
+      <div class="fs-fields" style="margin-bottom:8px">
+        <div><b>بلد المنشأ:</b> ${eq.origin||'—'}</div>
+        <div><b>سنة الصنع:</b> ${eq.year||'—'}</div>
+        <div><b>طراز:</b> ${eq.model||'—'}</div>
+        <div><b>المكان:</b> ${eq.loc||'—'}</div>
+        <div><b>طريقة النظافة:</b> ${eq.cleaning||'—'}</div>
+        <div><b>وظيفة المعدة:</b> ${eq.func||'—'}</div>
+        <div><b>تاريخ دخول الخدمة:</b> ${eq.serviceDate||'—'}</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>م</th><th>التاريخ</th><th>نوع الصيانة</th><th>بيان الإصلاحات وقطع الغيار</th><th>ملاحظات</th><th>توقيع الفني</th><th></th></tr></thead>
+          <tbody>
+            ${eq.entries.map((en,i)=>`<tr>
+              <td>${i+1}</td><td class="dim">${en.date||'—'}</td><td class="dim">${en.type||'—'}</td>
+              <td>${en.desc||'—'}</td><td class="dim">${en.notes||'—'}</td><td class="dim">${en.tech||'—'}</td>
+              <td><button class="del-btn" onclick="deleteLifeLogEntry('${eq.id}',${i})"><i class="fa-solid fa-trash"></i></button></td>
+            </tr>`).join('') || `<tr><td colspan="7" class="empty">لا توجد قيود بعد</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+      <div class="fgrid3" style="margin-top:12px">
+        <div><label>التاريخ</label><input type="text" id="ll-date-${eq.id}" placeholder="مثال: 12/1/2026"></div>
+        <div><label>نوع الصيانة</label>
+          <select id="ll-type-${eq.id}"><option>وقائية</option><option>علاجية</option><option>وقائية وعلاجية</option></select>
+        </div>
+        <div><label>توقيع الفني</label><input type="text" id="ll-tech-${eq.id}" placeholder="اسم الفني..."></div>
+        <div style="grid-column:1/-1"><label>بيان الإصلاحات وقطع الغيار</label><input type="text" id="ll-desc-${eq.id}" placeholder="وصف أعمال الصيانة..."></div>
+        <div style="grid-column:1/-1"><label>ملاحظات</label><input type="text" id="ll-notes-${eq.id}"></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-gold btn-sm" onclick="addLifeLogEntry('${eq.id}')"><i class="fa-solid fa-plus"></i> إضافة قيد للسجل</button></div>
+    </div>`).join('');
+  container.innerHTML = `
+    <div class="form-card no-print">
+      <h2><i class="fa-solid fa-heart-pulse"></i> سجل حياة معدة — إضافة معدة جديدة <span style="font-size:10px;color:var(--dim);font-weight:400">(نموذج 6)</span></h2>
+      <div class="fgrid3">
+        <div><label>اسم المعدة</label><input type="text" id="ll-new-name" placeholder="مثال: فرن انكماش اوتوماتيك"></div>
+        <div><label>كود المعدة</label><input type="text" id="ll-new-code" placeholder="مثال: M 01-02"></div>
+        <div><label>المكان</label><input type="text" id="ll-new-loc" placeholder="مثال: صالة الفرز 81/90"></div>
+        <div><label>بلد المنشأ</label><input type="text" id="ll-new-origin"></div>
+        <div><label>سنة الصنع</label><input type="text" id="ll-new-year"></div>
+        <div><label>طراز</label><input type="text" id="ll-new-model"></div>
+        <div><label>طريقة النظافة</label><input type="text" id="ll-new-cleaning" placeholder="مياه / هواء / ..."></div>
+        <div><label>تاريخ دخول الخدمة</label><input type="text" id="ll-new-service" placeholder="مثال: 10/2025"></div>
+        <div><label>وظيفة المعدة</label><input type="text" id="ll-new-func"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="addLifeLogEquipment()"><i class="fa-solid fa-plus"></i> إنشاء سجل حياة جديد</button>
+      </div>
+    </div>
+    ${profiles || '<div class="log-card"><div class="empty">لا توجد معدات مسجّلة بعد</div></div>'}`;
+}
+
+function addLifeLogEquipment(){
+  const name = document.getElementById('ll-new-name').value.trim();
+  if(!name){showToast('⚠️ اكتب اسم المعدة أولاً');return;}
+  foodSafety.lifeLog.push({
+    id:'eq_'+Date.now(),
+    name,
+    code:document.getElementById('ll-new-code').value.trim(),
+    loc:document.getElementById('ll-new-loc').value.trim(),
+    origin:document.getElementById('ll-new-origin').value.trim(),
+    year:document.getElementById('ll-new-year').value.trim(),
+    model:document.getElementById('ll-new-model').value.trim(),
+    cleaning:document.getElementById('ll-new-cleaning').value.trim(),
+    serviceDate:document.getElementById('ll-new-service').value.trim(),
+    func:document.getElementById('ll-new-func').value.trim(),
+    entries:[]
+  });
+  renderLifeLogPanel();
+  saveData();
+  showToast('✅ تم إنشاء سجل حياة المعدة');
+}
+
+function deleteLifeLogEquipment(id){
+  if(!confirm('حذف سجل حياة هذه المعدة بالكامل؟')) return;
+  foodSafety.lifeLog = foodSafety.lifeLog.filter(e=>e.id!==id);
+  renderLifeLogPanel();
+  saveData();
+}
+
+function addLifeLogEntry(eqId){
+  const eq = foodSafety.lifeLog.find(e=>e.id===eqId);
+  if(!eq) return;
+  const desc = document.getElementById(`ll-desc-${eqId}`).value.trim();
+  if(!desc){showToast('⚠️ اكتب بيان الإصلاحات أولاً');return;}
+  eq.entries.push({
+    date:document.getElementById(`ll-date-${eqId}`).value.trim(),
+    type:document.getElementById(`ll-type-${eqId}`).value,
+    desc,
+    notes:document.getElementById(`ll-notes-${eqId}`).value.trim(),
+    tech:document.getElementById(`ll-tech-${eqId}`).value.trim()
+  });
+  renderLifeLogPanel();
+  saveData();
+  showToast('✅ تم إضافة القيد للسجل');
+}
+
+function deleteLifeLogEntry(eqId,idx){
+  const eq = foodSafety.lifeLog.find(e=>e.id===eqId);
+  if(!eq) return;
+  eq.entries.splice(idx,1);
+  renderLifeLogPanel();
+  saveData();
+}
+
+// ------ طباعة أوراق سلامة الغذاء (بكود الوثيقة + التاريخ + توقيع مدير الصيانة) ------
+function fsPrintHead(docTitle,docCode){
+  return `<style>
+    body{font-family:Arial,sans-serif;direction:rtl;padding:26px;color:#1e293b}
+    .fs-ph-wrap{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #b45309;padding-bottom:12px;margin-bottom:18px}
+    .fs-ph-wrap h1{margin:0;font-size:19px;color:#b45309}
+    .fs-ph-wrap .sub{font-size:13px;color:#334155;margin-top:5px;font-weight:700}
+    .fs-ph-meta{text-align:left;font-size:11px;color:#475569;line-height:1.9}
+    .fs-ph-meta b{color:#0f172a}
+    table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
+    th,td{padding:8px 10px;border:1px solid #e2e8f0;text-align:right}
+    th{background:#1e293b;color:#fbbf24;font-weight:700}
+    tr:nth-child(even){background:#f8fafc}
+    .fs-fld{display:grid;grid-template-columns:170px 1fr;border-bottom:1px solid #e2e8f0;font-size:12.5px}
+    .fs-fld b{background:#f8fafc;padding:8px 10px;border-left:1px solid #e2e8f0}
+    .fs-fld span{padding:8px 10px}
+    .fs-sign{margin-top:46px;display:flex;justify-content:space-between;font-size:12.5px;border-top:1px solid #cbd5e1;padding-top:18px}
+    .fs-sign div{text-align:center;width:32%}
+    .fs-sign .line{margin-top:34px;border-top:1px solid #334155;padding-top:4px}
+    @media print{@page{margin:1.2cm}}
+  </style>
+  <div class="fs-ph-wrap">
+    <div><h1>${settings.company||'منظومة سيجام للصيانة'}</h1><div class="sub">${docTitle}</div></div>
+    <div class="fs-ph-meta"><div><b>كود الوثيقة:</b> ${docCode}</div><div><b>تاريخ الطباعة:</b> ${new Date().toLocaleDateString('ar-EG')}</div></div>
+  </div>`;
+}
+function fsPrintSign(){
+  return `<div class="fs-sign">
+    <div>الفني / المسؤول المباشر<div class="line">التوقيع</div></div>
+    <div>مسئول الجودة / سلامة الغذاء<div class="line">التوقيع</div></div>
+    <div>مدير الصيانة: ${settings.manager||'.......................'}<div class="line">التوقيع</div></div>
+  </div>`;
+}
+function fsOpenPrint(title,bodyHtml){
+  const pw=window.open('','_blank');
+  pw.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>${title}</title></head><body>${bodyHtml}</body></html>`);
+  pw.document.close();
+  setTimeout(()=>pw.print(),500);
+}
+
+function printFSRecord(typeKey,id){
+  const cfg=FS_TYPES[typeKey];
+  const rec=(foodSafety[typeKey]||[]).find(r=>r.id===id);
+  if(!rec) return;
+  const rows=cfg.fields.map(f=>`<div class="fs-fld"><b>${f.label}</b><span>${rec[f.id]||'—'}</span></div>`).join('');
+  const body=fsPrintHead(cfg.label,FS_DOC_CODES[typeKey])+`<div style="border:1px solid #e2e8f0;border-radius:6px;overflow:hidden">${rows}</div>`+fsPrintSign();
+  fsOpenPrint(cfg.label,body);
+}
+
+function printFSAll(typeKey){
+  const cfg=FS_TYPES[typeKey];
+  const records=foodSafety[typeKey]||[];
+  if(!records.length){showToast('⚠️ لا توجد سجلات للطباعة');return;}
+  const head=`<tr>${cfg.fields.map(f=>`<th>${f.label}</th>`).join('')}</tr>`;
+  const rows=records.map(r=>`<tr>${cfg.fields.map(f=>`<td>${r[f.id]||'—'}</td>`).join('')}</tr>`).join('');
+  const body=fsPrintHead(cfg.label+' — كل السجلات',FS_DOC_CODES[typeKey])+`<table>${head}${rows}</table>`+fsPrintSign();
+  fsOpenPrint(cfg.label,body);
+}
+
+function printInfraRound(id){
+  const r=(foodSafety.infra||[]).find(x=>x.id===id);
+  if(!r) return;
+  const meta=`<div class="fs-fld"><b>تاريخ المتابعة</b><span>${r.date||'—'}</span></div><div class="fs-fld"><b>المسؤول</b><span>${r.responsible||'—'}</span></div>`;
+  let bySection={};
+  r.items.forEach(it=>{(bySection[it.section]=bySection[it.section]||[]).push(it);});
+  const sections=Object.keys(bySection).map(sec=>`
+    <h3 style="font-size:13px;color:#0f172a;margin:14px 0 6px;border-bottom:1px solid #e2e8f0;padding-bottom:4px">${sec}</h3>
+    <table><tr><th style="width:60px">م</th><th>البند</th><th style="width:110px">التقييم</th><th style="width:200px">ملاحظات</th></tr>
+    ${bySection[sec].map((it,i)=>`<tr><td>${i+1}</td><td>${it.text}</td><td style="font-weight:700;color:${it.eval==='غير مقبول'?'#dc2626':it.eval==='مقبول'?'#16a34a':'#94a3b8'}">${it.eval||'—'}</td><td>${it.note||'—'}</td></tr>`).join('')}
+    </table>`).join('');
+  const body=fsPrintHead('متابعة حالة البنية التحتية وإمدادات الطاقة',FS_DOC_CODES.infra)+`<div style="border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:14px">${meta}</div>`+sections+fsPrintSign();
+  fsOpenPrint('متابعة البنية التحتية',body);
+}
+
+function printLifeLogEquipment(eqId){
+  const eq=(foodSafety.lifeLog||[]).find(e=>e.id===eqId);
+  if(!eq) return;
+  const profile=[
+    ['اسم المعدة',eq.name],['كود المعدة',eq.code],['المكان',eq.loc],['بلد المنشأ',eq.origin],
+    ['سنة الصنع',eq.year],['طراز',eq.model],['طريقة النظافة',eq.cleaning],
+    ['وظيفة المعدة',eq.func],['تاريخ دخول الخدمة',eq.serviceDate]
+  ].map(([l,v])=>`<div class="fs-fld"><b>${l}</b><span>${v||'—'}</span></div>`).join('');
+  const hist=`<table><tr><th>م</th><th>التاريخ</th><th>نوع الصيانة</th><th>بيان الإصلاحات وقطع الغيار</th><th>ملاحظات</th><th>توقيع الفني</th></tr>
+    ${eq.entries.map((en,i)=>`<tr><td>${i+1}</td><td>${en.date||'—'}</td><td>${en.type||'—'}</td><td>${en.desc||'—'}</td><td>${en.notes||'—'}</td><td>${en.tech||'—'}</td></tr>`).join('') || '<tr><td colspan="6">لا توجد قيود</td></tr>'}
+    </table>`;
+  const body=fsPrintHead('سجل حياة معدة',FS_DOC_CODES.lifeLog)+`<div style="border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:14px">${profile}</div>`+hist+fsPrintSign();
+  fsOpenPrint('سجل حياة معدة — '+eq.name,body);
+}
+
+// ====== EXPORT ======
+function exportCSV(){
+  if(!faults.length){showToast('⚠️ لا توجد بيانات');return;}
+  const rows=[['الرقم','المكان','الوصف','الأولوية','التوقف','الفني','السبب','القطع','الحالة','التاريخ','الوقت','مرسل للمشتريات']];
+  faults.forEach(f=>rows.push([f.id,f.loc,f.desc,LBL[f.p],f.down,f.tech||'',f.cause||'',f.parts||'',f.status==='open'?'مفتوح':'مغلق',f.date,f.time,f.sent?'نعم':'لا']));
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='sigam_faults_'+new Date().toLocaleDateString('ar-EG').replace(/\//g,'-')+'.csv';
+  a.click();showToast('📊 تم تصدير ملف Excel');
+}
+
+function exportJSON(){
+  const data=JSON.stringify({faults,counter,sentAlerts,planItems,notes,alerts,alertHistory,settings,foodSafety,exportDate:new Date().toISOString()},null,2);
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(data);
+  a.download='sigam_backup_'+Date.now()+'.json';
+  a.click();showToast('💾 تم تحميل النسخة الاحتياطية');
+}
+
+function importData(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=function(ev){
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(d.faults){faults=d.faults;}
+      if(d.counter){counter=d.counter;}
+      if(d.sentAlerts){sentAlerts=d.sentAlerts;}
+      if(d.planItems){planItems=d.planItems;}
+      if(d.notes){notes=d.notes;}
+      if(d.alerts){alerts=d.alerts;}
+      if(d.alertHistory){alertHistory=d.alertHistory;}
+      if(d.foodSafety){foodSafety=Object.assign(foodSafety,d.foodSafety);}
+      if(d.settings){settings=Object.assign(settings,d.settings);}
+      document.getElementById('s-phone').value=settings.phone||'01140707700';
+      document.getElementById('s-company').value=settings.company||'منظومة سيجام';
+      document.getElementById('s-manager').value=settings.manager||'';
+      populateLocFilter();updateAll();renderSentBox();renderPlan();renderNotes();renderAlerts();renderAlertHistory();applyFilters();
+      if(document.getElementById('panel-food').classList.contains('active')) renderAllFS();
+      saveData();
+      showToast('✅ تم استيراد البيانات بنجاح ('+faults.length+' عطل)');
+    }catch(err){showToast('❌ خطأ في قراءة الملف');}
+  };
+  r.readAsText(file);
+  e.target.value='';
+}
+
+// ====== WHATSAPP REPORT ======
+function sendOwnerReport(){
+  if(!faults.length){showToast('⚠️ لا توجد أعطال');return;}
+  const total=faults.length,high=faults.filter(f=>f.p==='high').length,
+    med=faults.filter(f=>f.p==='medium').length,low=faults.filter(f=>f.p==='low').length;
+  const totalDown=faults.reduce((a,f)=>a+f.down,0);
+  const closed=faults.filter(f=>f.status==='closed').length;
+  const sent=faults.filter(f=>f.sent).length;
+  const openHigh=faults.filter(f=>f.p==='high'&&f.status==='open');
+  const msg=encodeURIComponent(
+    `تقرير صيانة — ${settings.company||'منظومة سيجام'}\n`+
+    `━━━━━━━━━━━━━━━\n`+
+    `التاريخ: ${new Date().toLocaleDateString('ar-EG')}\n\n`+
+    `📊 الملخص:\n`+
+    `• إجمالي: ${total}\n`+
+    `• 🔴 عالية: ${high}\n`+
+    `• 🟠 متوسطة: ${med}\n`+
+    `• 🟢 منخفضة: ${low}\n`+
+    `• ✅ مغلقة: ${closed}\n`+
+    `• 📨 مرسلة للمشتريات: ${sent}\n`+
+    `• ⏱ توقف: ${totalDown} دقيقة\n`+
+    (openHigh.length?`\n⚠️ أعطال عالية مفتوحة:\n${openHigh.map(f=>`• ${f.id}: ${SHORT[f.loc]||f.loc} | ${f.desc}`).join('\n')}\n`:'')+
+    `\n📋 جميع الأعطال:\n`+
+    faults.map(f=>`• ${f.id} | ${SHORT[f.loc]||f.loc} | ${LBL[f.p]} | ${f.status==='open'?'مفتوح':'✅مغلق'}`).join('\n')+
+    `\n━━━━━━━━━━━━━━━\n${settings.company||'منظومة سيجام'}`
+  );
+  window.open('https://wa.me/'+(settings.phone||'01140707700')+'?text='+msg,'_blank');
+}
+
+// ====== PRINT ======
+function printReport(){
+  const total=faults.length,high=faults.filter(f=>f.p==='high').length,
+    med=faults.filter(f=>f.p==='medium').length,low=faults.filter(f=>f.p==='low').length;
+  const totalDown=faults.reduce((a,f)=>a+f.down,0);
+  const closed=faults.filter(f=>f.status==='closed').length;
+  const pw=window.open('','_blank');
+  pw.document.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+    <title>تقرير ${settings.company||'منظومة سيجام'}</title>
+    <style>body{font-family:Arial,sans-serif;direction:rtl;padding:24px;color:#1e293b}
+    h1{color:#b45309;margin-bottom:8px}h2{color:#0f172a;margin:16px 0 8px}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+    .kbox{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center}
+    .kbox .n{font-size:28px;font-weight:800;color:#b45309}.kbox .l{font-size:11px;color:#64748b;margin-top:4px}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th,td{padding:8px 10px;border:1px solid #e2e8f0;text-align:right}
+    th{background:#1e293b;color:#fbbf24;font-weight:700}
+    tr:nth-child(even){background:#f8fafc}
+    .ph{color:#ef4444;font-weight:800}.pm{color:#f97316;font-weight:700}.pl{color:#10b981;font-weight:700}
+    @media print{@page{margin:1cm}}</style></head><body>
+    <h1>${settings.company||'منظومة سيجام للصيانة'} — تقرير الأعطال</h1>
+    <p>التاريخ: ${new Date().toLocaleDateString('ar-EG')} | المسؤول: ${settings.manager||'—'}</p>
+    <div class="summary">
+      <div class="kbox"><div class="n">${total}</div><div class="l">إجمالي</div></div>
+      <div class="kbox"><div class="n" style="color:#ef4444">${high}</div><div class="l">عالية</div></div>
+      <div class="kbox"><div class="n" style="color:#10b981">${closed}</div><div class="l">مغلقة</div></div>
+      <div class="kbox"><div class="n" style="color:#3b82f6">${totalDown}</div><div class="l">دقائق توقف</div></div>
+    </div>
+    <h2>تفاصيل الأعطال</h2>
+    <table><tr><th>#</th><th>الرقم</th><th>مكان العطل</th><th>الوصف</th><th>الأولوية</th><th>التوقف</th><th>الفني</th><th>الحالة</th><th>مشتريات</th><th>التاريخ</th></tr>
+    ${faults.map((f,i)=>`<tr><td>${i+1}</td><td>${f.id}</td><td>${f.loc}</td><td>${f.desc}</td><td class="${f.p==='high'?'ph':f.p==='medium'?'pm':'pl'}">${LBL[f.p]}</td><td>${f.down||'—'}</td><td>${f.tech||'—'}</td><td>${f.status==='open'?'مفتوح':'مغلق'}</td><td>${f.sent?'✓':'—'}</td><td>${f.date}</td></tr>`).join('')}
+    </table></body></html>`);
+  pw.document.close();
+  setTimeout(()=>pw.print(),500);
+}
+
+// ====== INIT ======
+(async function initMaintenance(){
+  await loadData();
+  refreshOpenDurations();
+
+  // كل 8 ثواني: يتحقق من تعديلات جت من أجهزة تانية
+  setInterval(reloadDataQuiet, 8000);
+})();
+</script>
+</body>
+</html>

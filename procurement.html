@@ -1,0 +1,3253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سيجاما - داشبورد المشتريات والمصنع</title>
+<style>
+/* ===== CSS VARIABLES - Blue/Gold Theme ===== */
+:root {
+  --primary: #0d1b4c;
+  --primary-light: #1a2d6b;
+  --primary-dark: #070f2e;
+  --accent: #ffd700;
+  --accent-light: #ffeb3b;
+  --accent-dark: #ffaa00;
+  --success: #2ecc71;
+  --warning: #f39c12;
+  --danger: #e74c3c;
+  --info: #00b4d8;
+  --bg: #f0f2f5;
+  --card-bg: #ffffff;
+  --text: #1a1a2e;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.15);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, #0a1128 0%, #0d1b4c 50%, #0a1128 100%);
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 80px;
+  background: linear-gradient(180deg, #0d1b4c 0%, #070f2e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  z-index: 1000;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+}
+
+.logo-box {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+}
+
+.logo-box svg {
+  width: 28px;
+  height: 28px;
+  fill: var(--primary-dark);
+}
+
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.nav-btn {
+  width: 100%;
+  padding: 12px 4px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 215, 0, 0.1);
+  color: #ffd700;
+}
+
+.nav-btn.active {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.nav-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.nav-btn span {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.bottom-actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.icon-btn:hover {
+  background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+  color: #0d1b4c;
+  transform: scale(1.1);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main {
+  margin-right: 80px;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-bar {
+  width: 6px;
+  height: 40px;
+  background: linear-gradient(180deg, #ffd700 0%, #ffaa00 100%);
+  border-radius: 3px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: #ffd700;
+  font-weight: 800;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.header p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(13, 27, 76, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26,35,126,0.4);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+  color: #0d1b4c;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255,215,0,0.4);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--success) 0%, #27ae60 100%);
+  color: white;
+}
+
+.btn-purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.05);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  transition: all 0.3s;
+  color: #e2e8f0;
+}
+
+.card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.15);
+  transform: translateY(-2px);
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+.card-gold {
+  border-top: 3px solid var(--accent);
+}
+
+.card-blue {
+  border-left: 4px solid var(--primary);
+}
+
+.card-green {
+  border-left: 4px solid var(--success);
+}
+
+.card-orange {
+  border-left: 4px solid var(--warning);
+}
+
+.card-red {
+  border-left: 4px solid var(--danger);
+}
+
+/* ===== KPI GRID ===== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.05);
+  border-left: 4px solid #ffd700;
+  transition: all 0.3s;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  color: #e2e8f0;
+}
+.kpi-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 25px rgba(255, 215, 0, 0.2);
+  transform: translateY(-3px);
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.kpi-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.kpi-trend {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.kpi-trend.up { color: #2ecc71; }
+.kpi-trend.down { color: #e74c3c; }
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+/* ===== GRID LAYOUTS ===== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+/* ===== SECTIONS ===== */
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.section-title svg {
+  width: 20px;
+  height: 20px;
+  fill: #ffd700;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
+/* ===== DEPARTMENT CARDS ===== */
+.dept-card {
+  text-align: center;
+  cursor: pointer;
+  padding: 20px;
+  background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  color: #e2e8f0;
+}
+.dept-card:hover {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.15);
+}
+
+.dept-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  background: rgba(26,35,126,0.1);
+}
+
+.dept-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--primary);
+}
+
+.dept-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 4px;
+}
+
+.dept-manager {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.dept-count {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(255, 215, 0, 0.15);
+  border-radius: 20px;
+  font-size: 11px;
+  color: #ffd700;
+  font-weight: 700;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* ===== BRIDGE SECTION ===== */
+
+
+/* ===== WATCH TOWER ===== */
+.watch-tower {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.watch-card {
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.watch-card.dark {
+  background: linear-gradient(135deg, #0a1128 0%, #0d1b4c 100%);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.15), 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.watch-card.light {
+  background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  color: #e2e8f0;
+}
+
+.watch-label {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+
+.watch-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffd700;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.watch-value.small {
+  font-size: 24px;
+}
+
+.watch-value span {
+  font-size: 16px;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* ===== ALERTS ===== */
+.alert-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: 10px;
+  border-right: 4px solid #ffd700;
+  background: linear-gradient(135deg, rgba(13, 27, 76, 0.8) 0%, rgba(26, 45, 107, 0.6) 100%);
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  border-right-width: 4px;
+  color: #e2e8f0;
+}
+
+.alert-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: white;
+  flex-shrink: 0;
+}
+
+.alert-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 4px;
+}
+
+.alert-time {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* ===== PAGES ===== */
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+/* ===== MODALS ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 15, 46, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%);
+  border-radius: 20px;
+  padding: 28px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 30px rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: #e2e8f0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffd700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.modal-title svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--accent-dark);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  color: #94a3b8;
+}
+
+.modal-close:hover {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+}
+
+.modal-close svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* ===== FORMS ===== */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid rgba(255, 215, 0, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.3s;
+  background: linear-gradient(135deg, #0a1128 0%, #0d1b4c 100%);
+  color: #e2e8f0;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #ffd700;
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.drag-area {
+  border: 2px dashed rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: linear-gradient(135deg, rgba(13, 27, 76, 0.5) 0%, rgba(26, 45, 107, 0.3) 100%);
+}
+
+.drag-area:hover {
+  border-color: #ffd700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(13, 27, 76, 0.5) 100%);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.drag-area svg {
+  width: 40px;
+  height: 40px;
+  fill: var(--primary);
+  margin-bottom: 8px;
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: linear-gradient(135deg, #0d1b4c 0%, #070f2e 100%);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 3000;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toast-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--primary-dark);
+}
+
+.toast-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.toast-msg {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* ===== STATUS BADGES ===== */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge-gold {
+  background: rgba(255,215,0,0.2);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.badge-green {
+  background: rgba(46,204,113,0.2);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.badge-red {
+  background: rgba(231,76,60,0.2);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.badge-orange {
+  background: rgba(243,156,18,0.2);
+  color: #f39c12;
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.badge-blue {
+  background: rgba(0,180,216,0.2);
+  color: #00b4d8;
+  border: 1px solid rgba(0, 180, 216, 0.3);
+}
+
+.badge-purple {
+  background: rgba(139,92,246,0.2);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+}
+
+.empty-state svg {
+  width: 64px;
+  height: 64px;
+  fill: var(--border);
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #ffd700;
+}
+
+/* ===== ITEM CARDS ===== */
+.item-card {
+  background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  transition: all 0.3s;
+  color: #e2e8f0;
+}
+
+.item-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.1);
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.item-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.item-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.item-title {
+  font-weight: 700;
+  color: #ffd700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.item-meta {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.icon-action svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* ===== MAINTENANCE FLOW ===== */
+.flow-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: linear-gradient(135deg, #0a1128 0%, #0d1b4c 100%);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.flow-step {
+  text-align: center;
+  flex: 1;
+}
+
+.flow-step-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+  color: white;
+}
+
+.flow-step-icon.done {
+  background: var(--success);
+}
+
+.flow-step-icon.pending {
+  background: var(--warning);
+}
+
+.flow-step-icon.waiting {
+  background: #d1d5db;
+}
+
+.flow-step-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.flow-step-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.flow-line {
+  flex: 1;
+  height: 4px;
+  background: #e5e7eb;
+  margin: 0 8px;
+  border-radius: 2px;
+  margin-top: -20px;
+}
+
+.flow-line.done {
+  background: var(--success);
+}
+
+/* ===== CHECKBOX ===== */
+.checkbox-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-item input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+.checkbox-item span {
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== RADIO ===== */
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio-item input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 12px 0;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-fill.factory {
+  background: linear-gradient(90deg, #f39c12, #ffd700);
+  width: 33%;
+}
+
+.progress-fill.procurement {
+  background: linear-gradient(90deg, #ffd700, #ffaa00);
+  width: 66%;
+}
+
+.progress-fill.completed {
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
+  width: 100%;
+}
+
+.progress-fill.rejected {
+  background: linear-gradient(90deg, #e74c3c, #c0392b);
+  width: 100%;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 11px;
+}
+
+.progress-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #94a3b8;
+  transition: all 0.3s;
+}
+
+.progress-label.active {
+  color: #ffd700;
+  font-weight: 700;
+}
+
+.progress-label.completed {
+  color: #2ecc71;
+}
+
+.progress-label.rejected {
+  color: #e74c3c;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+  transition: all 0.3s;
+}
+
+.progress-label.active .progress-dot {
+  background: #ffd700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.progress-label.completed .progress-dot {
+  background: #2ecc71;
+}
+
+.progress-label.rejected .progress-dot {
+  background: #e74c3c;
+}
+
+/* ===== STATUS BADGE ===== */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.status-pill.factory {
+  background: rgba(243, 156, 18, 0.2);
+  color: #f39c12;
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.status-pill.procurement {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.status-pill.completed {
+  background: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.status-pill.rejected {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-5 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar { width: 60px; }
+  .main { margin-right: 60px; padding: 16px; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .grid-5 { grid-template-columns: repeat(2, 1fr); }
+  .bridge-container { flex-direction: column; }
+  .bridge-box, .bridge-center { max-width: 100%; width: 100%; }
+  .header { flex-direction: column; gap: 16px; align-items: flex-start; }
+  .header-actions { flex-wrap: wrap; }
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #0d1b4c; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #1a2d6b; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page.active {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* ===== UTILITIES ===== */
+.gap-1 { gap: 4px; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.flex-1 { flex: 1; }
+.text-sm { font-size: 12px; }
+.text-xs { font-size: 11px; }
+.font-bold { font-weight: 700; }
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--primary); }
+.text-gold { color: var(--accent-dark); }
+.text-green { color: #27ae60; }
+.text-red { color: #c0392b; }
+.w-full { width: 100%; }
+.hidden { display: none !important; }
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo-box" id="logo-test" style="cursor: pointer;" title="اضغط للاختبار">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+  </div>
+
+  <nav class="nav-menu">
+    <button class="nav-btn active" data-page="dashboard" title="الرئيسية">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      <span>الرئيسية</span>
+    </button>
+    <button class="nav-btn" data-page="departments" title="الأقسام">
+      <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M3 13.5h8v8H3z"/></svg>
+      <span>الأقسام</span>
+    </button>
+    <button class="nav-btn" data-page="warranty" title="الضمانات">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+      <span>الضمانات</span>
+    </button>
+    <button class="nav-btn" data-page="maintenance" title="الصيانة">
+      <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+      <span>الصيانة</span>
+    </button>
+    <button class="nav-btn" data-page="scheduled" title="المجدولة">
+      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+      <span>المجدولة</span>
+    </button>
+    <button class="nav-btn" data-page="recurring" title="الثابتة">
+      <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+      <span>الثابتة</span>
+    </button>
+  </nav>
+
+  <div class="bottom-actions">
+    <button class="icon-btn" id="btn-export" title="تصدير">
+      <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+    </button>
+    <button class="icon-btn" id="btn-clear" title="مسح الكل">
+      <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-title">
+      <div class="header-bar" style="width: 8px; background: linear-gradient(180deg, #ffd700 0%, #ffaa00 50%, #ffd700 100%); box-shadow: 0 0 15px rgba(255,215,0,0.4);"></div>
+      <div>
+        <h1 style="color: #0d1b4c;">داشبورد المشتريات والمصنع</h1>
+        <p>منظومة سيجاما المتكاملة - <span style="color: #ffd700; font-weight: 800; text-shadow: 0 0 10px rgba(255,215,0,0.3);">وضع العمل الفعلي</span></p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div id="storage-status" style="padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; background: rgba(255,215,0,0.2); color: #ffd700; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255, 215, 0, 0.3);">
+        <span id="storage-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block;"></span>
+        <span id="storage-text">جاهز</span>
+      </div>
+      <button class="btn btn-primary" id="btn-new-order">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        طلب جديد
+      </button>
+      <button class="btn btn-gold" id="btn-new-recurring">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        طلب ثابت
+      </button>
+      <div class="card" style="padding: 10px 16px; display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%); border: 1px solid rgba(255, 215, 0, 0.2);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+        <span id="currentDate" style="font-weight: 700; color: #ffd700; font-size: 13px;"></span>
+      </div>
+      <div class="card" style="padding: 10px 16px; display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #0d1b4c 0%, #1a2d6b 100%); border: 1px solid rgba(255, 215, 0, 0.2);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+        <span id="currentTime" style="font-weight: 700; color: #ffd700; font-size: 13px;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="kpi-card">
+      <div class="kpi-label">
+        <span>OTIF</span>
+        <span class="kpi-trend up">↑ 2.4%</span>
+      </div>
+      <div class="kpi-value">94.2%</div>
+    </div>
+    <div class="kpi-card" style="border-left-color: var(--info);">
+      <div class="kpi-label">
+        <span>دورة المخزون</span>
+        <span class="kpi-trend up">↑ 0.3x</span>
+      </div>
+      <div class="kpi-value">8.2x</div>
+    </div>
+  </div>
+
+  <!-- PAGES -->
+
+  <!-- DASHBOARD PAGE -->
+  <div id="page-dashboard" class="page active">
+    <div class="grid-2">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+
+        <!-- Urgency Engine -->
+        <div class="card card-gold">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+            نظام الهامبة
+            <div style="margin-right: auto; display: flex; gap: 8px;" id="urgency-stats"></div>
+          </div>
+          <div id="urgencyList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+        </div>
+
+        <!-- Departments Bridge -->
+        <div class="card" style="border-top: 3px solid var(--success);">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M3 13.5h8v8H3z"/></svg>
+            ربط الأقسام الداخلية
+          </div>
+          <div class="grid-5">
+            <div class="card dept-card" data-dept="production">
+              <div class="dept-icon" style="background: rgba(46,204,113,0.15);">
+                <svg viewBox="0 0 24 24" style="fill: #2ecc71;"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.39-.29-.61-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.49 0-.61.22l-1.92 3.32c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.04.64.09.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.39.29.61.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.58 1.62-.94l2.39.96c.22.08.49 0 .61-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+              </div>
+              <div class="dept-name">مدير الإنتاج</div>
+              <div class="dept-manager">محمد علي</div>
+              <div class="dept-count" id="count-production">0</div>
+            </div>
+            <div class="card dept-card" data-dept="maintenance">
+              <div class="dept-icon" style="background: rgba(0,180,216,0.15);">
+                <svg viewBox="0 0 24 24" style="fill: #00b4d8;"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+              </div>
+              <div class="dept-name">مدير الصيانة</div>
+              <div class="dept-manager">أحمد حسن</div>
+              <div class="dept-count" id="count-maintenance">0</div>
+            </div>
+            <div class="card dept-card" data-dept="factory">
+              <div class="dept-icon" style="background: rgba(139,92,246,0.15);">
+                <svg viewBox="0 0 24 24" style="fill: #8b5cf6;"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10z"/></svg>
+              </div>
+              <div class="dept-name">مدير المصنع</div>
+              <div class="dept-manager">خالد محمود</div>
+              <div class="dept-count" id="count-factory">0</div>
+            </div>
+            <div class="card dept-card" data-dept="procurement">
+              <div class="dept-icon" style="background: rgba(236,72,153,0.15);">
+                <svg viewBox="0 0 24 24" style="fill: #ec4899;"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              </div>
+              <div class="dept-name">مدير المشتريات</div>
+              <div class="dept-manager">سامي فؤاد</div>
+              <div class="dept-count" id="count-procurement">0</div>
+            </div>
+            <div class="card dept-card" data-dept="quality">
+              <div class="dept-icon" style="background: rgba(243,156,18,0.15);">
+                <svg viewBox="0 0 24 24" style="fill: #f39c12;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              </div>
+              <div class="dept-name">مدير الجودة</div>
+              <div class="dept-manager">طارق إبراهيم</div>
+              <div class="dept-count" id="count-quality">0</div>
+            </div>
+          </div>
+        </div>
+
+        
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- Watch Tower -->
+        <div class="card">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            برج المراقبة
+            <span class="badge badge-gold" style="margin-right: auto;">AI</span>
+          </div>
+          <div class="watch-tower">
+            <div class="watch-card dark">
+              <div class="watch-label">Forecast Accuracy</div>
+              <div class="watch-value">87.4%</div>
+            </div>
+            <div class="watch-card light">
+              <div class="watch-label" style="color: var(--text-muted);">Response Time</div>
+              <div class="watch-value small" style="color: var(--primary);">14 <span>min</span></div>
+            </div>
+            <div class="watch-card light">
+              <div class="watch-label" style="color: var(--text-muted);">Stockout Risk</div>
+              <div class="watch-value small" style="color: var(--warning);">12%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerts Feed -->
+        <div class="card">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            تدفق الإشعارات
+          </div>
+          <div id="alertFeed" style="max-height: 300px; overflow-y: auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPARTMENTS PAGE -->
+  <div id="page-departments" class="page">
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z"/><circle cx="17.5" cy="17.5" r="4.5"/><path d="M3 13.5h8v8H3z"/></svg>
+        إدارة الأقسام والتواصل
+      </div>
+      <div class="grid-3" style="margin-bottom: 20px;">
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">طلبات من الإنتاج</div>
+          <div style="font-size: 28px; font-weight: 800; color: var(--success);" id="dept-production-count">0</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">بلاغات الصيانة</div>
+          <div style="font-size: 28px; font-weight: 800; color: var(--info);" id="dept-maintenance-count">0</div>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">بانتظار المشتريات</div>
+          <div style="font-size: 28px; font-weight: 800; color: var(--danger);" id="dept-procurement-count">0</div>
+        </div>
+      </div>
+      <div style="background: var(--bg); border-radius: 12px; padding: 16px;">
+        <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">سجل التواصل:</div>
+        <div id="communication-log" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WARRANTY PAGE -->
+  <div id="page-warranty" class="page">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div class="section-title" style="margin: 0;">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        نظام الضمانات
+      </div>
+      <button class="btn btn-success" id="btn-add-warranty">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        إضافة ضمان
+      </button>
+    </div>
+    <div class="grid-3" style="margin-bottom: 24px;">
+      <div class="card card-green">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">ضمانات نشطة</div>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="warranty-active-count">0</div>
+      </div>
+      <div class="card card-orange">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">تنبيهات انتهاء</div>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="warranty-expiring-count">0</div>
+      </div>
+      <div class="card card-red">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">منتهية</div>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="warranty-expired-count">0</div>
+      </div>
+    </div>
+    <div class="grid-2" id="warrantyList"></div>
+  </div>
+
+  <!-- MAINTENANCE PAGE -->
+  <div id="page-maintenance" class="page">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div class="section-title" style="margin: 0;">
+        <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+        الصيانة الخارجية
+      </div>
+      <button class="btn btn-danger" id="btn-add-maintenance">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        بلاغ صيانة
+      </button>
+    </div>
+    <div class="grid-4" style="margin-bottom: 24px;">
+      <div class="card card-orange">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">قيد التنفيذ</div>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="maint-inprogress-count">0</div>
+      </div>
+      <div class="card card-blue">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">بانتظار التقرير الخارجي</div>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="maint-external-count">0</div>
+      </div>
+      <div class="card" style="border-left: 4px solid #8b5cf6;">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">بانتظار القرار</div>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="maint-decision-count">0</div>
+      </div>
+      <div class="card card-green">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">مكتملة</div>
+        <div style="font-size: 32px; font-weight: 800; color: var(--primary);" id="maint-completed-count">0</div>
+      </div>
+    </div>
+    <div id="maintenanceList" style="display: flex; flex-direction: column; gap: 16px;"></div>
+  </div>
+
+  <!-- SCHEDULED PAGE -->
+  <div id="page-scheduled" class="page">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div class="section-title" style="margin: 0;">
+        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+        الطلبات المجدولة
+      </div>
+      <button class="btn btn-purple" id="btn-add-scheduled">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        طلب مجدول
+      </button>
+    </div>
+    <div id="scheduledListPage" style="display: flex; flex-direction: column; gap: 12px;"></div>
+  </div>
+
+  <!-- RECURRING PAGE -->
+  <div id="page-recurring" class="page">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <div class="section-title" style="margin: 0;">
+        <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        الطلبات الثابتة
+      </div>
+      <button class="btn btn-gold" id="btn-add-recurring-page">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        إضافة طلب ثابت
+      </button>
+    </div>
+    <div class="grid-2" id="recurringListPage"></div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">
+    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  </div>
+  <div>
+    <div class="toast-title" id="toastTitle">تم بنجاح</div>
+    <div class="toast-msg" id="toastMessage"></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+
+<!-- Order Modal -->
+<div class="modal-overlay" id="modal-order">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        طلب جديد
+      </div>
+      <button class="modal-close" id="close-modal-order">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <form id="form-order">
+      <div class="form-group">
+        <label class="form-label">نوع الطلب</label>
+        <select class="form-select" id="order-type">
+          <option value="normal">طلب عادي</option>
+          <option value="scheduled">طلب مجدول</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم المنتج / الخامة</label>
+        <input type="text" class="form-input" id="order-product" placeholder="مثال: حديد صلب" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الكمية</label>
+          <input type="text" class="form-input" id="order-quantity" placeholder="مثال: 2 طن" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">المورد</label>
+          <input type="text" class="form-input" id="order-supplier" placeholder="اسم المورد" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">القسم الطالب</label>
+        <select class="form-select" id="order-dept">
+          <option value="production">مدير الإنتاج</option>
+          <option value="maintenance">مدير الصيانة</option>
+          <option value="factory">مدير المصنع</option>
+          <option value="quality">مدير الجودة</option>
+        </select>
+      </div>
+      <div class="form-group hidden" id="order-scheduled-fields">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">تاريخ التنفيذ</label>
+            <input type="date" class="form-input" id="order-date">
+          </div>
+          <div class="form-group">
+            <label class="form-label">وقت التنفيذ</label>
+            <input type="time" class="form-input" id="order-time">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الأولوية</label>
+        <select class="form-select" id="order-priority">
+          <option value="normal">عادي</option>
+          <option value="high">عاجل</option>
+          <option value="critical">حرج</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">إرفاق صورة</label>
+        <div class="drag-area" id="order-drag-area">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <div style="color: var(--text-muted); font-size: 14px;">اضغط هنا لاختيار صورة</div>
+          <input type="file" id="order-image" style="display: none;" accept="image/*">
+        </div>
+        <div id="order-img-preview" style="display: none; margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 10px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; background: var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 700;" id="order-img-name"></div>
+            </div>
+            <button type="button" id="remove-order-img" style="background: none; border: none; cursor: pointer; color: var(--danger);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ملاحظات</label>
+        <textarea class="form-textarea" id="order-notes" rows="3" placeholder="أي ملاحظات إضافية..."></textarea>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button type="submit" class="btn btn-primary" style="flex: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+          حفظ الطلب
+        </button>
+        <button type="button" class="btn" id="cancel-order" style="background: var(--border); color: var(--text-muted);">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Recurring Modal -->
+<div class="modal-overlay" id="modal-recurring">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+        طلب ثابت (شهري)
+      </div>
+      <button class="modal-close" id="close-modal-recurring">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <form id="form-recurring">
+      <div class="form-group">
+        <label class="form-label">اسم المنتج</label>
+        <input type="text" class="form-input" id="rec-product" placeholder="مثال: حديد خام" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">الكمية</label>
+          <input type="text" class="form-input" id="rec-quantity" placeholder="5 طن" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">المورد</label>
+          <input type="text" class="form-input" id="rec-supplier" placeholder="اسم المورد" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">يوم التنفيذ</label>
+          <select class="form-select" id="rec-day">
+            <option value="1">1</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">التكرار</label>
+          <select class="form-select" id="rec-frequency">
+            <option value="monthly">شهري</option>
+            <option value="biweekly">كل أسبوعين</option>
+            <option value="weekly">أسبوعي</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">القيمة التقديرية</label>
+        <input type="number" class="form-input" id="rec-value" placeholder="EGP">
+      </div>
+      <div class="form-group">
+        <label class="form-label">إرفاق صورة</label>
+        <div class="drag-area" id="rec-drag-area">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <div style="color: var(--text-muted); font-size: 14px;">اضغط هنا لاختيار صورة</div>
+          <input type="file" id="rec-image" style="display: none;" accept="image/*">
+        </div>
+        <div id="rec-img-preview" style="display: none; margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 10px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; background: var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 700;" id="rec-img-name"></div>
+            </div>
+            <button type="button" id="remove-rec-img" style="background: none; border: none; cursor: pointer; color: var(--danger);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">قنوات الإشعارات</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" id="rec-whatsapp" checked>
+            <span>WhatsApp</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="rec-email" checked>
+            <span>Email</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="rec-sms">
+            <span>SMS</span>
+          </label>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button type="submit" class="btn btn-gold" style="flex: 1; color: var(--primary-dark);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+          حفظ الطلب الثابت
+        </button>
+        <button type="button" class="btn" id="cancel-recurring" style="background: var(--border); color: var(--text-muted);">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Warranty Modal -->
+<div class="modal-overlay" id="modal-warranty">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        إضافة ضمان جديد
+      </div>
+      <button class="modal-close" id="close-modal-warranty">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <form id="form-warranty">
+      <div class="form-group">
+        <label class="form-label">اسم المنتج</label>
+        <input type="text" class="form-input" id="warranty-product" placeholder="اسم المنتج" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">رقم المنتج / الموديل</label>
+        <input type="text" class="form-input" id="warranty-model" placeholder="PKG-2024-001" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">المورد</label>
+          <input type="text" class="form-input" id="warranty-supplier" placeholder="اسم المورد" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">تاريخ الشراء</label>
+          <input type="date" class="form-input" id="warranty-purchase-date" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">مدة الضمان (شهور)</label>
+          <input type="number" class="form-input" id="warranty-duration" placeholder="36" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">تاريخ الانتهاء</label>
+          <input type="date" class="form-input" id="warranty-expiry" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">صورة الضمان (إلزامي)</label>
+        <div class="drag-area" id="warranty-drag-area">
+          <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <div style="color: var(--text-muted); font-size: 14px;">اضغط هنا لاختيار صورة الضمان</div>
+          <input type="file" id="warranty-image" style="display: none;" accept="image/*">
+        </div>
+        <div id="warranty-img-preview" style="display: none; margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 10px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; background: var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 700;" id="warranty-img-name"></div>
+            </div>
+            <button type="button" id="remove-warranty-img" style="background: none; border: none; cursor: pointer; color: var(--danger);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ملاحظات</label>
+        <textarea class="form-textarea" id="warranty-notes" rows="3" placeholder="ملاحظات..."></textarea>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button type="submit" class="btn btn-success" style="flex: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+          حفظ الضمان
+        </button>
+        <button type="button" class="btn" id="cancel-warranty" style="background: var(--border); color: var(--text-muted);">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Maintenance Modal -->
+<div class="modal-overlay" id="modal-maintenance">
+  <div class="modal" style="max-width: 700px;">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+        بلاغ صيانة خارجية جديد
+      </div>
+      <button class="modal-close" id="close-modal-maintenance">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <form id="form-maintenance">
+      <div class="form-group">
+        <label class="form-label">عنوان البلاغ</label>
+        <input type="text" class="form-input" id="maint-title" placeholder="عطل في ماكينة التعبئة" required>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">القسم الطالب</label>
+          <select class="form-select" id="maint-dept">
+            <option value="production">مدير الإنتاج</option>
+            <option value="factory">مدير المصنع</option>
+            <option value="maintenance">مدير الصيانة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">الماكينة / الخط</label>
+          <input type="text" class="form-input" id="maint-machine" placeholder="Line 2 - ماكينة التعبئة" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">الأولوية</label>
+        <select class="form-select" id="maint-priority">
+          <option value="normal">عادي</option>
+          <option value="high">عاجل</option>
+          <option value="critical">حرج - توقف الإنتاج</option>
+        </select>
+      </div>
+      <div style="background: var(--bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); margin-bottom: 16px;">
+        <div style="font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 16px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--primary)" style="vertical-align: middle; margin-left: 6px;"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+          التقرير الفني الداخلي (مدير الصيانة)
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label">التشخيص الفني</label>
+            <textarea class="form-textarea" id="maint-diagnosis" rows="2" placeholder="وصف العطل والتشخيص..."></textarea>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label">السبب المتوقع</label>
+            <input type="text" class="form-input" id="maint-cause" placeholder="سبب العطل">
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label">التوصية</label>
+            <textarea class="form-textarea" id="maint-recommendation" rows="2" placeholder="التوصية الفنية..."></textarea>
+          </div>
+          <div class="form-group" style="margin: 0;">
+            <label class="form-label">التكلفة المتوقعة</label>
+            <input type="text" class="form-input" id="maint-cost" placeholder="EGP">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">صور الماكينة (اختياري)</label>
+        <div class="drag-area" id="maint-drag-area">
+          <svg viewBox="0 0 24 24"><path d="M9.4 10.5l4.77-8.26C13.47 2.09 12.75 2 12 2c-2.4 0-4.6.85-6.32 2.25l3.66 6.35.06-.1zM21.54 9c-.93 0-1.84.15-2.68.42l-3.66 6.35 3.66 6.35c1.78-1.04 3.2-2.61 4.08-4.51.27-.64.42-1.33.42-2.06 0-2.76-2.24-5-5-5zM7.88 14.75l-3.66 6.35C5.34 22.91 7.54 24 9.94 24c.75 0 1.47-.09 2.17-.26L8.45 17.39l-.57-2.64zM14.05 13.5h5.9c-.72-1.25-1.82-2.25-3.12-2.86l-.06.1-2.72 4.76zM8.59 13.5l2.72-4.76-.06-.1c-1.3.61-2.4 1.61-3.12 2.86h5.9zM15.54 15.5l-3.66 6.35c.7.17 1.42.26 2.17.26 2.4 0 4.6-.85 6.32-2.25l-3.66-6.35-.17.29zM6.49 18.09l3.66-6.35-.17-.29c-1.78 1.04-3.2 2.61-4.08 4.51-.27.64-.42 1.33-.42 2.06 0 .72.15 1.42.42 2.06.27.01.57.01.59.01z"/></svg>
+          <div style="color: var(--text-muted); font-size: 14px;">إرفاق صور</div>
+          <input type="file" id="maint-image" style="display: none;" accept="image/*">
+        </div>
+        <div id="maint-img-preview" style="display: none; margin-top: 12px; padding: 12px; background: var(--bg); border-radius: 10px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 48px; height: 48px; background: var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--text-muted)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 700;" id="maint-img-name"></div>
+            </div>
+            <button type="button" id="remove-maint-img" style="background: none; border: none; cursor: pointer; color: var(--danger);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button type="submit" class="btn btn-danger" style="flex: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+          حفظ البلاغ وإرسال للخارجية
+        </button>
+        <button type="button" class="btn" id="cancel-maintenance" style="background: var(--border); color: var(--text-muted);">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- External Report Modal -->
+<div class="modal-overlay" id="modal-external">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        إضافة التقرير الخارجي
+      </div>
+      <button class="modal-close" id="close-modal-external">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <form id="form-external">
+      <input type="hidden" id="ext-maint-id">
+      <div class="form-group">
+        <label class="form-label">شركة الصيانة</label>
+        <input type="text" class="form-input" id="ext-company" placeholder="اسم الشركة" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">اسم الفني</label>
+        <input type="text" class="form-input" id="ext-technician" placeholder="اسم الفني" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">نتيجة الفحص</label>
+        <textarea class="form-textarea" id="ext-result" rows="3" placeholder="نتيجة الفحص الخارجي..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">التكلفة الفعلية</label>
+        <input type="text" class="form-input" id="ext-cost" placeholder="EGP">
+      </div>
+      <div class="form-group">
+        <label class="form-label">التوصية</label>
+        <textarea class="form-textarea" id="ext-recommendation" rows="2" placeholder="توصية الفني..."></textarea>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button type="submit" class="btn btn-primary" style="flex: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+          حفظ التقرير الخارجي
+        </button>
+        <button type="button" class="btn" id="cancel-external" style="background: var(--border); color: var(--text-muted);">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Decision Modal -->
+<div class="modal-overlay" id="modal-decision">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">
+        <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v2h2v-2zm0-4h-2v4h2v-4z"/></svg>
+        قرار مدير الصيانة
+      </div>
+      <button class="modal-close" id="close-modal-decision">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+    </div>
+    <form id="form-decision">
+      <input type="hidden" id="dec-maint-id">
+      <div class="form-group">
+        <label class="form-label">القرار</label>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="decision" value="approve" checked>
+            <span>موافقة - إنشاء طلب شراء</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="decision" value="reject">
+            <span>رفض</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ملاحظات القرار</label>
+        <textarea class="form-textarea" id="dec-notes" rows="3" placeholder="ملاحظات..."></textarea>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button type="submit" class="btn btn-purple" style="flex: 1;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v2h2v-2zm0-4h-2v4h2v-4z"/></svg>
+          اتخاذ القرار
+        </button>
+        <button type="button" class="btn" id="cancel-decision" style="background: var(--border); color: var(--text-muted);">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// FIREBASE — منظومة سيجام (sigam-operations) — تخزين حقيقي + حارس دخول
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyBtcvF104xLvNX6xkwxcMZThjQPq2EKAKU",
+  authDomain: "sigam-operations.firebaseapp.com",
+  projectId: "sigam-operations",
+  storageBucket: "sigam-operations.firebasestorage.app",
+  messagingSenderId: "971246574608",
+  appId: "1:971246574608:web:8c70a8271664b0457c3e95"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+db.enablePersistence({ synchronizeTabs:true }).catch(()=>{});
+
+// هذه الصفحة مقصورة على: المدير، أو صاحب دور "المشتريات"
+const REQUIRED_ROLE = 'procurement';
+auth.onAuthStateChanged(async user=>{
+  if(!user){ window.location.href = 'SIGAM-HOME.html'; return; }
+  try{
+    const doc = await db.collection('users').doc(user.uid).get();
+    const role = doc.exists ? doc.data().role : null;
+    if(role !== 'admin' && role !== REQUIRED_ROLE){
+      alert('⛔ حسابك غير مصرح له بفتح صفحة المشتريات');
+      window.location.href = 'SIGAM-HOME.html';
+    }
+  }catch(e){ window.location.href = 'SIGAM-HOME.html'; }
+});
+
+// ---------- Fetch shim: يحوّل كل نداءات /api/* لقراءة/كتابة مباشرة على Firestore ----------
+(function(){
+  const REAL_FETCH = window.fetch.bind(window);
+  const API_MAP = {
+    '/api/maintenance-state': 'maintenance_state',
+    '/api/procurement-state': 'procurement_state',
+    '/api/proc-alerts': 'proc_alerts',
+    '/api/tracking-state': 'tracking_state',
+    '/api/warehouse-state': 'warehouse_state'
+  };
+  window.fetch = async function(url, opts){
+    const key = API_MAP[url];
+    if(!key) return REAL_FETCH(url, opts);
+    const docRef = db.collection('app_state').doc(key);
+    const method = (opts && opts.method) ? opts.method.toUpperCase() : 'GET';
+    try{
+      if(method === 'GET'){
+        const snap = await docRef.get();
+        const data = snap.exists ? snap.data().payload : (key==='proc_alerts' ? [] : {});
+        return new Response(JSON.stringify({ success:true, data }), { status:200, headers:{'Content-Type':'application/json'} });
+      } else if(method === 'POST'){
+        const body = JSON.parse(opts.body);
+        await docRef.set({ payload: body, updatedAt: Date.now() });
+        return new Response(JSON.stringify({ success:true }), { status:200, headers:{'Content-Type':'application/json'} });
+      }
+      return REAL_FETCH(url, opts);
+    }catch(e){
+      return new Response(JSON.stringify({ success:false, error:String(e) }), { status:500, headers:{'Content-Type':'application/json'} });
+    }
+  };
+})();
+
+// ==================== DATA STORAGE ====================
+const DB = {
+  orders: [], scheduled: [], recurring: [], warranties: [], maintenance: [], alerts: []
+};
+
+let storageAvailable = false;
+let storageType = 'server';
+let _procSaveTimeout = null;
+
+function checkStorage() {
+  // بقينا بنحفظ على السيرفر (SQLite على اللابتوب) بدل المتصفح
+  // عشان البيانات تتشارك بين كل الأجهزة (لابتوب/تابليت) وتفضل موجودة دايماً
+  storageAvailable = true;
+  storageType = 'server';
+}
+
+function getStorage() { return null; } // مبقاش مستخدم - موجود بس عشان أي كود قديم بينده
+
+function loadDB() {
+  return fetch('/api/procurement-state', { cache: 'no-store' })
+    .then(res => res.json())
+    .then(json => {
+      if (json.success && json.data) {
+        Object.assign(DB, json.data);
+        console.log('✅ Data loaded from server');
+      } else {
+        console.log('ℹ️ No saved data found on server yet');
+      }
+    })
+    .catch(e => console.error('⚠️ Error loading data from server:', e));
+}
+
+function saveDB() {
+  clearTimeout(_procSaveTimeout);
+  _procSaveTimeout = setTimeout(() => {
+    fetch('/api/procurement-state', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify(DB)
+    }).then(async res => {
+      const json = await res.json().catch(() => null);
+      if (!res.ok || !json || !json.success) {
+        console.error('❌ السيرفر رفض حفظ بيانات المشتريات:', res.status, json);
+      } else {
+        console.log('✅ Data saved to server');
+      }
+    }).catch(e => console.error('⚠️ Error saving data to server:', e));
+  }, 500);
+}
+
+function genId(prefix) {
+  return prefix + '-' + Date.now().toString(36).toUpperCase();
+}
+
+// ==================== UI HELPERS ====================
+function showToast(title, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMessage').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('active');
+  });
+  const activeBtn = document.getElementById('nav-' + pageId);
+  if (activeBtn) activeBtn.classList.add('active');
+  renderAll();
+}
+
+function toggleOrderFields() {
+  const fields = document.getElementById('order-scheduled-fields');
+  if (fields) {
+    fields.classList.toggle('hidden', document.getElementById('order-type').value !== 'scheduled');
+  }
+}
+
+function handleImage(input, previewId, nameId) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById(previewId);
+      const nameEl = document.getElementById(nameId);
+      if (preview) {
+        preview.style.display = 'block';
+        preview.dataset.img = e.target.result;
+      }
+      if (nameEl) nameEl.textContent = input.files[0].name;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function removeImage(previewId) {
+  const preview = document.getElementById(previewId);
+  if (preview) {
+    preview.style.display = 'none';
+    preview.dataset.img = '';
+  }
+}
+
+// ==================== EVENT LISTENERS ====================
+function setupEventListeners() {
+  // Navigation
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const page = this.dataset.page;
+      if (page) showPage(page);
+    });
+  });
+
+  // Logo test button
+  document.getElementById('logo-test').addEventListener('click', () => {
+    showToast('✅ النظام شغال!', 'كل حاجة تمام، جرب تضيف بيانات');
+  });
+
+  // Header buttons
+  document.getElementById('btn-new-order').addEventListener('click', () => openModal('modal-order'));
+  document.getElementById('btn-new-recurring').addEventListener('click', () => openModal('modal-recurring'));
+  document.getElementById('btn-export').addEventListener('click', exportData);
+  document.getElementById('btn-clear').addEventListener('click', clearAllData);
+
+  // Page buttons
+  document.getElementById('btn-add-warranty').addEventListener('click', () => openModal('modal-warranty'));
+  document.getElementById('btn-add-maintenance').addEventListener('click', () => openModal('modal-maintenance'));
+  document.getElementById('btn-add-scheduled').addEventListener('click', () => {
+    openModal('modal-order');
+    document.getElementById('order-type').value = 'scheduled';
+    toggleOrderFields();
+  });
+  document.getElementById('btn-add-recurring-page').addEventListener('click', () => openModal('modal-recurring'));
+
+  // Modal close buttons
+  document.getElementById('close-modal-order').addEventListener('click', () => closeModal('modal-order'));
+  document.getElementById('close-modal-recurring').addEventListener('click', () => closeModal('modal-recurring'));
+  document.getElementById('close-modal-warranty').addEventListener('click', () => closeModal('modal-warranty'));
+  document.getElementById('close-modal-maintenance').addEventListener('click', () => closeModal('modal-maintenance'));
+  document.getElementById('close-modal-external').addEventListener('click', () => closeModal('modal-external'));
+  document.getElementById('close-modal-decision').addEventListener('click', () => closeModal('modal-decision'));
+
+  // Cancel buttons
+  document.getElementById('cancel-order').addEventListener('click', () => closeModal('modal-order'));
+  document.getElementById('cancel-recurring').addEventListener('click', () => closeModal('modal-recurring'));
+  document.getElementById('cancel-warranty').addEventListener('click', () => closeModal('modal-warranty'));
+  document.getElementById('cancel-maintenance').addEventListener('click', () => closeModal('modal-maintenance'));
+  document.getElementById('cancel-external').addEventListener('click', () => closeModal('modal-external'));
+  document.getElementById('cancel-decision').addEventListener('click', () => closeModal('modal-decision'));
+
+  // Order type change
+  document.getElementById('order-type').addEventListener('change', toggleOrderFields);
+
+  // Drag areas
+  document.getElementById('order-drag-area').addEventListener('click', () => document.getElementById('order-image').click());
+  document.getElementById('rec-drag-area').addEventListener('click', () => document.getElementById('rec-image').click());
+  document.getElementById('warranty-drag-area').addEventListener('click', () => document.getElementById('warranty-image').click());
+  document.getElementById('maint-drag-area').addEventListener('click', () => document.getElementById('maint-image').click());
+
+  // Image inputs
+  document.getElementById('order-image').addEventListener('change', function() { handleImage(this, 'order-img-preview', 'order-img-name'); });
+  document.getElementById('rec-image').addEventListener('change', function() { handleImage(this, 'rec-img-preview', 'rec-img-name'); });
+  document.getElementById('warranty-image').addEventListener('change', function() { handleImage(this, 'warranty-img-preview', 'warranty-img-name'); });
+  document.getElementById('maint-image').addEventListener('change', function() { handleImage(this, 'maint-img-preview', 'maint-img-name'); });
+
+  // Remove image buttons
+  document.getElementById('remove-order-img').addEventListener('click', () => removeImage('order-img-preview'));
+  document.getElementById('remove-rec-img').addEventListener('click', () => removeImage('rec-img-preview'));
+  document.getElementById('remove-warranty-img').addEventListener('click', () => removeImage('warranty-img-preview'));
+  document.getElementById('remove-maint-img').addEventListener('click', () => removeImage('maint-img-preview'));
+
+  // Department cards
+  document.querySelectorAll('[data-dept]').forEach(card => {
+    card.addEventListener('click', function() {
+      showPage('departments');
+      showToast('👥', 'تصفية: ' + this.dataset.dept);
+    });
+  });
+
+  // Forms
+  document.getElementById('form-order').addEventListener('submit', submitOrder);
+  document.getElementById('form-recurring').addEventListener('submit', submitRecurring);
+  document.getElementById('form-warranty').addEventListener('submit', submitWarranty);
+  document.getElementById('form-maintenance').addEventListener('submit', submitMaintenance);
+  document.getElementById('form-external').addEventListener('submit', submitExternal);
+  document.getElementById('form-decision').addEventListener('submit', submitDecision);
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('active');
+    });
+  });
+}
+
+// ==================== SUBMIT FUNCTIONS ====================
+function submitOrder(e) {
+  e.preventDefault();
+  const type = document.getElementById('order-type').value;
+  const order = {
+    id: genId(type === 'scheduled' ? 'SO' : 'PO'),
+    product: document.getElementById('order-product').value,
+    quantity: document.getElementById('order-quantity').value,
+    supplier: document.getElementById('order-supplier').value,
+    dept: document.getElementById('order-dept').value,
+    priority: document.getElementById('order-priority').value,
+    notes: document.getElementById('order-notes').value,
+    image: document.getElementById('order-img-preview').dataset.img || '',
+    status: 'pending',
+    factoryApproval: 'pending',
+    factoryNotes: '',
+    createdAt: new Date().toISOString()
+  };
+  if (type === 'scheduled') {
+    order.scheduledDate = document.getElementById('order-date').value;
+    order.scheduledTime = document.getElementById('order-time').value;
+    DB.scheduled.push(order);
+    addAlert('scheduled', 'طلب مجدول: ' + order.product);
+  } else {
+    DB.orders.push(order);
+    addAlert('order', 'طلب جديد: ' + order.product);
+  }
+  saveDB();
+  closeModal('modal-order');
+  showToast('✅ تم الحفظ', 'تم حفظ الطلب بنجاح');
+  renderAll();
+  e.target.reset();
+  removeImage('order-img-preview');
+  toggleOrderFields();
+}
+
+function submitRecurring(e) {
+  e.preventDefault();
+  DB.recurring.push({
+    id: genId('RO'),
+    product: document.getElementById('rec-product').value,
+    quantity: document.getElementById('rec-quantity').value,
+    supplier: document.getElementById('rec-supplier').value,
+    day: document.getElementById('rec-day').value,
+    frequency: document.getElementById('rec-frequency').value,
+    value: document.getElementById('rec-value').value,
+    image: document.getElementById('rec-img-preview').dataset.img || '',
+    whatsapp: document.getElementById('rec-whatsapp').checked,
+    email: document.getElementById('rec-email').checked,
+    sms: document.getElementById('rec-sms').checked,
+    status: 'active',
+    createdAt: new Date().toISOString()
+  });
+  saveDB();
+  closeModal('modal-recurring');
+  showToast('✅ تم الحفظ', 'تم حفظ الطلب الثابت');
+  renderAll();
+  e.target.reset();
+  removeImage('rec-img-preview');
+}
+
+function submitWarranty(e) {
+  e.preventDefault();
+  DB.warranties.push({
+    id: genId('WAR'),
+    product: document.getElementById('warranty-product').value,
+    model: document.getElementById('warranty-model').value,
+    supplier: document.getElementById('warranty-supplier').value,
+    purchaseDate: document.getElementById('warranty-purchase-date').value,
+    duration: document.getElementById('warranty-duration').value,
+    expiry: document.getElementById('warranty-expiry').value,
+    image: document.getElementById('warranty-img-preview').dataset.img || '',
+    notes: document.getElementById('warranty-notes').value,
+    createdAt: new Date().toISOString()
+  });
+  saveDB();
+  closeModal('modal-warranty');
+  showToast('✅ تم الحفظ', 'تم حفظ الضمان');
+  renderAll();
+  e.target.reset();
+  removeImage('warranty-img-preview');
+}
+
+function submitMaintenance(e) {
+  e.preventDefault();
+  DB.maintenance.push({
+    id: genId('MR'),
+    title: document.getElementById('maint-title').value,
+    dept: document.getElementById('maint-dept').value,
+    machine: document.getElementById('maint-machine').value,
+    priority: document.getElementById('maint-priority').value,
+    image: document.getElementById('maint-img-preview').dataset.img || '',
+    status: 'inprogress',
+    internalReport: {
+      diagnosis: document.getElementById('maint-diagnosis').value,
+      cause: document.getElementById('maint-cause').value,
+      recommendation: document.getElementById('maint-recommendation').value,
+      cost: document.getElementById('maint-cost').value,
+      date: new Date().toISOString()
+    },
+    externalReport: null,
+    managerDecision: null,
+    createdAt: new Date().toISOString()
+  });
+  saveDB();
+  closeModal('modal-maintenance');
+  showToast('✅ تم الحفظ', 'تم حفظ البلاغ وإرسال للخارجية');
+  renderAll();
+  e.target.reset();
+  removeImage('maint-img-preview');
+}
+
+function submitExternal(e) {
+  e.preventDefault();
+  const id = document.getElementById('ext-maint-id').value;
+  const m = DB.maintenance.find(x => x.id === id);
+  if (!m) return;
+  m.externalReport = {
+    company: document.getElementById('ext-company').value,
+    technician: document.getElementById('ext-technician').value,
+    result: document.getElementById('ext-result').value,
+    cost: document.getElementById('ext-cost').value,
+    recommendation: document.getElementById('ext-recommendation').value,
+    date: new Date().toISOString()
+  };
+  m.status = 'external_done';
+  saveDB();
+  closeModal('modal-external');
+  showToast('✅ تم', 'تم إضافة التقرير الخارجي');
+  renderAll();
+  e.target.reset();
+}
+
+function submitDecision(e) {
+  e.preventDefault();
+  const id = document.getElementById('dec-maint-id').value;
+  const m = DB.maintenance.find(x => x.id === id);
+  if (!m) return;
+  const decision = document.querySelector('input[name="decision"]:checked');
+  if (!decision) return;
+  m.managerDecision = {
+    decision: decision.value,
+    notes: document.getElementById('dec-notes').value,
+    date: new Date().toISOString()
+  };
+  m.status = m.managerDecision.decision === 'approve' ? 'approved' : 'rejected';
+  saveDB();
+  closeModal('modal-decision');
+  showToast('✅ تم', 'تم اتخاذ القرار');
+  renderAll();
+  e.target.reset();
+}
+
+// ==================== ACTIONS ====================
+function addAlert(type, msg) {
+  DB.alerts.unshift({
+    id: genId('ALERT'),
+    type,
+    message: msg,
+    time: new Date().toISOString()
+  });
+  if (DB.alerts.length > 50) DB.alerts = DB.alerts.slice(0, 50);
+  saveDB();
+}
+
+function executeScheduled(id) {
+  const s = DB.scheduled.find(x => x.id === id);
+  if (!s) return;
+  DB.orders.push({ ...s, status: 'executed', executedAt: new Date().toISOString() });
+  DB.scheduled = DB.scheduled.filter(x => x.id !== id);
+  saveDB();
+  showToast('✅ تم', 'تم تنفيذ الطلب المجدول');
+  renderAll();
+}
+
+function deleteScheduled(id) {
+  DB.scheduled = DB.scheduled.filter(x => x.id !== id);
+  saveDB();
+  showToast('🗑️ تم الحذف', 'تم حذف الطلب المجدول');
+  renderAll();
+}
+
+function executeRecurring(id) {
+  const r = DB.recurring.find(x => x.id === id);
+  if (!r) return;
+  DB.orders.push({
+    id: genId('PO'),
+    product: r.product,
+    quantity: r.quantity,
+    supplier: r.supplier,
+    dept: 'procurement',
+    priority: 'normal',
+    notes: 'طلب ثابت - ' + r.id,
+    status: 'pending',
+    factoryApproval: 'pending',
+    factoryNotes: '',
+    createdAt: new Date().toISOString()
+  });
+  addAlert('recurring', 'تم تنفيذ الطلب الثابت: ' + r.product);
+  saveDB();
+  showToast('✅ تم', 'تم تنفيذ الطلب الثابت');
+  renderAll();
+}
+
+function toggleRecurring(id) {
+  const r = DB.recurring.find(x => x.id === id);
+  if (!r) return;
+  r.status = r.status === 'active' ? 'paused' : 'active';
+  saveDB();
+  showToast('⏯️', 'تم ' + (r.status === 'active' ? 'تفعيل' : 'إيقاف') + ' الطلب');
+  renderAll();
+}
+
+function deleteRecurring(id) {
+  DB.recurring = DB.recurring.filter(x => x.id !== id);
+  saveDB();
+  showToast('🗑️ تم الحذف', 'تم حذف الطلب الثابت');
+  renderAll();
+}
+
+function addExternalReport(id) {
+  document.getElementById('ext-maint-id').value = id;
+  openModal('modal-external');
+}
+
+function makeManagerDecision(id) {
+  const m = DB.maintenance.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('dec-maint-id').value = id;
+  openModal('modal-decision');
+}
+
+function createPOFromMaint(id) {
+  const m = DB.maintenance.find(x => x.id === id);
+  if (!m) { showToast('⚠️', 'البلاغ غير موجود'); return; }
+  if (m.status === 'po_created') { showToast('ℹ️', 'طلب الشراء تم إنشاؤه مسبقاً'); return; }
+  if (m.status !== 'approved') { showToast('⚠️', 'يجب موافقة المدير أولاً'); return; }
+
+  const newPO = {
+    id: genId('PO'),
+    product: 'قطع غيار - ' + m.title,
+    quantity: m.internalReport?.recommendation || 'حسب التقرير',
+    supplier: m.externalReport?.company || 'يحدد لاحقاً',
+    dept: 'maintenance',
+    priority: m.priority === 'critical' ? 'critical' : m.priority === 'high' ? 'high' : 'normal',
+    notes: 'من بلاغ صيانة ' + m.id + (m.internalReport?.diagnosis ? ' | ' + m.internalReport.diagnosis.substring(0,80) : ''),
+    status: 'completed',
+    factoryApproval: 'approved',
+    completedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    value: m.internalReport?.cost || ''
+  };
+  DB.orders.push(newPO);
+  m.status = 'po_created';
+  m.poId = newPO.id;
+  addAlert('order', 'تم إنشاء طلب شراء من بلاغ الصيانة: ' + m.title);
+  saveDB();
+  showToast('✅ تم إنشاء طلب الشراء', newPO.id + ' — الحالة: مكتمل');
+  renderAll();
+}
+
+function deleteMaintenance(id) {
+  if (!confirm('هل أنت متأكد من حذف هذا البلاغ؟')) return;
+  DB.maintenance = DB.maintenance.filter(x => x.id !== id);
+  saveDB();
+  showToast('🗑️ تم الحذف', 'تم حذف البلاغ بنجاح');
+  renderAll();
+}
+
+function claimWarranty(id) { showToast('📋', 'فتح نموذج مطالبة الضمان'); }
+function editWarranty(id) { showToast('📝', 'فتح نموذج تعديل الضمان'); }
+function sendWhatsAppDirect(id) { showToast('📱', 'تم إرسال WhatsApp'); }
+function sendEmail(id) { showToast('📧', 'تم إرسال Email'); }
+function sendWhatsAppGroup(id) { showToast('👥', 'تم إرسال للجروب'); }
+function escalateAlert(id) { showToast('🚨', 'تم التصعيد'); }
+
+// ==================== RENDERING ====================
+function renderAll() {
+  renderOrders();
+  renderScheduled();
+  renderRecurring();
+  renderWarranties();
+  renderMaintenance();
+  renderAlerts();
+  renderDepartments();
+  renderBridge();
+}
+
+function renderOrders() {
+  const list = document.getElementById('urgencyList');
+  const urgent = DB.orders.filter(o => o.priority === 'critical' || o.priority === 'high');
+
+  if (urgent.length === 0) {
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM8 11h8v2H8v-2z"/></svg><div style="font-size: 14px;">لا يوجد طلبات عاجلة</div></div>';
+  } else {
+    list.innerHTML = urgent.map(o => {
+      const isCritical = o.priority === 'critical';
+      const color = isCritical ? '#e74c3c' : '#f39c12';
+      const bg = isCritical ? 'rgba(231,76,60,0.08)' : 'rgba(243,156,18,0.08)';
+      const border = isCritical ? 'rgba(231,76,60,0.2)' : 'rgba(243,156,18,0.2)';
+
+      // Determine status for progress bar
+      let progressClass = 'factory';
+      let progressStatus = 'factory';
+      let statusText = 'بانتظار مدير المصنع';
+      let statusPillClass = 'factory';
+
+      if (o.factoryApproval === 'approved') {
+        progressClass = 'procurement';
+        progressStatus = 'procurement';
+        statusText = 'عند المشتريات';
+        statusPillClass = 'procurement';
+      } else if (o.factoryApproval === 'rejected') {
+        progressClass = 'rejected';
+        progressStatus = 'rejected';
+        statusText = 'مرفوض من المصنع';
+        statusPillClass = 'rejected';
+      } else if (o.status === 'completed') {
+        progressClass = 'completed';
+        progressStatus = 'completed';
+        statusText = 'مكتمل';
+        statusPillClass = 'completed';
+      }
+
+      return `<div style="background: linear-gradient(135deg, rgba(13,27,76,0.9) 0%, rgba(26,45,107,0.8) 100%); border: 1px solid ${border}; border-radius: 16px; padding: 20px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <div style="width: 48px; height: 48px; background: ${color}; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          </div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="padding: 2px 10px; background: ${color}; color: white; border-radius: 6px; font-size: 11px; font-weight: 700;">${o.priority.toUpperCase()}</span>
+              <span style="font-size: 14px; font-weight: 700; color: #ffd700;">${o.id}</span>
+              <span style="font-size: 12px; color: #94a3b8;">| ${o.product} - ${o.quantity}</span>
+            </div>
+            <div style="display: flex; gap: 16px; font-size: 12px; color: #94a3b8;">
+              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10z"/></svg>${o.supplier}</span>
+              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>${o.dept}</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+            <span class="status-pill ${statusPillClass}">
+              <span class="progress-dot" style="width: 8px; height: 8px; border-radius: 50%; background: currentColor;"></span>
+              ${statusText}
+            </span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div style="margin: 12px 0;">
+          <div class="progress-track">
+            <div class="progress-fill ${progressClass}"></div>
+          </div>
+          <div class="progress-labels">
+            <span class="progress-label ${progressStatus === 'factory' || progressStatus === 'procurement' || progressStatus === 'completed' ? 'completed' : ''}">
+              <span class="progress-dot"></span> الطلب
+            </span>
+            <span class="progress-label ${progressStatus === 'factory' ? 'active' : progressStatus === 'procurement' || progressStatus === 'completed' ? 'completed' : ''}">
+              <span class="progress-dot"></span> مدير المصنع
+            </span>
+            <span class="progress-label ${progressStatus === 'procurement' ? 'active' : progressStatus === 'completed' ? 'completed' : ''}">
+              <span class="progress-dot"></span> المشتريات
+            </span>
+            <span class="progress-label ${progressStatus === 'completed' ? 'completed' : progressStatus === 'rejected' ? 'rejected' : ''}">
+              <span class="progress-dot"></span> التنفيذ
+            </span>
+          </div>
+        </div>
+
+        ${o.factoryNotes ? `<div style="background: rgba(243, 156, 18, 0.1); border-radius: 8px; padding: 10px; margin-top: 12px; border: 1px solid rgba(243, 156, 18, 0.2); font-size: 12px; color: #f39c12;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 6px;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          ملاحظات: ${o.factoryNotes}
+        </div>` : ''}
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255, 215, 0, 0.1);">
+          ${progressStatus === 'factory' ? `
+            <button class="btn" data-action="approve-order" data-id="${o.id}" style="flex: 1; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; font-size: 12px; padding: 8px 16px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              موافقة
+            </button>
+            <button class="btn" data-action="reject-order" data-id="${o.id}" style="flex: 1; background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; font-size: 12px; padding: 8px 16px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              رفض
+            </button>
+          ` : progressStatus === 'procurement' ? `
+            <button class="btn" data-action="complete-order" data-id="${o.id}" style="flex: 1; background: linear-gradient(135deg, #ffd700, #ffaa00); color: #0d1b4c; font-size: 12px; padding: 8px 16px; font-weight: 700;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              تم التنفيذ
+            </button>
+          ` : progressStatus === 'completed' ? `
+            <span style="flex: 1; text-align: center; color: #2ecc71; font-size: 12px; font-weight: 700; padding: 8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              تم التنفيذ بنجاح
+            </span>
+          ` : progressStatus === 'rejected' ? `
+            <span style="flex: 1; text-align: center; color: #e74c3c; font-size: 12px; font-weight: 700; padding: 8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              مرفوض
+            </span>
+          ` : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const critical = urgent.filter(o => o.priority === 'critical').length;
+  const high = urgent.filter(o => o.priority === 'high').length;
+  const pendingFactory = DB.orders.filter(o => o.factoryApproval === 'pending').length;
+  const pendingProcurement = DB.orders.filter(o => o.factoryApproval === 'approved' && o.status !== 'completed').length;
+  const completed = DB.orders.filter(o => o.status === 'completed').length;
+  document.getElementById('urgency-stats').innerHTML = 
+    `<span class="badge badge-red">🔴 ${critical}</span>` +
+    `<span class="badge badge-orange">🟠 ${high}</span>` +
+    `<span class="badge badge-gold">🏭 ${pendingFactory}</span>` +
+    `<span class="badge badge-blue">🛒 ${pendingProcurement}</span>` +
+    `<span class="badge badge-green">✓ ${completed}</span>`;
+}
+
+function renderScheduled() {
+  const list = document.getElementById('scheduledListPage');
+  if (DB.scheduled.length === 0) {
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg><h3>لا يوجد طلبات مجدولة</h3></div>';
+  } else {
+    list.innerHTML = DB.scheduled.map(s => 
+      `<div class="item-card" style="background: linear-gradient(to right, rgba(139,92,246,0.05), white); border-color: rgba(139,92,246,0.2);">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          </div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span class="badge badge-purple">SCHEDULED</span>
+              <span style="font-size: 14px; font-weight: 700; color: var(--primary);">${s.id}</span>
+              <span style="font-size: 12px; color: var(--text-muted);">| ${s.product} - ${s.quantity}</span>
+            </div>
+            <div style="display: flex; gap: 16px; font-size: 12px;">
+              <span style="color: #8b5cf6; font-weight: 700;"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>${s.scheduledDate} ${s.scheduledTime || ''}</span>
+              <span style="color: var(--text-muted);"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10z"/></svg>${s.supplier}</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
+            <button class="btn btn-purple" data-action="execute-scheduled" data-id="${s.id}" style="font-size: 12px; padding: 8px 16px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> نفذ
+            </button>
+            <button class="icon-action" data-action="delete-scheduled" data-id="${s.id}" style="background: rgba(231,76,60,0.1); color: #e74c3c;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>`
+    ).join('');
+  }
+}
+
+function renderRecurring() {
+  const list = document.getElementById('recurringListPage');
+  if (DB.recurring.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="grid-column: span 2;"><svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg><h3>لا يوجد طلبات ثابتة</h3></div>';
+  } else {
+    list.innerHTML = DB.recurring.map(r => {
+      const isActive = r.status === 'active';
+      return `<div class="item-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 44px; height: 44px; background: rgba(236,72,153,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#ec4899"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+            </div>
+            <div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--primary);">${r.id} - ${r.product}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">${r.supplier}</div>
+            </div>
+          </div>
+          <span class="badge ${isActive ? 'badge-green' : 'badge'}" style="background: ${isActive ? 'rgba(46,204,113,0.15)' : 'var(--border)'}; color: ${isActive ? '#27ae60' : 'var(--text-muted)'};">${isActive ? 'نشط' : 'متوقف'}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">الكمية:</span><span style="font-weight: 700;">${r.quantity}</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">التكرار:</span><span style="font-weight: 700; color: #ec4899;">${r.frequency === 'monthly' ? 'شهري' : r.frequency === 'biweekly' ? 'كل أسبوعين' : 'أسبوعي'} - يوم ${r.day}</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">القيمة:</span><span style="font-weight: 700; color: var(--success);">EGP ${r.value || 0}</span></div>
+        </div>
+        <div style="display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border);">
+          <button class="btn btn-gold" data-action="execute-recurring" data-id="${r.id}" style="flex: 1; font-size: 12px; padding: 8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg> نفذ
+          </button>
+          <button class="icon-action" data-action="toggle-recurring" data-id="${r.id}" style="background: rgba(243,156,18,0.1); color: #f39c12;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <button class="icon-action" data-action="delete-recurring" data-id="${r.id}" style="background: rgba(231,76,60,0.1); color: #e74c3c;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderWarranties() {
+  const list = document.getElementById('warrantyList');
+  const now = new Date();
+  const active = DB.warranties.filter(w => new Date(w.expiry) > now);
+  const expiring = DB.warranties.filter(w => {
+    const exp = new Date(w.expiry);
+    const diff = (exp - now) / (1000 * 60 * 60 * 24 * 30);
+    return diff > 0 && diff <= 6;
+  });
+  const expired = DB.warranties.filter(w => new Date(w.expiry) <= now);
+
+  document.getElementById('warranty-active-count').textContent = active.length;
+  document.getElementById('warranty-expiring-count').textContent = expiring.length;
+  document.getElementById('warranty-expired-count').textContent = expired.length;
+
+  if (DB.warranties.length === 0) {
+    list.innerHTML = '<div class="empty-state" style="grid-column: span 2;"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg><h3>لا يوجد ضمانات</h3><button class="btn btn-success" id="btn-empty-warranty">إضافة ضمان</button></div>';
+  } else {
+    list.innerHTML = DB.warranties.map(w => {
+      const isExpired = new Date(w.expiry) <= now;
+      const isExpiring = (new Date(w.expiry) - now) / (1000 * 60 * 60 * 24 * 30) <= 6 && !isExpired;
+      const statusColor = isExpired ? '#e74c3c' : isExpiring ? '#f39c12' : '#2ecc71';
+      const statusBg = isExpired ? 'rgba(231,76,60,0.08)' : isExpiring ? 'rgba(243,156,18,0.08)' : 'rgba(46,204,113,0.08)';
+      const statusBorder = isExpired ? 'rgba(231,76,60,0.2)' : isExpiring ? 'rgba(243,156,18,0.2)' : 'rgba(46,204,113,0.2)';
+      const statusText = isExpired ? 'منتهي' : isExpiring ? 'ينتهي قريباً' : 'نشط';
+
+      return `<div class="item-card" style="border-color: ${statusBorder};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 44px; height: 44px; background: ${statusBg}; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="${statusColor}"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            </div>
+            <div>
+              <div style="font-size: 14px; font-weight: 700; color: var(--primary);">${w.product}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">${w.model}</div>
+            </div>
+          </div>
+          <span class="badge" style="background: ${statusBg}; color: ${statusColor};">${statusText}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">المورد:</span><span style="font-weight: 700;">${w.supplier}</span></div>
+          <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">الانتهاء:</span><span style="font-weight: 700; color: ${statusColor};">${w.expiry}</span></div>
+        </div>
+        <div style="display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border);">
+          <button class="btn btn-success" data-action="claim-warranty" data-id="${w.id}" style="flex: 1; font-size: 12px; padding: 8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> مطالبة
+          </button>
+          <button class="icon-action" data-action="edit-warranty" data-id="${w.id}" style="background: var(--bg); color: var(--text-muted);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderMaintenance() {
+  const list = document.getElementById('maintenanceList');
+  const inprogress = DB.maintenance.filter(m => m.status === 'inprogress').length;
+  const external = DB.maintenance.filter(m => m.status === 'external_done').length;
+  const decision = DB.maintenance.filter(m => m.status === 'approved' || m.status === 'rejected').length;
+  const completed = DB.maintenance.filter(m => m.status === 'po_created').length;
+
+  document.getElementById('maint-inprogress-count').textContent = inprogress;
+  document.getElementById('maint-external-count').textContent = external;
+  document.getElementById('maint-decision-count').textContent = decision;
+  document.getElementById('maint-completed-count').textContent = completed;
+
+  if (DB.maintenance.length === 0) {
+    list.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg><h3>لا يوجد بلاغات</h3><button class="btn btn-danger" id="btn-empty-maintenance">بلاغ صيانة</button></div>';
+  } else {
+    list.innerHTML = DB.maintenance.map(m => {
+      const sc = { inprogress: '#f39c12', external_done: '#00b4d8', approved: '#8b5cf6', rejected: '#e74c3c', po_created: '#2ecc71' };
+      const sl = { inprogress: 'قيد التنفيذ', external_done: 'تم التقرير الخارجي', approved: 'موافقة - بانتظار PO', rejected: 'مرفوض', po_created: 'مكتمل' };
+      const hi = !!m.internalReport;
+      const he = !!m.externalReport;
+      const hd = !!m.managerDecision;
+      const statusColor = sc[m.status] || '#9ca3af';
+
+      return `<div class="item-card">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <div style="width: 56px; height: 56px; background: ${statusColor}; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+          </div>
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+              <span style="padding: 2px 10px; background: ${statusColor}; color: white; border-radius: 6px; font-size: 11px; font-weight: 700;">${m.id}</span>
+              ${m.source === 'sigam' ? '<span style="padding: 2px 8px; background: rgba(231,76,60,0.15); color: #e74c3c; border-radius: 6px; font-size: 10px; font-weight: 800; border: 1px solid rgba(231,76,60,0.3);">📥 من الصيانة</span>' : ''}
+              <span style="font-size: 14px; font-weight: 700; color: var(--primary);">${m.title}</span>
+            </div>
+            <div style="display: flex; gap: 16px; font-size: 12px; color: var(--text-muted);">
+              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>${m.dept}</span>
+              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 4px;"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>${m.machine}</span>
+              <span style="color: ${m.priority === 'critical' ? '#e74c3c' : m.priority === 'high' ? '#f39c12' : '#00b4d8'}; font-weight: 700;">${m.priority === 'critical' ? 'حرج' : m.priority === 'high' ? 'عاجل' : 'عادي'}</span>
+              ${m.sigamDate ? `<span style="color: #8b5cf6;">🕐 ${m.sigamDate} ${m.sigamTime||''}</span>` : ''}
+            </div>
+          </div>
+          <span class="badge" style="background: ${statusColor}15; color: ${statusColor};">${sl[m.status] || m.status}</span>
+        </div>
+
+        <div style="background: var(--bg); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 16px;">مسار التقارير:</div>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div class="flow-step">
+              <div class="flow-step-icon ${hi ? 'done' : 'waiting'}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </div>
+              <div class="flow-step-label">تقرير داخلي</div>
+            </div>
+            <div class="flow-line ${hi ? 'done' : ''}"></div>
+            <div class="flow-step">
+              <div class="flow-step-icon ${he ? 'done' : hi ? 'pending' : 'waiting'}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+              </div>
+              <div class="flow-step-label">تقرير خارجي</div>
+              ${!he && hi ? `<button data-action="add-external" data-id="${m.id}" style="color: var(--info); font-size: 11px; background: none; border: none; cursor: pointer; margin-top: 4px;">إضافة</button>` : ''}
+            </div>
+            <div class="flow-line ${he ? 'done' : ''}"></div>
+            <div class="flow-step">
+              <div class="flow-step-icon ${hd ? 'done' : (hi || he) ? 'pending' : 'waiting'}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v2h2v-2zm0-4h-2v4h2v-4z"/></svg>
+              </div>
+              <div class="flow-step-label">قرار المدير</div>
+              ${!hd && (hi || he) ? `<button data-action="make-decision" data-id="${m.id}" style="color: #8b5cf6; font-size: 11px; background: none; border: none; cursor: pointer; margin-top: 4px;">قرار</button>` : ''}
+            </div>
+            <div class="flow-line ${hd && m.managerDecision?.decision === 'approve' ? 'done' : ''}"></div>
+            <div class="flow-step">
+              <div class="flow-step-icon ${m.status === 'po_created' ? 'done' : 'waiting'}">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+              </div>
+              <div class="flow-step-label">طلب شراء</div>
+              ${hd && m.managerDecision?.decision === 'approve' && m.status !== 'po_created' ? `<button data-action="create-po" data-id="${m.id}" style="color: #ec4899; font-size: 11px; background: none; border: none; cursor: pointer; margin-top: 4px;">إنشاء</button>` : ''}
+              ${m.status === 'po_created' ? `<span style="color: #2ecc71; font-size: 10px; margin-top: 4px; display:block; font-weight:700;">✓ تم</span>` : ''}
+            </div>
+          </div>
+        </div>
+
+        ${m.internalReport ? `<div style="background: rgba(0,180,216,0.05); border-radius: 10px; padding: 14px; border: 1px solid rgba(0,180,216,0.15); margin-bottom: 12px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--info)" style="vertical-align: middle; margin-left: 6px;"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            التقرير الداخلي:
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted);">${m.internalReport.diagnosis}</div>
+        </div>` : ''}
+
+        ${m.externalReport ? `<div style="background: rgba(46,204,113,0.05); border-radius: 10px; padding: 14px; border: 1px solid rgba(46,204,113,0.15); margin-bottom: 12px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--success)" style="vertical-align: middle; margin-left: 6px;"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            التقرير الخارجي - ${m.externalReport.company}:
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted);">${m.externalReport.result}</div>
+        </div>` : ''}
+
+        ${m.managerDecision ? `<div style="background: ${m.managerDecision.decision === 'approve' ? 'rgba(46,204,113,0.05)' : 'rgba(231,76,60,0.05)'}; border-radius: 10px; padding: 14px; border: 1px solid ${m.managerDecision.decision === 'approve' ? 'rgba(46,204,113,0.15)' : 'rgba(231,76,60,0.15)'}; margin-bottom: 12px;">
+          <div style="font-size: 12px; font-weight: 700; color: ${m.managerDecision.decision === 'approve' ? '#27ae60' : '#c0392b'};">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-left: 6px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            قرار المدير: ${m.managerDecision.decision === 'approve' ? '✅ موافقة' : '❌ رفض'}
+          </div>
+        </div>` : ''}
+
+        ${m.status === 'po_created' ? `
+        <div style="background: rgba(46,204,113,0.08); border: 1px solid rgba(46,204,113,0.25); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; display:flex; align-items:center; gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#2ecc71"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          <span style="font-size:13px; font-weight:700; color:#2ecc71;">تم إنشاء طلب الشراء</span>
+          <span style="font-size:11px; color: var(--text-muted); margin-right:auto;">${m.poId || ''}</span>
+        </div>` : ''}
+
+        <div style="display:flex; gap:8px; padding-top: 12px; border-top: 1px solid var(--border); margin-top: 4px;">
+          ${m.managerDecision?.decision === 'approve' && m.status !== 'po_created' ? `
+          <button class="btn btn-success" data-action="create-po" data-id="${m.id}" style="flex:1; font-size:13px; padding:10px; font-weight:800;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle; margin-left:6px;"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            إرسال للمشتريات
+          </button>` : ''}
+          ${m.status === 'po_created' ? `
+          <div style="flex:1; background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.3); border-radius:10px; padding:10px; text-align:center; font-size:13px; font-weight:800; color:#2ecc71;">
+            ✅ تم — في المشتريات
+          </div>` : ''}
+          <button class="btn btn-danger" data-action="delete-maintenance" data-id="${m.id}" style="padding:10px 14px; font-size:12px;" title="حذف البلاغ">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            حذف
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderAlerts() {
+  const feed = document.getElementById('alertFeed');
+  if (DB.alerts.length === 0) {
+    feed.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 12px; padding: 20px;">لا يوجد إشعارات</div>';
+  } else {
+    const colors = {
+      order: { bg: 'rgba(0,180,216,0.08)', border: '#00b4d8', icon: '#00b4d8' },
+      scheduled: { bg: 'rgba(139,92,246,0.08)', border: '#8b5cf6', icon: '#8b5cf6' },
+      recurring: { bg: 'rgba(236,72,153,0.08)', border: '#ec4899', icon: '#ec4899' },
+      maintenance: { bg: 'rgba(231,76,60,0.08)', border: '#e74c3c', icon: '#e74c3c' },
+      warranty: { bg: 'rgba(46,204,113,0.08)', border: '#2ecc71', icon: '#2ecc71' }
+    };
+    const icons = {
+      order: '<path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>',
+      scheduled: '<path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>',
+      recurring: '<path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>',
+      maintenance: '<path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>',
+      warranty: '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>'
+    };
+
+    feed.innerHTML = DB.alerts.slice(0, 10).map(a => {
+      const c = colors[a.type] || colors.order;
+      return `<div class="alert-item" style="background: ${c.bg}; border-right-color: ${c.border};">
+        <div class="alert-icon" style="background: ${c.icon};">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white">${icons[a.type] || icons.order}</svg>
+        </div>
+        <div class="alert-content">
+          <div class="alert-title">${a.message}</div>
+          <div class="alert-time">${new Date(a.time).toLocaleTimeString('ar-EG')}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderDepartments() {
+  const depts = ['production', 'maintenance', 'factory', 'procurement', 'quality'];
+  depts.forEach(d => {
+    const count = DB.orders.filter(o => o.dept === d).length + DB.maintenance.filter(m => m.dept === d).length;
+    const el = document.getElementById('count-' + d);
+    if (el) el.textContent = count + (d === 'maintenance' ? ' بلاغ' : d === 'procurement' ? ' بانتظار' : ' طلب');
+  });
+  document.getElementById('dept-production-count').textContent = DB.orders.filter(o => o.dept === 'production').length;
+  document.getElementById('dept-maintenance-count').textContent = DB.maintenance.filter(m => m.dept === 'maintenance').length;
+  document.getElementById('dept-procurement-count').textContent = DB.orders.filter(o => o.status === 'pending').length;
+}
+
+function renderBridge() {
+  document.getElementById('bridge-po-today').textContent = DB.orders.filter(o => new Date(o.createdAt).toDateString() === new Date().toDateString()).length;
+  const totalValue = DB.orders.reduce((sum, o) => sum + (parseFloat(o.value) || 0), 0);
+  document.getElementById('bridge-po-value').textContent = 'EGP ' + totalValue.toLocaleString();
+  document.getElementById('bridge-matched').textContent = DB.orders.filter(o => o.status !== 'pending').length + '/' + DB.orders.length;
+}
+
+// ==================== EXPORT & CLEAR ====================
+function exportData() {
+  const data = {
+    orders: DB.orders,
+    scheduled: DB.scheduled,
+    recurring: DB.recurring,
+    warranties: DB.warranties,
+    maintenance: DB.maintenance,
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'sigma-data-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  showToast('💾 تصدير', 'تم تصدير البيانات');
+}
+
+function clearAllData() {
+  if (!confirm('هل أنت متأكد من مسح كل البيانات؟')) return;
+  DB.orders = [];
+  DB.scheduled = [];
+  DB.recurring = [];
+  DB.warranties = [];
+  DB.maintenance = [];
+  DB.alerts = [];
+  saveDB(); // بيحفظ النسخة الفاضية على السيرفر فوراً
+  showToast('🗑️', 'تم مسح كل البيانات');
+  renderAll();
+}
+
+// ==================== DELEGATED EVENT LISTENERS ====================
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const action = btn.dataset.action;
+  const id = btn.dataset.id;
+
+  switch(action) {
+    case 'whatsapp': sendWhatsAppDirect(id); break;
+    case 'email': sendEmail(id); break;
+    case 'execute-scheduled': executeScheduled(id); break;
+    case 'delete-scheduled': deleteScheduled(id); break;
+    case 'execute-recurring': executeRecurring(id); break;
+    case 'toggle-recurring': toggleRecurring(id); break;
+    case 'delete-recurring': deleteRecurring(id); break;
+    case 'claim-warranty': claimWarranty(id); break;
+    case 'edit-warranty': editWarranty(id); break;
+    case 'add-external': addExternalReport(id); break;
+    case 'make-decision': makeManagerDecision(id); break;
+    case 'create-po': createPOFromMaint(id); break;
+    case 'approve-order': approveOrder(id); break;
+    case 'reject-order': rejectOrder(id); break;
+    case 'complete-order': completeOrder(id); break;
+    case 'delete-maintenance': deleteMaintenance(id); break;
+  }
+});
+
+// ==================== ORDER APPROVAL SYSTEM ====================
+function approveOrder(id) {
+  const order = DB.orders.find(o => o.id === id);
+  if (!order) return;
+  order.factoryApproval = 'approved';
+  order.status = 'procurement';
+  order.approvedAt = new Date().toISOString();
+  saveDB();
+  addAlert('order', 'طلب ' + order.product + ' تمت الموافقة من مدير المصنع');
+  showToast('✅ تمت الموافقة', 'الطلب انتقل للمشتريات');
+  renderAll();
+}
+
+function rejectOrder(id) {
+  const order = DB.orders.find(o => o.id === id);
+  if (!order) return;
+  order.factoryApproval = 'rejected';
+  order.status = 'rejected';
+  order.rejectedAt = new Date().toISOString();
+  saveDB();
+  addAlert('order', 'طلب ' + order.product + ' مرفوض من مدير المصنع');
+  showToast('❌ تم الرفض', 'تم رفض الطلب');
+  renderAll();
+}
+
+function completeOrder(id) {
+  const order = DB.orders.find(o => o.id === id);
+  if (!order) return;
+  order.status = 'completed';
+  order.completedAt = new Date().toISOString();
+  saveDB();
+  addAlert('order', 'طلب ' + order.product + ' تم التنفيذ');
+  showToast('✅ تم التنفيذ', 'تم إكمال الطلب بنجاح');
+  renderAll();
+}
+
+// ==================== MAINTENANCE ALERTS FROM SIGAM SYSTEM ====================
+
+async function importSigamAlerts() {
+  try {
+    const res = await fetch('/api/proc-alerts', { cache: 'no-store' });
+    const json = await res.json();
+    const alerts = (json.success && Array.isArray(json.data)) ? json.data : [];
+    if (!alerts.length) return 0;
+
+    let added = 0;
+    alerts.forEach(alert => {
+      const alreadyExists = DB.maintenance.some(m => m.sigamAlertId === alert.id);
+      if (alreadyExists) return;
+
+      const priorityMap = { high: 'critical', medium: 'high', low: 'normal' };
+      const newMaint = {
+        id: 'MNT-' + Date.now().toString(36).toUpperCase() + added,
+        sigamAlertId: alert.id,
+        sigamFaultId: alert.faultId,
+        title: alert.title || ('عطل في ' + alert.equipment),
+        dept: 'maintenance',
+        machine: alert.equipment || '—',
+        priority: priorityMap[alert.priority] || 'normal',
+        status: 'inprogress',
+        source: 'sigam',
+        internalReport: {
+          diagnosis: [
+            alert.description,
+            alert.cause ? 'السبب: ' + alert.cause : '',
+            alert.parts ? 'قطع مطلوبة: ' + alert.parts : '',
+            alert.technician ? 'الفني: ' + alert.technician : ''
+          ].filter(Boolean).join(' | '),
+          cause: alert.cause || '',
+          recommendation: alert.parts ? 'توفير القطع: ' + alert.parts : 'مراجعة الوحدة',
+          cost: ''
+        },
+        createdAt: new Date(alert.timestamp || Date.now()).toISOString(),
+        sigamDate: alert.date,
+        sigamTime: alert.time
+      };
+      DB.maintenance.unshift(newMaint);
+      added++;
+    });
+
+    if (added > 0) {
+      DB.alerts.unshift({
+        id: 'ALT-' + Date.now(),
+        type: 'maintenance',
+        message: '\uD83D\uDCE5 وصل ' + added + ' بلاغ جديد من منظومة سيجام للصيانة',
+        time: new Date().toISOString()
+      });
+      saveDB();
+      renderAll();
+      showToast('\uD83D\uDCE5 بلاغات جديدة', 'وصل ' + added + ' بلاغ من الصيانة');
+    }
+    return added;
+  } catch(e) {
+    console.log('Error importing sigam alerts:', e);
+    return 0;
+  }
+}
+
+try {
+  const bc = new BroadcastChannel('sigma_alerts');
+  bc.onmessage = function(e) {
+    if (e.data && e.data.type === 'new_alert') {
+      importSigamAlerts();
+    }
+  };
+} catch(e) {}
+
+// ==================== INIT ====================
+function updateClock() {
+  const now = new Date();
+  document.getElementById('currentTime').textContent = now.toLocaleTimeString('ar-EG');
+  document.getElementById('currentDate').textContent = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+checkStorage();
+
+(async function initProcurement(){
+  await loadDB();
+  setupEventListeners();
+
+  // Add sample data if empty
+  if (DB.recurring.length === 0) {
+    DB.recurring.push({
+      id: 'RO-001',
+      product: 'حديد خام',
+      quantity: '5 طن',
+      supplier: 'الحديد الوطنية',
+      day: '5',
+      frequency: 'monthly',
+      value: '125000',
+      status: 'active',
+      createdAt: new Date().toISOString()
+    });
+    DB.recurring.push({
+      id: 'RO-002',
+      product: 'ورق تغليف',
+      quantity: '500 رول',
+      supplier: 'التعبئة الذهبية',
+      day: '10',
+      frequency: 'monthly',
+      value: '45000',
+      status: 'active',
+      createdAt: new Date().toISOString()
+    });
+    saveDB();
+  }
+
+  renderAll();
+  await importSigamAlerts();
+  // Update storage status indicator
+  const statusDot = document.getElementById('storage-dot');
+  const statusText = document.getElementById('storage-text');
+  if (statusDot && statusText) {
+    statusDot.style.background = '#2ecc71';
+    statusText.textContent = 'محفوظ على السيرفر';
+  }
+
+  console.log('🚀 Sigma Dashboard loaded successfully!');
+  console.log('Storage type:', storageType);
+  console.log('Data counts:', {
+    orders: DB.orders.length,
+    scheduled: DB.scheduled.length,
+    recurring: DB.recurring.length,
+    warranties: DB.warranties.length,
+    maintenance: DB.maintenance.length,
+    alerts: DB.alerts.length
+  });
+
+  // كل 20 ثانية: يتحقق من أي تعديلات جت من أجهزة تانية ويحدث الشاشة
+  setInterval(async () => {
+    await loadDB();
+    await importSigamAlerts();
+    renderAll();
+  }, 20000);
+})();
+</script>
+</body>
+</html>
