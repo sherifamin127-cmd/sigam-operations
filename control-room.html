@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كنترول روم - سيجام</title>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --bg:      #070f2e;
+  --bg1:     #070f2e;
+  --bg2:     #0d1b4c;
+  --bg3:     #1a2d6b;
+  --gold:    #ffd700;
+  --gold2:   #ffaa00;
+  --gold3:   #ffe566;
+  --text:    #f8fafc;
+  --dim:     #94a3b8;
+  --dim2:    #3a4f72;
+  --red:     #ef4444;
+  --green:   #10b981;
+  --blue:    #3b82f6;
+  --cyan:    #06b6d4;
+  --orange:  #f97316;
+  --purple:  #a855f7;
+  --border:  rgba(255,215,0,0.12);
+  --border2: rgba(255,215,0,0.30);
+}
+*{ box-sizing:border-box; margin:0; padding:0 }
+html,body {
+  min-height:100vh; font-family:'Almarai',sans-serif;
+  background:var(--bg); color:var(--text); direction:rtl; overflow-x:hidden;
+  scroll-behavior:smooth;
+}
+body {
+  background-image:
+    radial-gradient(ellipse 900px 500px at 15% -5%, rgba(255,215,0,0.07), transparent),
+    radial-gradient(ellipse 700px 500px at 100% 20%, rgba(59,130,246,0.06), transparent),
+    radial-gradient(ellipse 800px 600px at 50% 100%, rgba(16,185,129,0.05), transparent);
+}
+.stars { position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,.5), transparent),
+    radial-gradient(1px 1px at 90px 120px, rgba(255,255,255,.35), transparent),
+    radial-gradient(1.5px 1.5px at 160px 60px, rgba(255,255,255,.4), transparent),
+    radial-gradient(1px 1px at 230px 180px, rgba(255,255,255,.3), transparent);
+  background-size: 260px 220px; opacity:.5;
+}
+
+/* ============ TOP BAR ============ */
+.top-bar {
+  position:relative; z-index:5; display:flex; align-items:center; justify-content:space-between;
+  gap:16px; flex-wrap:wrap; padding:20px 34px; border-bottom:1px solid var(--border);
+  background:rgba(4,9,26,0.55); backdrop-filter:blur(14px);
+}
+.brand { display:flex; align-items:center; gap:12px; }
+.brand-icon {
+  width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0d1b4c; font-size:1.2em;
+  box-shadow:0 0 26px -4px rgba(255,215,0,.55);
+}
+.brand-text .t1 { font-weight:800; color:var(--gold); font-size:1.05em; }
+.brand-text .t2 { font-size:.72em; color:var(--dim); letter-spacing:.5px; }
+
+.demo-badge {
+  display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:20px;
+  background:rgba(249,115,22,0.12); border:1px solid rgba(249,115,22,0.4); color:var(--orange);
+  font-size:.78em; font-weight:800;
+}
+.demo-badge i { animation:pulse-dot 1.6s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ============ STATUS STRIP ============ */
+.status-strip {
+  position:relative; z-index:2; max-width:1300px; margin:26px auto 0; padding:0 24px;
+  display:grid; grid-template-columns:repeat(5,1fr); gap:14px;
+}
+.stat-chip {
+  background:linear-gradient(160deg, rgba(13,27,76,0.85), rgba(26,45,107,0.65));
+  border:1px solid var(--border); border-radius:16px; padding:16px 18px;
+  display:flex; align-items:center; gap:14px;
+}
+.stat-chip .ic {
+  width:42px; height:42px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1.1em; flex-shrink:0;
+}
+.stat-chip .val { font-weight:800; font-size:1.25em; font-family:'Montserrat',sans-serif; }
+.stat-chip .lbl { font-size:.72em; color:var(--dim); }
+
+/* ============ PAGE HEADER ============ */
+.page-head { max-width:1300px; margin:38px auto 4px; padding:0 24px; position:relative; z-index:2; }
+.page-head h1 { font-size:1.7em; color:var(--gold); display:flex; align-items:center; gap:12px; }
+.page-head p { color:var(--dim); font-size:.9em; margin-top:6px; }
+
+/* ============ SECTION ============ */
+.section { max-width:1300px; margin:0 auto; padding:34px 24px 10px; position:relative; z-index:2; }
+.section-head { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.section-head .ic {
+  width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:1.15em;
+  box-shadow:0 6px 18px -4px rgba(0,0,0,.5);
+}
+.section-head h2 { font-size:1.18em; font-weight:800; }
+.section-head span { font-size:.78em; color:var(--dim); display:block; margin-top:2px; }
+.section-actions { margin-right:auto; display:flex; gap:10px; }
+.mini-btn {
+  padding:8px 16px; border-radius:10px; border:1px solid var(--border); background:rgba(255,255,255,.04);
+  color:var(--text); font-family:'Almarai',sans-serif; font-size:.78em; font-weight:700; cursor:pointer; transition:all .2s;
+  display:flex; align-items:center; gap:6px;
+}
+.mini-btn:hover { border-color:var(--border2); background:rgba(255,255,255,.08); }
+
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px; }
+
+/* ============ LIGHT SWITCH CARD (signature element) ============ */
+.light-card {
+  position:relative; overflow:hidden; border-radius:20px; padding:22px;
+  background:linear-gradient(160deg, rgba(13,27,76,0.9), rgba(20,34,88,0.7));
+  border:1px solid var(--border); transition:all .35s ease;
+}
+.light-card.on {
+  border-color:rgba(255,215,0,0.55);
+  box-shadow:0 0 0 1px rgba(255,215,0,0.15), 0 18px 40px -12px rgba(255,180,0,0.35);
+}
+.light-card::before {
+  content:''; position:absolute; top:-40%; left:50%; transform:translateX(-50%);
+  width:220px; height:220px; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(255,215,0,0.35), transparent 70%);
+  opacity:0; transition:opacity .4s ease;
+}
+.light-card.on::before { opacity:1; }
+.light-card-top { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; }
+.light-bulb-ic {
+  width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+  font-size:1.25em; background:rgba(255,255,255,0.06); color:var(--dim); transition:all .35s ease;
+}
+.light-card.on .light-bulb-ic {
+  background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#0d1b4c;
+  box-shadow:0 0 24px 2px rgba(255,215,0,0.65);
+}
+.light-name { font-weight:800; margin-top:14px; font-size:.98em; position:relative; z-index:1; }
+.light-zone { font-size:.72em; color:var(--dim); margin-top:2px; position:relative; z-index:1; }
+
+.switch { position:relative; width:54px; height:30px; flex-shrink:0; }
+.switch input { opacity:0; width:0; height:0; position:absolute; }
+.switch-track {
+  position:absolute; inset:0; border-radius:20px; cursor:pointer;
+  background:rgba(255,255,255,0.08); border:1px solid var(--border); transition:all .3s ease;
+}
+.switch-thumb {
+  position:absolute; top:3px; right:3px; width:22px; height:22px; border-radius:50%;
+  background:linear-gradient(160deg,#cbd5e1,#94a3b8); transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 2px 6px rgba(0,0,0,.4);
+}
+.switch input:checked + .switch-track { background:linear-gradient(135deg,var(--gold),var(--gold2)); border-color:transparent;
+  box-shadow:0 0 16px 1px rgba(255,215,0,.55); }
+.switch input:checked + .switch-track .switch-thumb { transform:translateX(-24px); background:#fffef4; }
+
+.light-meta { display:flex; align-items:center; justify-content:space-between; margin-top:16px; position:relative; z-index:1; }
+.light-status-txt { font-size:.76em; font-weight:700; color:var(--dim); }
+.light-card.on .light-status-txt { color:var(--gold3); }
+.brightness-dots { display:flex; gap:3px; }
+.brightness-dots span { width:5px; height:5px; border-radius:50%; background:var(--dim2); }
+.light-card.on .brightness-dots span { background:var(--gold); }
+
+/* ============ DOOR CARDS ============ */
+.door-card {
+  border-radius:20px; padding:22px; text-align:center;
+  background:linear-gradient(160deg, rgba(13,27,76,0.9), rgba(20,34,88,0.7));
+  border:1px solid var(--border); transition:all .3s ease;
+}
+.door-card.open { border-color:rgba(239,68,68,0.5); box-shadow:0 14px 32px -10px rgba(239,68,68,.28); }
+.door-card.locked { border-color:rgba(16,185,129,0.4); }
+.door-ic {
+  width:64px; height:64px; margin:0 auto 14px; border-radius:18px; display:flex; align-items:center; justify-content:center;
+  font-size:1.7em; background:rgba(16,185,129,0.12); color:var(--green); transition:all .3s ease;
+}
+.door-card.open .door-ic { background:rgba(239,68,68,0.14); color:var(--red); }
+.door-name { font-weight:800; font-size:.95em; }
+.door-loc { font-size:.72em; color:var(--dim); margin:4px 0 14px; }
+.door-status-badge {
+  display:inline-flex; align-items:center; gap:6px; padding:5px 14px; border-radius:16px; font-size:.72em; font-weight:800;
+  background:rgba(16,185,129,0.12); color:var(--green); margin-bottom:14px;
+}
+.door-card.open .door-status-badge { background:rgba(239,68,68,0.14); color:var(--red); }
+.door-btn {
+  width:100%; padding:11px; border-radius:11px; border:none; cursor:pointer; font-family:'Almarai',sans-serif;
+  font-weight:800; font-size:.85em; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px;
+  background:linear-gradient(135deg,var(--green),#0d9668); color:#062017;
+}
+.door-card.open .door-btn { background:linear-gradient(135deg,var(--red),#c0392b); color:#fff; }
+.door-btn:hover { transform:translateY(-2px); filter:brightness(1.08); }
+
+/* ============ CAMERA CARDS ============ */
+.cam-card {
+  border-radius:18px; overflow:hidden; border:1px solid var(--border);
+  background:#050a1e;
+}
+.cam-feed {
+  position:relative; aspect-ratio:16/10; overflow:hidden;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px),
+    linear-gradient(150deg,#0a1230 0%, #142150 45%, #0a1230 100%);
+  display:flex; align-items:center; justify-content:center;
+}
+.cam-feed::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(120deg, transparent 40%, rgba(255,255,255,.035) 50%, transparent 60%);
+  animation:cam-scan 5s linear infinite;
+}
+@keyframes cam-scan { 0%{ transform:translateX(-100%);} 100%{ transform:translateX(100%);} }
+.cam-placeholder-ic { color:rgba(255,255,255,0.14); font-size:2.6em; position:relative; z-index:1; }
+.cam-live-badge {
+  position:absolute; top:10px; right:10px; z-index:2; display:flex; align-items:center; gap:5px;
+  background:rgba(239,68,68,0.85); padding:4px 10px; border-radius:6px; font-size:.68em; font-weight:800;
+}
+.cam-live-badge i { font-size:.6em; animation:pulse-dot 1.2s ease-in-out infinite; }
+.cam-time {
+  position:absolute; bottom:10px; left:10px; z-index:2; font-size:.66em; color:rgba(255,255,255,.55);
+  font-family:'Montserrat',sans-serif; background:rgba(0,0,0,.35); padding:3px 8px; border-radius:5px;
+}
+.cam-demo-tag {
+  position:absolute; bottom:10px; right:10px; z-index:2; font-size:.62em; color:rgba(255,255,255,.4);
+  border:1px dashed rgba(255,255,255,.25); padding:3px 8px; border-radius:5px;
+}
+.cam-info { padding:14px 16px; display:flex; align-items:center; justify-content:space-between; }
+.cam-name { font-weight:800; font-size:.88em; }
+.cam-loc { font-size:.7em; color:var(--dim); margin-top:2px; }
+
+/* ============ SENSOR GAUGES ============ */
+.sensor-card {
+  border-radius:20px; padding:22px;
+  background:linear-gradient(160deg, rgba(13,27,76,0.9), rgba(20,34,88,0.7));
+  border:1px solid var(--border);
+}
+.sensor-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.sensor-name { font-weight:800; font-size:.92em; }
+.sensor-loc { font-size:.7em; color:var(--dim); }
+.sensor-badge {
+  font-size:.68em; font-weight:800; padding:4px 10px; border-radius:12px;
+  background:rgba(16,185,129,0.12); color:var(--green);
+}
+.sensor-badge.warn { background:rgba(249,115,22,0.14); color:var(--orange); }
+.gauge-row { display:flex; gap:14px; }
+.gauge {
+  flex:1; text-align:center; padding:16px 8px; border-radius:14px; background:rgba(0,0,0,0.18);
+}
+.gauge .g-icon { font-size:1.3em; margin-bottom:6px; }
+.gauge.temp .g-icon { color:var(--orange); }
+.gauge.hum .g-icon { color:var(--cyan); }
+.gauge .g-val { font-family:'Montserrat',sans-serif; font-weight:800; font-size:1.5em; }
+.gauge .g-lbl { font-size:.68em; color:var(--dim); margin-top:2px; }
+
+/* ============ FRIDGE CARDS ============ */
+.fridge-card {
+  border-radius:20px; padding:22px; position:relative; overflow:hidden;
+  background:linear-gradient(160deg, rgba(13,27,76,0.9), rgba(20,34,88,0.7));
+  border:1px solid var(--border);
+}
+.fridge-top { display:flex; align-items:center; gap:14px; }
+.fridge-ic {
+  width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  background:rgba(6,182,212,0.14); color:var(--cyan); font-size:1.3em; flex-shrink:0;
+}
+.fridge-name { font-weight:800; font-size:.95em; }
+.fridge-sub { font-size:.7em; color:var(--dim); margin-top:2px; }
+.fridge-temp { margin-top:16px; display:flex; align-items:baseline; gap:6px; }
+.fridge-temp .num { font-family:'Montserrat',sans-serif; font-weight:800; font-size:2em; color:var(--cyan); }
+.fridge-temp .unit { font-size:.9em; color:var(--dim); }
+.fridge-bar-wrap { margin-top:12px; height:6px; border-radius:6px; background:rgba(255,255,255,.06); overflow:hidden; }
+.fridge-bar { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--cyan),var(--blue)); }
+.fridge-footer { display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:.72em; color:var(--dim); }
+.fridge-compressor { display:flex; align-items:center; gap:6px; }
+.fridge-compressor .dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse-dot 1.4s ease-in-out infinite; }
+
+.footer-note {
+  max-width:1300px; margin:20px auto 60px; padding:16px 24px; text-align:center;
+  color:var(--dim); font-size:.78em; position:relative; z-index:2;
+}
+
+@media (max-width:900px){
+  .status-strip { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:640px){
+  .top-bar { padding:16px 18px; }
+  .section { padding:26px 16px 4px; }
+  .status-strip { grid-template-columns:1fr 1fr; padding:0 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="top-bar">
+  <div class="brand">
+    <div class="brand-icon"><i class="fa-solid fa-house-signal"></i></div>
+    <div class="brand-text">
+      <div class="t1">كنترول روم — سيجام</div>
+      <div class="t2">SEGAM SMART CONTROL</div>
+    </div>
+  </div>
+  <div class="demo-badge"><i class="fa-solid fa-circle"></i> وضع تجريبي — لسه مربوطة بأجهزة حقيقية</div>
+</div>
+
+<div class="status-strip">
+  <div class="stat-chip">
+    <div class="ic" style="background:rgba(255,215,0,0.14);color:var(--gold)"><i class="fa-solid fa-lightbulb"></i></div>
+    <div><div class="val" id="stat-lights">2 / 6</div><div class="lbl">إضاءات شغالة</div></div>
+  </div>
+  <div class="stat-chip">
+    <div class="ic" style="background:rgba(16,185,129,0.14);color:var(--green)"><i class="fa-solid fa-door-closed"></i></div>
+    <div><div class="val" id="stat-doors">3 / 4</div><div class="lbl">أبواب مقفولة</div></div>
+  </div>
+  <div class="stat-chip">
+    <div class="ic" style="background:rgba(239,68,68,0.14);color:var(--red)"><i class="fa-solid fa-video"></i></div>
+    <div><div class="val">4 / 4</div><div class="lbl">كاميرات متصلة</div></div>
+  </div>
+  <div class="stat-chip">
+    <div class="ic" style="background:rgba(6,182,212,0.14);color:var(--cyan)"><i class="fa-solid fa-temperature-half"></i></div>
+    <div><div class="val">طبيعية</div><div class="lbl">حالة الحرارة</div></div>
+  </div>
+  <div class="stat-chip">
+    <div class="ic" style="background:rgba(59,130,246,0.14);color:var(--blue)"><i class="fa-solid fa-snowflake"></i></div>
+    <div><div class="val">3 / 3</div><div class="lbl">ثلاجات تعمل</div></div>
+  </div>
+</div>
+
+<div class="page-head">
+  <h1><i class="fa-solid fa-sliders"></i> غرفة التحكم</h1>
+  <p>تحكم كامل في إضاءة وأبواب وحساسات المزرعة والمصنع من مكان واحد — هيتوصل بالأجهزة الحقيقية (Sonoff) قريبًا.</p>
+</div>
+
+<!-- ============ الإضاءة ============ -->
+<div class="section">
+  <div class="section-head">
+    <div class="ic" style="background:rgba(255,215,0,0.14);color:var(--gold)"><i class="fa-solid fa-lightbulb"></i></div>
+    <div>
+      <h2>الإضاءة</h2>
+      <span>تحكم في كل نقاط الإنارة داخل المزرعة والمصنع</span>
+    </div>
+    <div class="section-actions">
+      <button class="mini-btn" onclick="setAllLights(true)"><i class="fa-solid fa-sun"></i> تشغيل الكل</button>
+      <button class="mini-btn" onclick="setAllLights(false)"><i class="fa-regular fa-moon"></i> إطفاء الكل</button>
+    </div>
+  </div>
+  <div class="grid" id="lights-grid"></div>
+</div>
+
+<!-- ============ الأبواب ============ -->
+<div class="section">
+  <div class="section-head">
+    <div class="ic" style="background:rgba(16,185,129,0.14);color:var(--green)"><i class="fa-solid fa-door-open"></i></div>
+    <div>
+      <h2>الأبواب والبوابات <span style="font-size:.6em;background:rgba(249,115,22,.15);color:#f97316;padding:3px 10px;border-radius:10px;vertical-align:middle;margin-right:8px">قريبًا</span></h2>
+      <span>فتح وقفل البوابات عن بعد ومتابعة حالتها لحظيًا</span>
+    </div>
+  </div>
+  <div class="grid" id="doors-grid"></div>
+</div>
+
+<!-- ============ الكاميرات ============ -->
+<div class="section">
+  <div class="section-head">
+    <div class="ic" style="background:rgba(239,68,68,0.14);color:var(--red)"><i class="fa-solid fa-video"></i></div>
+    <div>
+      <h2>متابعة الكاميرات <span style="font-size:.6em;background:rgba(249,115,22,.15);color:#f97316;padding:3px 10px;border-radius:10px;vertical-align:middle;margin-right:8px">قريبًا</span></h2>
+      <span>عرض مباشر لكل نقاط المراقبة (شكل تجريبي لحد ما نربط الكاميرات الحقيقية)</span>
+    </div>
+  </div>
+  <div class="grid" id="cameras-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))"></div>
+</div>
+
+<!-- ============ الحرارة والرطوبة ============ -->
+<div class="section">
+  <div class="section-head">
+    <div class="ic" style="background:rgba(6,182,212,0.14);color:var(--cyan)"><i class="fa-solid fa-droplet-degree"></i></div>
+    <div>
+      <h2>الحرارة والرطوبة <span style="font-size:.6em;background:rgba(249,115,22,.15);color:#f97316;padding:3px 10px;border-radius:10px;vertical-align:middle;margin-right:8px">قريبًا</span></h2>
+      <span>قراءات الحساسات الموزّعة في المزرعة والمصنع</span>
+    </div>
+  </div>
+  <div class="grid" id="sensors-grid"></div>
+</div>
+
+<!-- ============ الثلاجات ============ -->
+<div class="section">
+  <div class="section-head">
+    <div class="ic" style="background:rgba(59,130,246,0.14);color:var(--blue)"><i class="fa-solid fa-snowflake"></i></div>
+    <div>
+      <h2>متابعة الثلاجات <span style="font-size:.6em;background:rgba(249,115,22,.15);color:#f97316;padding:3px 10px;border-radius:10px;vertical-align:middle;margin-right:8px">قريبًا</span></h2>
+      <span>درجة حرارة وحالة كل ثلاجة تبريد</span>
+    </div>
+  </div>
+  <div class="grid" id="fridges-grid"></div>
+</div>
+
+<div class="footer-note">
+  <i class="fa-solid fa-circle-info"></i> هذه الصفحة نموذج تصميمي مبدئي — بمجرد اعتماد حساب المطوّر على eWeLink، هنربط كل زرار هنا بالجهاز الحقيقي بتاعه.
+</div>
+
+<script>
+// ============================================================
+// ربط حقيقي بأجهزة Sonoff عن طريق Cloudflare Worker
+// ============================================================
+const WORKER_BASE = 'https://sigam-control-room.sherifamin127.workers.dev';
+
+function getControlPassword(){
+  let pass = localStorage.getItem('sigam_control_password');
+  if(!pass){
+    pass = prompt('اكتب باسورد التحكم في الأجهزة:');
+    if(pass) localStorage.setItem('sigam_control_password', pass);
+  }
+  return pass || '';
+}
+
+async function apiFetch(path, opts){
+  const pass = getControlPassword();
+  const res = await fetch(WORKER_BASE + path, {
+    ...opts,
+    headers: { ...(opts && opts.headers), 'X-Control-Password': pass, 'Content-Type': 'application/json' },
+  });
+  return res.json();
+}
+
+const LIGHTS = [
+  { name:'إنارة ١', zone:'—', deviceid:'1002189ab4', on:false },
+  { name:'إنارة ٢', zone:'—', deviceid:'1002188a86', on:false },
+  { name:'إنارة ٣', zone:'—', deviceid:'10021876aa', on:false },
+  { name:'إنارة ٤', zone:'—', deviceid:'10021899fc', on:false },
+  { name:'إنارة ٥', zone:'—', deviceid:'10021884a8', on:false },
+  { name:'إنارة ٦', zone:'—', deviceid:'1002187690', on:false },
+  { name:'إنارة ٧', zone:'—', deviceid:'1002188a7b', on:false },
+];
+
+async function loadLightsStatus(){
+  try{
+    const data = await apiFetch('/api/devices');
+    if(data.error){ showConnBadge(false); return; }
+    showConnBadge(true);
+    (data.devices || []).forEach(dev=>{
+      const light = LIGHTS.find(l=>l.deviceid === dev.itemData.deviceid);
+      if(!light) return;
+      const sw = dev.itemData.params && dev.itemData.params.switches && dev.itemData.params.switches[0];
+      light.on = sw ? sw.switch === 'on' : false;
+      light.online = dev.itemData.online;
+    });
+  }catch(e){
+    showConnBadge(false);
+  }
+  renderLights();
+}
+
+function showConnBadge(ok){
+  const badge = document.querySelector('.demo-badge');
+  if(!badge) return;
+  badge.innerHTML = ok
+    ? '<i class="fa-solid fa-circle" style="color:var(--green)"></i> متصل بأجهزة Sonoff الحقيقية'
+    : '<i class="fa-solid fa-triangle-exclamation"></i> تعذّر الاتصال بالأجهزة — تأكد من الباسورد';
+  badge.style.color = ok ? 'var(--green)' : 'var(--red)';
+  badge.style.borderColor = ok ? 'rgba(16,185,129,.4)' : 'rgba(239,68,68,.4)';
+  badge.style.background = ok ? 'rgba(16,185,129,.1)' : 'rgba(239,68,68,.1)';
+}
+
+const DOORS = [
+  { name:'البوابة الرئيسية', loc:'مدخل المزرعة', locked:true },
+  { name:'باب المخزن', loc:'المخازن', locked:true },
+  { name:'باب غرفة التبريد', loc:'الثلاجات', locked:true },
+  { name:'باب الطوارئ', loc:'المصنع', locked:false },
+];
+
+const CAMERAS = [
+  { name:'كاميرا البوابة', loc:'المدخل الرئيسي' },
+  { name:'كاميرا خط الإنتاج', loc:'المصنع' },
+  { name:'كاميرا المخزن', loc:'المخازن' },
+  { name:'كاميرا الفناء الخارجي', loc:'خارجي' },
+];
+
+const SENSORS = [
+  { name:'صالة الإنتاج', loc:'المصنع', temp:24, hum:48 },
+  { name:'المخزن الرئيسي', loc:'المخازن', temp:27, hum:41 },
+  { name:'الفناء الخارجي', loc:'خارجي', temp:33, hum:29 },
+];
+
+const FRIDGES = [
+  { name:'ثلاجة 1', sub:'تبريد التمور', temp:4, target:5, running:true },
+  { name:'ثلاجة 2', sub:'تبريد التمور', temp:5, target:5, running:true },
+  { name:'ثلاجة خارجية', sub:'تخزين مؤقت', temp:6, target:6, running:true },
+];
+
+function renderLights(){
+  const grid = document.getElementById('lights-grid');
+  grid.innerHTML = LIGHTS.map((l,i)=>`
+    <div class="light-card ${l.on?'on':''}" id="light-${i}">
+      <div class="light-card-top">
+        <div class="light-bulb-ic"><i class="fa-solid fa-lightbulb"></i></div>
+        <label class="switch">
+          <input type="checkbox" ${l.on?'checked':''} onchange="toggleLight(${i}, this.checked)">
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+        </label>
+      </div>
+      <div class="light-name">${l.name}</div>
+      <div class="light-zone"><i class="fa-solid ${l.online===false?'fa-wifi-slash':'fa-wifi'}"></i> ${l.online===false?'غير متصل':'متصل بالشبكة'}</div>
+      <div class="light-meta">
+        <span class="light-status-txt">${l.on?'شغالة الآن':'مطفية'}</span>
+        <div class="brightness-dots"><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>`).join('');
+  updateStats();
+}
+
+async function toggleLight(i, val){
+  const light = LIGHTS[i];
+  light.on = val; // تحديث فوري في الواجهة
+  document.getElementById('light-'+i).classList.toggle('on', val);
+  document.querySelector('#light-'+i+' .light-status-txt').textContent = val ? 'شغالة الآن' : 'مطفية';
+  updateStats();
+
+  try{
+    const res = await apiFetch('/api/control', {
+      method:'POST',
+      body: JSON.stringify({ deviceid: light.deviceid, params: { switches: [{ switch: val?'on':'off', outlet:0 }] } })
+    });
+    if(res.error){
+      light.on = !val; renderLights();
+      alert('⚠️ حصل خطأ في التحكم: ' + JSON.stringify(res));
+    }
+  }catch(e){
+    light.on = !val; renderLights();
+    alert('⚠️ تعذّر الاتصال بالجهاز');
+  }
+}
+
+async function setAllLights(val){
+  for(const l of LIGHTS){ l.on = val; }
+  renderLights();
+  for(const l of LIGHTS){
+    try{
+      await apiFetch('/api/control', {
+        method:'POST',
+        body: JSON.stringify({ deviceid: l.deviceid, params: { switches: [{ switch: val?'on':'off', outlet:0 }] } })
+      });
+    }catch(e){}
+  }
+  loadLightsStatus();
+}
+
+function renderDoors(){
+  const grid = document.getElementById('doors-grid');
+  grid.innerHTML = DOORS.map((d,i)=>`
+    <div class="door-card ${d.locked?'locked':'open'}" id="door-${i}">
+      <div class="door-ic"><i class="fa-solid ${d.locked?'fa-lock':'fa-lock-open'}"></i></div>
+      <div class="door-name">${d.name}</div>
+      <div class="door-loc"><i class="fa-solid fa-location-dot"></i> ${d.loc}</div>
+      <div class="door-status-badge">${d.locked?'🔒 مغلق':'🔓 مفتوح'}</div>
+      <button class="door-btn" onclick="toggleDoor(${i})">
+        <i class="fa-solid ${d.locked?'fa-lock-open':'fa-lock'}"></i> ${d.locked?'فتح الباب':'قفل الباب'}
+      </button>
+    </div>`).join('');
+  updateStats();
+}
+
+function toggleDoor(i){
+  DOORS[i].locked = !DOORS[i].locked;
+  renderDoors();
+}
+
+function renderCameras(){
+  const grid = document.getElementById('cameras-grid');
+  const now = new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  grid.innerHTML = CAMERAS.map(c=>`
+    <div class="cam-card">
+      <div class="cam-feed">
+        <i class="fa-solid fa-video cam-placeholder-ic"></i>
+        <div class="cam-live-badge"><i class="fa-solid fa-circle"></i> مباشر</div>
+        <div class="cam-time">${now}</div>
+        <div class="cam-demo-tag">شكل تجريبي</div>
+      </div>
+      <div class="cam-info">
+        <div>
+          <div class="cam-name">${c.name}</div>
+          <div class="cam-loc">${c.loc}</div>
+        </div>
+        <i class="fa-solid fa-expand" style="color:var(--dim)"></i>
+      </div>
+    </div>`).join('');
+}
+
+function renderSensors(){
+  const grid = document.getElementById('sensors-grid');
+  grid.innerHTML = SENSORS.map(s=>{
+    const warn = s.temp >= 32;
+    return `<div class="sensor-card">
+      <div class="sensor-top">
+        <div>
+          <div class="sensor-name">${s.name}</div>
+          <div class="sensor-loc">${s.loc}</div>
+        </div>
+        <span class="sensor-badge ${warn?'warn':''}">${warn?'مرتفعة':'طبيعية'}</span>
+      </div>
+      <div class="gauge-row">
+        <div class="gauge temp"><div class="g-icon"><i class="fa-solid fa-temperature-half"></i></div><div class="g-val">${s.temp}°</div><div class="g-lbl">الحرارة</div></div>
+        <div class="gauge hum"><div class="g-icon"><i class="fa-solid fa-droplet"></i></div><div class="g-val">${s.hum}%</div><div class="g-lbl">الرطوبة</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderFridges(){
+  const grid = document.getElementById('fridges-grid');
+  grid.innerHTML = FRIDGES.map(f=>{
+    const pct = Math.min(100, Math.round((f.temp / (f.target*2)) * 100));
+    return `<div class="fridge-card">
+      <div class="fridge-top">
+        <div class="fridge-ic"><i class="fa-solid fa-snowflake"></i></div>
+        <div>
+          <div class="fridge-name">${f.name}</div>
+          <div class="fridge-sub">${f.sub}</div>
+        </div>
+      </div>
+      <div class="fridge-temp"><span class="num">${f.temp}</span><span class="unit">°م</span></div>
+      <div class="fridge-bar-wrap"><div class="fridge-bar" style="width:${pct}%"></div></div>
+      <div class="fridge-footer">
+        <span>الهدف: ${f.target}°م</span>
+        <span class="fridge-compressor"><span class="dot"></span> ${f.running?'الكمبروسور شغال':'متوقف'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats(){
+  const onCount = LIGHTS.filter(l=>l.on).length;
+  document.getElementById('stat-lights').textContent = onCount + ' / ' + LIGHTS.length;
+  const lockedCount = DOORS.filter(d=>d.locked).length;
+  document.getElementById('stat-doors').textContent = lockedCount + ' / ' + DOORS.length;
+}
+
+loadLightsStatus();
+setInterval(loadLightsStatus, 20000);
+renderDoors();
+renderCameras();
+renderSensors();
+renderFridges();
+</script>
+</body>
+</html>
